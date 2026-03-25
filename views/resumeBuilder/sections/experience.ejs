@@ -1,0 +1,110 @@
+<h2>Experience</h2>
+
+<div class="exp-add">
+
+<form method="POST" action="/builder/${resumeId}/experience">
+
+<input name="role" placeholder="Role (Software Engineer)" required>
+
+<input name="company" placeholder="Company">
+
+<input name="location" placeholder="Location">
+
+<input name="startDate" placeholder="Start Date">
+
+<input name="endDate" placeholder="End Date">
+
+<button class="primary-btn">Add Experience</button>
+
+</form>
+
+</div>
+
+<hr>
+
+<% const expSection = resume.sections.find(s => s.title === "Experience") %>
+
+<% expSection.data.forEach(entry => { %>
+
+<div class="exp-card">
+
+<div class="exp-header">
+
+<form method="POST"
+action="/builder/${resumeId}/experience/<%= entry._id %>/update">
+
+<input name="role" value="<%= entry.title %>" class="exp-role">
+
+<input name="company" value="<%= entry.subtitle %>" class="exp-company">
+
+<input name="location" value="<%= entry.location %>" class="exp-location">
+
+<input name="startDate" value="<%= entry.startDate %>" class="exp-date">
+
+<input name="endDate" value="<%= entry.endDate %>" class="exp-date">
+
+<button class="small-btn">Save</button>
+
+</form>
+
+<form method="POST"
+action="/builder/${resumeId}/experience/<%= entry._id %>/delete">
+
+<button class="delete-btn">Delete</button>
+
+</form>
+
+</div>
+
+<ul class="bullet-list">
+
+<% entry.bullets.forEach(b => { %>
+
+<li class="bullet-item">
+
+<form
+method="POST"
+action="/builder/${resumeId}/experience/<%= entry._id %>/bullet/<%= b._id %>/update"
+style="display:flex;flex:1;gap:6px">
+
+<input
+name="bullet"
+value="<%= b.text %>"
+class="bullet-input">
+
+<button class="btn btn-secondary">Save</button>
+
+</form>
+
+<form
+method="POST"
+action="/builder/${resumeId}/experience/<%= entry._id %>/bullet/<%= b._id %>/delete">
+
+<button class="btn-delete">×</button>
+
+</form>
+
+</li>
+
+<% }) %>
+
+</ul>
+
+<form
+method="POST"
+action="/builder/${resumeId}/experience/<%= entry._id %>/bullet">
+
+<input
+name="bullet"
+placeholder="Add bullet point"
+class="bullet-input">
+
+<button class="btn btn-primary">Add Bullet</button>
+
+</form>
+
+</div>
+
+<hr>
+
+<% }) %>

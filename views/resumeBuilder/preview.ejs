@@ -1,0 +1,85 @@
+<h2><%= resume.basics.fullName || "Your Name" %></h2>
+
+<p>
+
+<%= resume.basics.email || "" %>
+
+<% if(resume.basics.phone){ %>
+ | <%= resume.basics.phone %>
+<% } %>
+
+<% if(resume.basics.location){ %>
+ | <%= resume.basics.location %>
+<% } %>
+
+<% resume.basics.links.forEach(link=>{ %>
+ | <%= link.url %>
+<% }) %>
+
+</p>
+
+<hr>
+
+<% resume.sections.forEach(section=>{ %>
+
+<h3><%= section.title %></h3>
+
+<% if(section.type === "text"){ %>
+
+<p><%= section.data %></p>
+
+<% } %>
+
+<% if(section.type === "grouped-list"){ %>
+
+<% section.data.forEach(group=>{ %>
+
+<p>
+<strong><%= group.group %>:</strong>
+<%= group.items.join(", ") %>
+</p>
+
+<% }) %>
+
+<% } %>
+
+<% if(section.type === "entries"){ %>
+
+<% section.data.forEach(entry=>{ %>
+
+<p>
+
+<strong><%= entry.title %></strong>
+
+<% if(entry.subtitle){ %>
+ - <%= entry.subtitle %>
+<% } %>
+
+<br>
+
+<em>
+<%= entry.startDate || "" %>
+<% if(entry.endDate){ %>
+ - <%= entry.endDate %>
+<% } %>
+</em>
+
+</p>
+
+<ul>
+
+<% entry.bullets.forEach(b=>{ %>
+
+<li><%= b.text %></li>
+
+<% }) %>
+
+</ul>
+
+<% }) %>
+
+<% } %>
+
+<hr>
+
+<% }) %>

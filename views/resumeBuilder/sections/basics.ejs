@@ -1,0 +1,30 @@
+
+<h2>Basics</h2>
+
+<form method="POST" action="/builder/${resumeId}/basics">
+
+<label>Full Name</label>
+<input name="fullName" value="<%= resume.basics.fullName || '' %>" required>
+
+<label>Email</label>
+<input name="email" value="<%= resume.basics.email || '' %>">
+
+<label>Phone</label>
+<input name="phone" value="<%= resume.basics.phone || '' %>">
+
+<label>Location</label>
+<input name="location" value="<%= resume.basics.location || '' %>">
+
+<label>LinkedIn</label>
+<input name="linkedin"
+value="<%= (resume.basics.links.find(l => l.label === 'LinkedIn') || {}).url || '' %>">
+
+<label>GitHub</label>
+<input name="github"
+value="<%= (resume.basics.links.find(l => l.label === 'GitHub') || {}).url || '' %>">
+
+<br><br>
+
+<button type="submit">Save</button>
+
+</form>

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .dsa-form {
+  max-width: 500px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dsa-form input {
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.dsa-form button {
+  padding: 10px;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 6px;
+}
+    </style>
+</head>
+<body>
+
+    <form action="/profile/dsa-profiles" method="POST" class="dsa-form">
+  <h2>Connect Your Coding Profiles</h2>
+
+  <div>
+    <label>Codeforces</label>
+    <input type="text" name="codeforces" placeholder="e.g. tourist" value="<%= user.dsaProfiles?.codeforces || '' %>" />
+  </div>
+
+  <div>
+    <label>LeetCode</label>
+    <input type="text" name="leetcode" placeholder="e.g. shivam123" value="<%= user.dsaProfiles?.leetcode || '' %>" />
+  </div>
+
+  <div>
+    <label>CodeChef</label>
+    <input type="text" name="codechef" placeholder="e.g. shivam_01" value="<%= user.dsaProfiles?.codechef || '' %>" />
+  </div>
+
+  <div>
+    <label>GeeksforGeeks</label>
+    <input type="text" name="gfg" placeholder="e.g. shivam-verma" value="<%= user.dsaProfiles?.gfg || '' %>" />
+  </div>
+
+  <div>
+    <label>HackerRank</label>
+    <input type="text" name="hackerrank" placeholder="e.g. shivam_dev" value="<%= user.dsaProfiles?.hackerrank || '' %>" />
+  </div>
+
+  <div>
+    <label>Coding Ninjas (Code360)</label>
+    <input type="text" name="codingninjas" placeholder="e.g. shivam" value="<%= user.dsaProfiles?.codingninjas || '' %>" />
+  </div>
+
+  <div>
+    <label>GitHub</label>
+    <input type="text" name="github" placeholder="e.g. shivam-verma" value="<%= user.dsaProfiles?.github || '' %>" />
+  </div>
+
+  <button type="submit">Save Profiles</button>
+</form>
+</body>
+</html>

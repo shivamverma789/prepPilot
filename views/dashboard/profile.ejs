@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Profile - PrepPilot</title>
+    <style>
+        body { font-family: Arial; max-width: 900px; margin: auto; padding: 30px; }
+        h2 { margin-bottom: 10px; }
+        .section { margin-bottom: 40px; }
+        .suggestions {
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            display: none;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        .suggestions div {
+            padding: 8px;
+            cursor: pointer;
+        }
+        .suggestions div:hover {
+            background: #f2f2f2;
+        }
+        .card {
+            border: 1px solid #ddd;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            background: #4caf50;
+            color: white;
+            cursor: pointer;
+        }
+        .note {
+            background:#e8f5e9;
+            padding:10px;
+            border-radius:6px;
+            margin-bottom:15px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Edit Profile</h2>
+
+<% if (updated) { %>
+    <div class="note">Profile updated successfully.</div>
+<% } %>
+
+<form action="/profile" method="POST" onsubmit="prepareData()">
+
+<!-- ================= GOALS ================= -->
+<div class="section">
+    <h3>Career Goals</h3>
+
+    <input type="text" id="goalInput" placeholder="Type a goal..." autocomplete="off" style="width:100%; padding:8px;">
+    <div id="goalSuggestions" class="suggestions"></div>
+
+    <div id="goalsContainer"></div>
+    <input type="hidden" name="goalsJson" id="goalsJson">
+</div>
+
+<!-- ================= SKILLS ================= -->
+<div class="section">
+    <h3>Skills</h3>
+
+    <input type="text" id="skillInput" placeholder="Type a skill..." autocomplete="off" style="width:100%; padding:8px;">
+    <div id="skillSuggestions" class="suggestions"></div>
+
+    <div id="skillsContainer"></div>
+    <input type="hidden" name="skillsJson" id="skillsJson">
+</div>
+
+<!-- ================= EXPERIENCE ================= -->
+<div class="section">
+    <h3>Experience</h3>
+
+    <label>Projects Built</label><br>
+    <select name="projectsCount">
+        <option value="0" <%= user.experience.projectsCount==="0"?"selected":"" %>>0</option>
+        <option value="1-3" <%= user.experience.projectsCount==="1-3"?"selected":"" %>>1-3</option>
+        <option value="3+" <%= user.experience.projectsCount==="3+"?"selected":"" %>>3+</option>
+    </select>
+
+    <br><br>
+
+    <label>Internship</label><br>
+    <select name="internshipExperience">
+        <option value="true" <%= user.experience.internshipExperience?"selected":"" %>>Yes</option>
+        <option value="false" <%= !user.experience.internshipExperience?"selected":"" %>>No</option>
+    </select>
+
+    <br><br>
+
+    <label>Resume Ready</label><br>
+    <select name="resumeReady">
+        <option value="true" <%= user.experience.resumeReady?"selected":"" %>>Yes</option>
+        <option value="false" <%= !user.experience.resumeReady?"selected":"" %>>No</option>
+    </select>
+
+    <br><br>
+
+    <label>Daily Study Hours</label><br>
+    <select name="dailyStudyHours">
+        <option value="<1" <%= user.experience.dailyStudyHours==="<1"?"selected":"" %>><1</option>
+        <option value="1-3" <%= user.experience.dailyStudyHours==="1-3"?"selected":"" %>>1-3</option>
+        <option value="3-5" <%= user.experience.dailyStudyHours==="3-5"?"selected":"" %>>3-5</option>
+        <option value="5+" <%= user.experience.dailyStudyHours==="5+"?"selected":"" %>>5+</option>
+    </select>
+</div>
+
+<button type="submit" class="btn">Save Changes</button>
+</form>
+
+<script>
+const TECH_SKILLS = [
+"C","C++","Java","Python","JavaScript","TypeScript",
+"React","Node.js","MongoDB","MySQL","DSA","OOP",
+"DBMS","Operating Systems","Computer Networks",
+"AWS","Docker","System Design","Tailwind CSS",
+];
+
+const TECH_GOALS = [
+"SDE","Software Engineer","Frontend Developer",
+"Backend Developer","Full Stack Developer",
+"AI Engineer","ML Engineer","DevOps Engineer",
+"Cloud Engineer","Data Scientist"
+];
+
+let addedSkills = (<%- JSON.stringify(user.skills || []) %>).map(s => ({
+    name: s.name,
+    source: s.source || "core",
+    level: s.level || "beginner",
+    exposure: s.exposure || "heard",
+    confidence: s.confidence ?? 1
+}));
+let addedGoals = [
+    ...<%- JSON.stringify((user.careerGoals||[]).map(g=>({name:g,source:"core"}))) %>,
+    ...<%- JSON.stringify((user.customGoals||[]).map(g=>({name:g,source:"custom"}))) %>
+];
+
+const skillInput = document.getElementById("skillInput");
+const skillSuggestions = document.getElementById("skillSuggestions");
+const skillsContainer = document.getElementById("skillsContainer");
+
+const goalInput = document.getElementById("goalInput");
+const goalSuggestions = document.getElementById("goalSuggestions");
+const goalsContainer = document.getElementById("goalsContainer");
+
+function renderSkills(){
+    skillsContainer.innerHTML="";
+    addedSkills.forEach((s,index)=>{
+        const card=document.createElement("div");
+        card.className="card";
+        card.innerHTML=`
+            <strong>${s.name}</strong>
+            <br>
+            Level:
+            <select onchange="updateSkill(${index},'level',this.value)">
+                <option value="beginner" ${s.level==="beginner"?"selected":""}>Beginner</option>
+                <option value="intermediate" ${s.level==="intermediate"?"selected":""}>Intermediate</option>
+                <option value="advanced" ${s.level==="advanced"?"selected":""}>Advanced</option>
+            </select>
+            Exposure:
+            <select onchange="updateSkill(${index},'exposure',this.value)">
+                <option value="heard" ${s.exposure==="heard"?"selected":""}>Heard</option>
+                <option value="learned" ${s.exposure==="learned"?"selected":""}>Learned</option>
+                <option value="projects" ${s.exposure==="projects"?"selected":""}>Projects</option>
+                <option value="confident" ${s.exposure==="confident"?"selected":""}>Confident</option>
+            </select>
+            Confidence:
+            <input type="number" min="0" max="5" value="${s.confidence}" onchange="updateSkill(${index},'confidence',this.value)">
+            <button type="button" onclick="removeSkill(${index})">Remove</button>
+        `;
+        skillsContainer.appendChild(card);
+    });
+}
+
+function renderGoals(){
+    goalsContainer.innerHTML="";
+    addedGoals.forEach((g,index)=>{
+        const chip=document.createElement("div");
+        chip.className="card";
+        chip.innerHTML=`
+            ${g.name}
+            <button type="button" onclick="removeGoal(${index})">Remove</button>
+        `;
+        goalsContainer.appendChild(chip);
+    });
+}
+
+function updateSkill(index,key,value){
+    if(key==="confidence"){value=parseInt(value)||1;}
+    addedSkills[index][key]=value;
+}
+
+function removeSkill(index){
+    addedSkills.splice(index,1);
+    renderSkills();
+}
+
+function removeGoal(index){
+    addedGoals.splice(index,1);
+    renderGoals();
+}
+
+function prepareData(){
+    document.getElementById("skillsJson").value=JSON.stringify(addedSkills);
+    document.getElementById("goalsJson").value=JSON.stringify(addedGoals);
+}
+
+skillInput.addEventListener("input",()=>{
+    const query=skillInput.value.toLowerCase();
+    skillSuggestions.innerHTML="";
+    if(!query){skillSuggestions.style.display="none";return;}
+    TECH_SKILLS.filter(s=>s.toLowerCase().includes(query))
+        .forEach(skill=>{
+            const div=document.createElement("div");
+            div.textContent=skill;
+            div.onclick=()=>addSkill(skill,"core");
+            skillSuggestions.appendChild(div);
+        });
+    skillSuggestions.style.display="block";
+});
+
+goalInput.addEventListener("input",()=>{
+    const query=goalInput.value.toLowerCase();
+    goalSuggestions.innerHTML="";
+    if(!query){goalSuggestions.style.display="none";return;}
+    TECH_GOALS.filter(g=>g.toLowerCase().includes(query))
+        .forEach(goal=>{
+            const div=document.createElement("div");
+            div.textContent=goal;
+            div.onclick=()=>addGoal(goal,"core");
+            goalSuggestions.appendChild(div);
+        });
+    goalSuggestions.style.display="block";
+});
+
+goalInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+        e.preventDefault();
+
+        const value = goalInput.value.trim();
+        if (!value) return;
+
+        addGoal(value, "custom");
+    }
+});
+
+skillInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+        e.preventDefault();
+
+        const value = skillInput.value.trim();
+        if (!value) return;
+
+        addSkill(value, "custom");
+    }
+});
+
+function addSkill(name,source){
+    if(addedSkills.find(s=>s.name.toLowerCase()===name.toLowerCase()))return;
+    addedSkills.push({name,source,level:"beginner",exposure:"heard",confidence:1});
+    renderSkills();
+    skillInput.value="";
+    skillSuggestions.style.display="none";
+}
+
+function addGoal(name,source){
+    if(addedGoals.find(g=>g.name.toLowerCase()===name.toLowerCase()))return;
+    addedGoals.push({name,source});
+    renderGoals();
+    goalInput.value="";
+    goalSuggestions.style.display="none";
+}
+
+renderSkills();
+renderGoals();
+</script>
+
+</body>
+</html>

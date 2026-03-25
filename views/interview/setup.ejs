@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>AI Interview Setup</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0f172a;
+    color: white;
+}
+
+/* Layout */
+.wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.container {
+    width: 900px;
+}
+
+/* Header */
+.header {
+    margin-bottom: 25px;
+}
+
+.header h2 {
+    margin: 0;
+}
+
+.header p {
+    color: #94a3b8;
+    font-size: 14px;
+}
+
+/* Grid layout */
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* Card */
+.card {
+    background: #1e293b;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.card label {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+/* Input */
+input {
+    width: 90%;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    outline: none;
+    margin-bottom: 20px;
+    background: #afbbd5;
+    color: #0f172a;
+}
+
+/* Chips */
+.chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.chip {
+    padding: 6px 10px;
+    border-radius: 20px;
+    background: #334155;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.chip:hover {
+    background: #475569;
+}
+
+/* Buttons */
+.btn-group {
+    display: flex;
+    gap: 6px;
+}
+
+.btn {
+    flex: 1;
+    padding: 10px;
+    border-radius: 6px;
+    border: none;
+    background: #334155;
+    color: white;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+.btn.active.level { background: #3b82f6; }
+.btn.active.company { background: #22c55e; }
+.btn.active.type { background: #8b5cf6; }
+.btn.active.duration { background: #ef4444; }
+
+/* Focus section */
+.focus-section {
+    margin-top: 20px;
+}
+
+.focus-scroll {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 6px;
+}
+
+.focus-chip {
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: #334155;
+    cursor: pointer;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.focus-chip.active {
+    background: #f59e0b;
+}
+
+/* Button */
+.submit {
+    margin-top: 25px;
+    width: 100%;
+    padding: 12px;
+    background: #3b82f6;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.submit:hover {
+    background: #2563eb;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrapper">
+<div class="container">
+
+<div class="header">
+    <h2>AI Interview Setup</h2>
+    <p>Customize your interview experience</p>
+</div>
+
+<form id="form">
+
+<div class="card">
+    <label>Role</label>
+    <input id="roleInput" placeholder="Enter role..." required>
+
+    <div class="chips">
+        <div class="chip">Backend Developer</div>
+        <div class="chip">Frontend Developer</div>
+        <div class="chip">Full Stack Developer</div>
+        <div class="chip">Data Scientist</div>
+    </div>
+</div>
+<div class="grid">
+
+<!-- ROLE -->
+
+
+<!-- LEVEL -->
+<div class="card">
+    <label>Level</label>
+    <div class="btn-group">
+        <button type="button" class="btn level" data="beginner">Beginner</button>
+        <button type="button" class="btn level" data="intermediate">Intermediate</button>
+        <button type="button" class="btn level" data="advanced">Advanced</button>
+    </div>
+</div>
+
+<!-- COMPANY -->
+<div class="card">
+    <label>Company</label>
+    <div class="btn-group">
+        <button type="button" class="btn company" data="product">Product</button>
+        <button type="button" class="btn company" data="service">Service</button>
+        <button type="button" class="btn company" data="startup">Startup</button>
+    </div>
+</div>
+
+<!-- TYPE -->
+<div class="card">
+    <label>Interview Type</label>
+    <div class="btn-group">
+        <button type="button" class="btn type" data="technical">Technical</button>
+        <button type="button" class="btn type" data="system-design">System</button>
+        <button type="button" class="btn type" data="hr">HR</button>
+        <button type="button" class="btn type" data="mixed">Mixed</button>
+    </div>
+</div>
+
+<!-- DURATION -->
+<div class="card">
+    <label>Duration</label>
+    <div class="btn-group">
+        <button type="button" class="btn duration" data="short">Short</button>
+        <button type="button" class="btn duration" data="medium">Medium</button>
+        <button type="button" class="btn duration" data="long">Long</button>
+    </div>
+</div>
+
+</div>
+
+<!-- FOCUS -->
+<div class="card focus-section">
+    <label>Focus Areas (select max 4)</label>
+
+    <div class="focus-scroll">
+        <div class="chips">
+
+    <!-- Core CS -->
+    <div class="focus-chip">DSA</div>
+    <div class="focus-chip">DBMS</div>
+    <div class="focus-chip">OS</div>
+    <div class="focus-chip">Computer Networks</div>
+    <div class="focus-chip">OOPs</div>
+
+    <!-- Development -->
+    <div class="focus-chip">Backend Development</div>
+    <div class="focus-chip">Frontend Development</div>
+    <div class="focus-chip">API Design</div>
+    <div class="focus-chip">Microservices</div>
+
+    <!-- Advanced -->
+    <div class="focus-chip">System Design</div>
+    <div class="focus-chip">Low-Level Design</div>
+    <div class="focus-chip">Scalability</div>
+    <div class="focus-chip">Caching</div>
+
+    <!-- Frontend -->
+    <div class="focus-chip">React</div>
+    <div class="focus-chip">JavaScript</div>
+    <div class="focus-chip">Performance</div>
+
+    <!-- Backend/Data -->
+    <div class="focus-chip">SQL</div>
+    <div class="focus-chip">Database Design</div>
+
+    <!-- Practical -->
+    <div class="focus-chip">Debugging</div>
+    <div class="focus-chip">Code Optimization</div>
+
+    <!-- HR -->
+    <div class="focus-chip">Behavioral</div>
+
+</div>
+    </div>
+</div>
+
+<button class="submit">Start Interview</button>
+
+</form>
+</div>
+</div>
+
+<script>
+let selected = {
+    level: "beginner",
+    company: "product",
+    type: "technical",
+    duration: "medium",
+    focus: []
+};
+
+// Role chips
+document.querySelectorAll(".chip").forEach(c => {
+    c.onclick = () => document.getElementById("roleInput").value = c.innerText;
+});
+
+// Generic handler
+function handleGroup(selector, key) {
+    const buttons = document.querySelectorAll(selector);
+    buttons.forEach(btn => {
+        btn.onclick = () => {
+            buttons.forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            selected[key] = btn.getAttribute("data");
+        };
+    });
+}
+
+handleGroup(".level", "level");
+handleGroup(".company", "company");
+handleGroup(".type", "type");
+handleGroup(".duration", "duration");
+
+// Defaults
+document.querySelector(".level[data='beginner']").classList.add("active");
+document.querySelector(".company[data='product']").classList.add("active");
+document.querySelector(".type[data='technical']").classList.add("active");
+document.querySelector(".duration[data='medium']").classList.add("active");
+
+// Focus
+document.querySelectorAll(".focus-chip").forEach(btn => {
+    btn.onclick = () => {
+
+        const value = btn.innerText;
+
+        if (!btn.classList.contains("active") && selected.focus.length >= 4) {
+            alert("Max 4 focus areas allowed");
+            return;
+        }
+
+        btn.classList.toggle("active");
+
+        if (selected.focus.includes(value)) {
+            selected.focus = selected.focus.filter(f => f !== value);
+        } else {
+            selected.focus.push(value);
+        }
+    };
+});
+
+// Submit
+document.getElementById("form").onsubmit = async (e) => {
+    e.preventDefault();
+
+    const role = document.getElementById("roleInput").value;
+
+    await fetch("http://localhost:3000/api/interview/set-interview-data", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({
+            role,
+            ...selected
+        })
+    });
+
+    window.open("http://localhost:4000", "_blank");
+};
+</script>
+
+</body>
+</html>

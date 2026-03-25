@@ -1,0 +1,78 @@
+<h2>Skills</h2>
+
+<div class="add-group">
+
+<form method="POST" action="/builder/${resumeId}/skills/group">
+
+<input class="group-input"
+name="groupName"
+placeholder="Add Skill Group (Frontend, Backend, Tools)"
+required>
+
+<button class="primary-btn" type="submit">Add</button>
+
+</form>
+
+</div>
+
+<hr>
+
+<% const skillsSection = resume.sections.find(s => s.title === "Skills") %>
+
+<% skillsSection.data.forEach((group,index)=>{ %>
+
+<div class="skill-card">
+
+<div class="group-header">
+
+<form class="rename-form"
+method="POST"
+action="/builder/${resumeId}/skills/<%= index %>/name">
+
+<input
+class="group-name"
+name="groupName"
+value="<%= group.group %>">
+
+</form>
+
+<div class="group-actions">
+
+<button
+class="small-btn"
+onclick="this.closest('.rename-form').submit()">
+Rename
+</button>
+
+<form
+method="POST"
+action="/builder/${resumeId}/skills/<%= index %>/delete"
+style="display:inline">
+
+<button class="delete-btn">Delete</button>
+
+</form>
+
+</div>
+
+</div>
+
+<div class="skills-editor">
+
+<form method="POST" action="/builder/${resumeId}/skills/<%= index %>">
+
+<input
+class="skills-input"
+name="skills"
+value="<%= group.items.join(', ') %>"
+placeholder="HTML, CSS, JavaScript">
+
+<button class="primary-btn">Save Skills</button>
+
+</form>
+
+</div>
+
+</div>
+
+<% }) %>

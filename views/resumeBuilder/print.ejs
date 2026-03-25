@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<style>
+
+body {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  max-width: 800px;
+  margin: auto;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #111;
+  padding: 20px 30px;   /* ✅ FIXED */
+  font-weight: 500;     /* ✅ Slightly stronger text */
+}
+
+/* TEXT WRAP FIX */
+
+p, li {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* HEADER */
+
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.name {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.contact {
+  font-size: 11px;
+  color: #444;
+  margin-top: 6px;
+
+}
+
+.contact span {
+  margin: 0 6px;
+}
+
+/* SECTION */
+
+.section {
+  margin-top: 16px;
+}
+
+.section-title {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  border-bottom: 1.5px solid #000;
+  padding-bottom: 3px;
+  margin-bottom: 8px;
+}
+
+/* ENTRY */
+
+.entry {
+  margin-bottom: 12px;
+}
+
+.entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.entry-role {
+  font-weight: 600; /* ✅ Slight emphasis */
+  font-size: 12.5px;
+}
+
+.entry-sub {
+  font-style: italic;
+  color: #333;
+}
+
+.entry-dates {
+  font-size: 11px;
+  color: #444;
+  white-space: nowrap;
+}
+
+/* BULLETS */
+
+ul {
+  margin-top: 6px;
+  padding-left: 20px;
+}
+
+li {
+  margin-bottom: 4px;
+}
+
+/* SKILLS */
+
+.skill-group {
+  margin-bottom: 6px;
+}
+
+.skill-group strong {
+  font-weight: 600;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+
+  <div class="name"><%= resume.basics.fullName %></div>
+
+  <div class="contact">
+    <%= resume.basics.email %>
+
+    <% if (resume.basics.phone) { %>
+      <span>|</span> <%= resume.basics.phone %>
+    <% } %>
+
+    <% if (resume.basics.location) { %>
+      <span>|</span> <%= resume.basics.location %>
+    <% } %>
+
+    <% if (resume.basics.links && resume.basics.links.length > 0) { %>
+      <% resume.basics.links.forEach(link => { %>
+        <span>|</span> <%= link.url %>
+      <% }) %>
+    <% } %>
+  </div>
+
+</div>
+
+<% resume.sections.forEach(section => {
+
+  let isEmpty = false;
+
+  if(section.type === "text"){
+    isEmpty = !section.data || section.data.trim() === "";
+  }
+
+  if(section.type === "grouped-list"){
+    isEmpty = !section.data || section.data.length === 0;
+  }
+
+  if(section.type === "entries"){
+    isEmpty = !section.data || section.data.length === 0;
+  }
+
+  if(isEmpty) return;
+
+%>
+<div class="section">
+
+  <div class="section-title"><%= section.title %></div>
+
+  <% if (section.type === "text") { %>
+    <p><%= section.data %></p>
+  <% } %>
+
+  <% if (section.type === "grouped-list") { %>
+    <% section.data.forEach(group => { %>
+      <div class="skill-group">
+        <strong><%= group.group %>:</strong>
+        <%= group.items.join(", ") %>
+      </div>
+    <% }) %>
+  <% } %>
+
+  <% if (section.type === "entries") { %>
+    <% section.data.forEach(entry => { %>
+
+      <div class="entry">
+
+        <div class="entry-header">
+
+          <div class="entry-role">
+            <%= entry.title %>
+            <% if (entry.subtitle) { %>
+              - <span class="entry-sub"><%= entry.subtitle %></span>
+            <% } %>
+          </div>
+
+          <div class="entry-dates">
+            <%= entry.startDate %>
+            <% if (entry.endDate) { %>
+              - <%= entry.endDate %>
+            <% } %>
+          </div>
+
+        </div>
+
+        <% if (entry.bullets && entry.bullets.length > 0) { %>
+          <ul>
+            <% entry.bullets.forEach(b => { %>
+              <li><%= b.text %></li>
+            <% }) %>
+          </ul>
+        <% } %>
+
+      </div>
+
+    <% }) %>
+  <% } %>
+
+</div>
+
+<% }) %>
+
+</body>
+</html>

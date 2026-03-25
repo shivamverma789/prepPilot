@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Onboarding - PrepPilot</title>
+</head>
+<body>
+    <h2>Complete Your Profile</h2>
+
+    <form action="/onboarding" method="POST">
+        <div>
+            <label>Current Year (1-4):</label>
+            <input type="number" name="year" required />
+        </div>
+        <br>
+
+        <div>
+            <label>Target Goal (comma separated):</label>
+            <input type="text" name="goal" placeholder="SDE at MNC, Backend Engineer" required />
+        </div>
+        <br>
+
+        <div>
+            <label>Skills (comma separated):</label>
+            <input type="text" name="skills" placeholder="C++, DSA, Node.js" required />
+        </div>
+        <br>
+
+        <div>
+            <label>Degree / Branch:</label>
+            <input type="text" name="degree" placeholder="B.Tech CSE" required />
+        </div>
+        <br>
+
+        <button type="submit">Save & Continue</button>
+    </form>
+</body>
+</html>

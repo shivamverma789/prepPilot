@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>PrepPilot Dashboard</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #0d1117, #111827);
+    color: #e6edf3;
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* HEADER */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+/* BUTTON */
+.btn {
+    padding: 8px 12px;
+    background: #238636;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    margin-right: 10px;
+}
+
+.btn:hover {
+    background: #2ea043;
+}
+
+/* GRID */
+.grid {
+    display: grid;
+    gap: 20px;
+}
+
+/* STATS */
+.stats {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+.card {
+    background: #161b22;
+    padding: 16px;
+    border-radius: 12px;
+    border: 1px solid #30363d;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    transition: 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    border-color: #58a6ff;
+    box-shadow: 0 0 20px rgba(88,166,255,0.2);
+}
+
+.big {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* HEATMAP */
+.heatmap-container {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+}
+
+.month {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.weeks {
+    display: flex;
+    gap: 3px;
+    margin-top: 10px;
+}
+
+.week-col {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.day {
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+    
+}
+
+/* PLATFORM CARDS */
+.platforms {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.badge {
+    background: #21262d;
+    padding: 4px 8px;
+    border-radius: 6px;
+    margin: 3px;
+    display: inline-block;
+}
+
+/* SECTION */
+.section {
+    margin-top: 30px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- HEADER -->
+<div class="header">
+    <h2>📊 Activity Dashboard</h2>
+
+    <form method="GET" action="/activity/activity-dashboard">
+        <select name="platform" onchange="this.form.submit()">
+            <option value="all" <%= selectedPlatform==="all"?"selected":"" %>>All</option>
+            <option value="leetcode" <%= selectedPlatform==="leetcode"?"selected":"" %>>LeetCode</option>
+            <option value="github" <%= selectedPlatform==="github"?"selected":"" %>>GitHub</option>
+            <option value="codeforces" <%= selectedPlatform==="codeforces"?"selected":"" %>>Codeforces</option>
+            <option value="codechef" <%= selectedPlatform==="codechef"?"selected":"" %>>CodeChef</option>
+        </select>
+    </form>
+</div>
+
+<div style="margin-bottom:20px; display:flex; align-items:center; gap:15px;">
+
+    <a href="/activity/activity-sync/all" class="btn">
+        🔄 Sync All
+    </a>
+
+    <div id="timer" style="font-size:14px; color:#8b949e;">
+        Next refresh in: --
+    </div>
+
+</div>
+
+<!-- ACTIONS -->
+<div>
+    <a href="/activity/activity-profile" class="btn">Edit Profile</a>
+    <a href="/activity/activity-sync/leetcode" class="btn">Sync LeetCode</a>
+    <a href="/activity/activity-sync/github" class="btn">Sync GitHub</a>
+    <a href="/activity/activity-sync/codeforces" class="btn">Sync CF</a>
+    <a href="/activity/activity-sync/codechef" class="btn">Sync CodeChef</a>
+    <!-- <a href="/activity/u/<%= user.username %>" class="btn">👤 View Profile</a> -->
+</div>
+
+<!-- STATS -->
+<div class="grid stats section">
+
+    <div class="card">
+        <div class="big"><%= totalSolved %></div>
+        Problems Solved
+    </div>
+
+    <div class="card">
+        <div class="big"><%= activeDays %></div>
+        Active Days
+    </div>
+
+    <div class="card">
+        <div class="big"><%= totalActivity %></div>
+        Total Activity
+    </div>
+
+    <div class="card">
+        <div class="big"><%= currentStreak %></div>
+        Current Streak
+    </div>
+
+    <div class="card">
+        <div class="big"><%= longestStreak %></div>
+        Longest Streak
+    </div>
+
+</div>
+
+<!-- BREAKDOWN -->
+<div class="card section">
+    <strong>Platform Breakdown</strong><br><br>
+
+    <div>LeetCode: <%= solvedBreakdown.leetcode %></div>
+    <div>CodeChef: <%= solvedBreakdown.codechef %></div>
+</div>
+
+<!-- HEATMAP -->
+<div class="card section">
+    <h3>📅 Activity Heatmap</h3>
+
+    <div class="heatmap-container">
+
+        <% months.forEach(month => { %>
+            <div class="month">
+
+                <small><%= month.name %></small>
+
+                <div class="weeks">
+                    <% month.weeks.forEach(week => { %>
+
+                        <div class="week-col">
+                            <% week.forEach(day => { %>
+
+                                <div class="day"
+                                    data-date="<%= day ? day.date : '' %>"
+                                    data-count="<%= day ? day.count : 0 %>"
+                                    style="
+                                        background-color:
+                                        <%= !day || day.count === 0 ? '#2d333b' :
+                                        day.count < 3 ? '#9be9a8' :
+                                        day.count < 6 ? '#40c463' :
+                                        day.count < 10 ? '#30a14e' :
+                                        '#216e39' %>;
+                                        
+                                    ">
+                                </div>
+
+                            <% }) %>
+                        </div>
+
+                    <% }) %>
+                </div>
+
+            </div>
+        <% }) %>
+
+    </div>
+</div>
+
+<!-- PLATFORM DATA -->
+<div class="grid platforms section">
+
+    <div class="card">
+        <h4>Codeforces</h4>
+        Rating: <%= cfRating %><br>
+        Max: <%= cfMaxRating %><br>
+        Rank: <%= cfRank %>
+    </div>
+
+    <div class="card">
+        <h4>CodeChef</h4>
+        Rating: <%= codechefRating %><br>
+        Max: <%= codechefMaxRating %><br>
+        Rank: <%= codechefGlobalRank %><br>
+        Solved: <%= codechefSolved %>
+
+        <div style="margin-top:10px;">
+            <% codechefBadges.forEach(b => { %>
+                <span class="badge">🏅 <%= b %></span>
+            <% }) %>
+        </div>
+    </div>
+
+</div>
+
+<!-- RESOURCES -->
+<div class="section">
+    <a href="/activity/resources" class="btn">📚 Resources</a>
+</div>
+
+</div>
+
+<!-- TOOLTIP -->
+<div id="tooltip" style="
+position:absolute;
+background:#111;
+padding:6px;
+border-radius:6px;
+display:none;
+font-size:12px;"></div>
+
+<script>
+const tooltip = document.getElementById("tooltip");
+
+document.querySelectorAll(".day").forEach(box => {
+    box.addEventListener("mouseenter", () => {
+        tooltip.innerHTML = box.dataset.date + "<br>" + box.dataset.count + " activity";
+        tooltip.style.display = "block";
+    });
+
+    box.addEventListener("mousemove", (e) => {
+        tooltip.style.left = e.pageX + 10 + "px";
+        tooltip.style.top = e.pageY - 20 + "px";
+    });
+
+    box.addEventListener("mouseleave", () => {
+        tooltip.style.display = "none";
+    });
+});
+</script>
+
+<script>
+const REFRESH_INTERVAL = 24*60*60; // (testing: 30 sec, later change to 3*60*60)
+
+let lastSync = parseInt(localStorage.getItem("lastSync"));
+
+if (!lastSync) {
+    lastSync = Math.floor(Date.now() / 1000);
+    localStorage.setItem("lastSync", lastSync);
+}
+
+let hasSynced = false; // 🔥 prevents multiple redirects
+
+function updateTimer() {
+    const now = Math.floor(Date.now() / 1000);
+    const diff = now - lastSync;
+
+    let remaining = REFRESH_INTERVAL - diff;
+
+    // 🔥 AUTO SYNC TRIGGER
+    if (remaining <= 0 && !hasSynced) {
+        hasSynced = true;
+
+        document.getElementById("timer").innerText = "Syncing...";
+
+        // update last sync time
+        localStorage.setItem("lastSync", Math.floor(Date.now() / 1000));
+
+        setTimeout(() => {
+            window.location.href = "/activity/activity-sync/all";
+        }, 1000);
+
+        return;
+    }
+
+    // 🔥 TIMER DISPLAY
+    const hours = Math.floor(remaining / 3600);
+    const minutes = Math.floor((remaining % 3600) / 60);
+    const seconds = remaining % 60;
+
+    document.getElementById("timer").innerText =
+        `Next refresh in: ${hours}:${minutes}:${seconds}`;
+}
+
+// 🔥 RUN TIMER
+setInterval(updateTimer, 1000);
+updateTimer();
+
+// 🔥 UPDATE lastSync when user clicks sync manually
+document.querySelectorAll('a[href="/activity/activity-sync/all"]').forEach(btn => {
+    btn.addEventListener("click", () => {
+        localStorage.setItem("lastSync", Math.floor(Date.now() / 1000));
+    });
+});
+</script>
+
+</body>
+</html>

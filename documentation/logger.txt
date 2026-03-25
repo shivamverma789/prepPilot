@@ -1,0 +1,84 @@
+
+------  📅 Date: 19 march (thrusday) -------------
+
+### 🎯 Plan for Today
+- ai generated resume feature
+
+### ✅ Done Today
+- generating the ai resume
+- saving it in the db 
+- assigning the id for entries 
+- normalise the resume for get fit in our template 
+
+##issues:
+- when we are genrating ai resume it does not contain the db ids hard to edit the entries
+
+### 🔥 Next Day Focus
+import resume feautre 
+
+------  📅 Date: 20 march -------------
+
+### 🎯 Plan for Today
+- import the resume feature 
+
+### ✅ Done Today
+- import any resume with different templates 
+- worked on print.ejs for alignment of the resume page 
+- dont show the empty section like experience
+
+##issues:
+takes hit and trail process for the resume page designing , takes too much time 
+
+### 🔥 Next Day Focus
+- move to the next module ai interviewer
+
+------  📅 Date: 21 march (saturday) -------------
+
+### 🎯 Plan for Today
+- want to build the ai interviewer 
+- learn livekit 
+- want to make the customise bot 
+- integrate with PrepPilot
+
+### ✅ Done Today
+- PrepPilot ai interviwer apis Done
+- integrated livekit 
+- use meta data for custum agent 
+
+##issues:
+- livekit starter code in next.js 
+- agents not joining the room. (token problem )
+
+### 🔥 Next Day Focus
+- DSA dashboard and resources 
+
+------- 📅 Date: 22 march (sunday) ----------
+
+### 🎯 Plan for Today
+- want to build something like codolio , and make that green dot heatmap .
+
+### ✅ Done Today
+- integrated the heatmap , and make the dsa dashboard 
+- able to make it for the leetcode , github , codechef .
+
+### issues faced :
+- in codechef there is no direct api or endpoint to extract the data , have to do the web scrapping . 
+
+### 🔥 Next Day Focus
+make the dsa dashboard autosync feature 
+work on ui 
+
+
+
+------  📅 Date: 23 march (Monday) -------------
+
+### 🎯 Plan for Today
+- auto sync each day 
+- work on overall ui 
+
+### ✅ Done Today
+-auto sync done 
+
+##issues:
+
+### 🔥 Next Day Focus

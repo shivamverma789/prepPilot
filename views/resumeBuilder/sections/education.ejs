@@ -1,0 +1,92 @@
+
+<h2>Education</h2>
+
+<form method="POST" action="/builder/${resumeId}/education">
+
+<input name="degree" placeholder="Degree (B.Tech Computer Science)" required>
+
+<input name="institution" placeholder="Institution">
+
+<input name="location" placeholder="Location">
+
+<input name="startDate" placeholder="Start Year">
+
+<input name="endDate" placeholder="End Year">
+
+<button class="btn btn-primary">Add Education</button>
+
+</form>
+
+<hr>
+
+<% const eduSection = resume.sections.find(s => s.title === "Education") %>
+
+<% eduSection.data.forEach(entry => { %>
+
+<div class="edu-card">
+
+<form method="POST"
+action="/builder/${resumeId}/education/<%= entry._id %>/update">
+
+<div class="edu-row">
+
+<input
+name="degree"
+value="<%= entry.title %>"
+placeholder="Degree"
+class="edu-input">
+
+</div>
+
+<div class="edu-row">
+
+<input
+name="institution"
+value="<%= entry.subtitle %>"
+placeholder="Institution"
+class="edu-input">
+
+</div>
+
+<div class="edu-row">
+
+<input
+name="location"
+value="<%= entry.location %>"
+placeholder="Location"
+class="edu-input">
+
+</div>
+
+<div class="edu-row edu-bottom">
+
+<input
+name="startDate"
+value="<%= entry.startDate %>"
+placeholder="Start Year"
+class="edu-date">
+
+<input
+name="endDate"
+value="<%= entry.endDate %>"
+placeholder="End Year"
+class="edu-date">
+
+<button class="btn btn-secondary">Save</button>
+
+</form>
+
+<form method="POST"
+action="/builder/${resumeId}/education/<%= entry._id %>/delete">
+
+<button class="btn-delete">×</button>
+
+</form>
+
+</div>
+
+</div>
+
+<hr>
+
+<% }) %>

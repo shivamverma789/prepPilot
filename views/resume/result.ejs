@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Resume Analysis - PrepPilot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f4f7fb;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: auto;
+        }
+
+        h2 {
+            text-align: center;
+            color: #1e3a8a;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.07);
+            margin-bottom: 30px;
+        }
+
+        /* ================= GAUGE ================= */
+
+        .gauge-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .gauge {
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #2563eb <%= analysis.atsScore * 3.6 %>deg,
+                #e5e7eb 0deg
+            );
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .gauge::before {
+            content: "";
+            width: 170px;
+            height: 170px;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute;
+        }
+
+        .score-text {
+            position: absolute;
+            font-size: 38px;
+            font-weight: bold;
+            color: #1e3a8a;
+        }
+
+        .sub-score {
+            font-size: 18px;
+            margin-top: 10px;
+            font-weight: 600;
+            color: #2563eb;
+        }
+
+        /* ================= BADGES ================= */
+
+        .badge {
+            display: inline-block;
+            padding: 8px 14px;
+            margin: 6px 6px 0 0;
+            border-radius: 20px;
+            background: #e0f2fe;
+            color: #0369a1;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .badge.red {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .badge.green {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        h3 {
+            margin-top: 0;
+            color: #1e3a8a;
+        }
+
+        .divider {
+            height: 1px;
+            background: #e5e7eb;
+            margin: 30px 0;
+        }
+
+        .rewrite-box {
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            margin-bottom: 15px;
+        }
+
+        .rewrite-box p {
+            margin: 6px 0;
+        }
+
+        .action-link {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .action-link a {
+            text-decoration: none;
+            background: #2563eb;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+        }
+
+        .action-link a:hover {
+            background: #1d4ed8;
+        }
+        /* ================= SCORE CARD ================= */
+
+.score-card {
+    text-align: center;
+    padding: 40px 30px;
+}
+
+.score-header {
+    font-size: 14px;
+    letter-spacing: 2px;
+    font-weight: 600;
+    color: #6b7280;
+    margin-bottom: 15px;
+}
+
+.score-main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.score-number {
+    font-size: 64px;
+    font-weight: 800;
+    color: #1e3a8a;
+}
+
+.score-number span {
+    font-size: 22px;
+    font-weight: 500;
+    color: #6b7280;
+}
+
+.score-meta {
+    text-align: left;
+}
+
+.issues-count {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.score-status {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.score-status.needs-work {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.score-status.moderate {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.score-status.strong {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.jd-score {
+    margin-top: 20px;
+    font-size: 16px;
+    color: #2563eb;
+    font-weight: 600;
+}
+        @media (max-width: 768px) {
+            .gauge {
+                width: 180px;
+                height: 180px;
+            }
+            .gauge::before {
+                width: 140px;
+                height: 140px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+<h2>Resume Analysis Result</h2>
+
+<!-- ================= SCORE CARD ================= -->
+<div class="card score-card">
+
+    <div class="score-header">YOUR SCORE</div>
+
+    <div class="score-main">
+        <div class="score-number">
+            <%= analysis.atsScore || 0 %><span>/100</span>
+        </div>
+
+        <div class="score-meta">
+            <% 
+                const issueCount = (analysis.criticalIssues?.length || 0) 
+                    + (analysis.missingKeywords?.length || 0);
+            %>
+            <div class="issues-count">
+                <%= issueCount %> Issues Found
+            </div>
+
+            <% 
+                let status = "Needs Work";
+                if (analysis.atsScore >= 80) status = "Strong";
+                else if (analysis.atsScore >= 60) status = "Moderate";
+            %>
+
+            <div class="score-status <%= status.toLowerCase().replace(" ", "-") %>">
+                <%= status %>
+            </div>
+        </div>
+    </div>
+
+    <% if (analysis.jdMatchScore !== undefined && analysis.jdMatchScore !== null) { %>
+        <div class="jd-score">
+            JD Match Score: <strong><%= analysis.jdMatchScore %>/100</strong>
+        </div>
+    <% } %>
+
+</div>
+<!-- ================= BREAKDOWN ================= -->
+<% if (analysis.breakdown) { %>
+<div class="card">
+    <h3>Score Breakdown</h3>
+    <ul>
+        <% Object.keys(analysis.breakdown).forEach(key => { %>
+            <li>
+                <strong><%= key %></strong>: <%= analysis.breakdown[key] %>
+            </li>
+        <% }) %>
+    </ul>
+</div>
+<% } %>
+
+<!-- ================= CRITICAL ISSUES ================= -->
+<% if (analysis.criticalIssues && analysis.criticalIssues.length > 0) { %>
+<div class="card">
+    <h3>Critical Issues</h3>
+    <ul>
+        <% analysis.criticalIssues.forEach(issue => { %>
+            <li><%= issue %></li>
+        <% }) %>
+    </ul>
+</div>
+<% } %>
+
+<!-- ================= KEYWORDS ================= -->
+<% if (analysis.missingKeywords && analysis.missingKeywords.length > 0) { %>
+<div class="card">
+    <h3>Missing Keywords</h3>
+    <% analysis.missingKeywords.forEach(keyword => { %>
+        <span class="badge red"><%= keyword %></span>
+    <% }) %>
+</div>
+<% } %>
+
+<% if (analysis.matchedSkills && analysis.matchedSkills.length > 0) { %>
+<div class="card">
+    <h3>Matched Skills</h3>
+    <% analysis.matchedSkills.forEach(skill => { %>
+        <span class="badge green"><%= skill %></span>
+    <% }) %>
+</div>
+<% } %>
+
+<% if (analysis.missingSkills && analysis.missingSkills.length > 0) { %>
+<div class="card">
+    <h3>Missing Skills (From JD)</h3>
+    <% analysis.missingSkills.forEach(skill => { %>
+        <span class="badge red"><%= skill %></span>
+    <% }) %>
+</div>
+<% } %>
+
+<!-- ================= IMPROVEMENTS ================= -->
+<% if (analysis.improvementSuggestions && analysis.improvementSuggestions.length > 0) { %>
+<div class="card">
+    <h3>Improvement Suggestions</h3>
+    <ul>
+        <% analysis.improvementSuggestions.forEach(s => { %>
+            <li><%= s %></li>
+        <% }) %>
+    </ul>
+</div>
+<% } %>
+
+<!-- ================= JD TAILORING ================= -->
+<% if (analysis.tailoringSuggestions && analysis.tailoringSuggestions.length > 0) { %>
+<div class="card">
+    <h3>JD Tailoring Suggestions</h3>
+    <ul>
+        <% analysis.tailoringSuggestions.forEach(s => { %>
+            <li><%= s %></li>
+        <% }) %>
+    </ul>
+</div>
+<% } %>
+
+<!-- ================= REWRITE ================= -->
+<% if (analysis.rewriteExamples && analysis.rewriteExamples.length > 0) { %>
+<div class="card">
+    <h3>Rewrite Suggestions</h3>
+    <% analysis.rewriteExamples.forEach(r => { %>
+        <div class="rewrite-box">
+            <strong>Original:</strong>
+            <p><%= r.original %></p>
+            <strong>Improved:</strong>
+            <p><%= r.improved %></p>
+        </div>
+    <% }) %>
+</div>
+<% } %>
+
+<div class="action-link">
+    <a href="/resume">Analyze Another Resume</a>
+</div>
+
+</div>
+
+</body>
+</html>

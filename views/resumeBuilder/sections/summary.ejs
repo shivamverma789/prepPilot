@@ -1,0 +1,22 @@
+
+<h2>Professional Summary</h2>
+
+<form method="POST" action="/builder/${resumeId}/summary">
+
+<textarea name="summary" rows="8"
+style="width:100%; padding:10px; border:1px solid #ccc; border-radius:5px;">
+
+<%
+const summarySection = resume.sections.find(
+  s => s.title === "Summary"
+)
+%>
+<%= summarySection?.data || "" %>
+
+</textarea>
+
+<br><br>
+
+<button type="submit">Save Summary</button>
+
+</form>

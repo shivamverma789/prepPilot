@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Activity Profile Setup</h2>
+
+<form action="/activity/activity-profile" method="POST">
+    
+    <label>LeetCode Username:</label>
+    <input 
+        type="text" 
+        name="leetcodeUsername" 
+        value="<%= userPlatforms?.leetcodeUsername || '' %>" 
+        required 
+    />
+
+    <br><br>
+
+    <label>GitHub Username:</label>
+    <input 
+        type="text" 
+        name="githubUsername" 
+        value="<%= userPlatforms?.githubUsername || '' %>" 
+        required 
+    />
+
+    <br><br>
+
+    <label>Codeforces Handle:</label>
+    <input 
+        type="text" 
+        name="codeforcesHandle" 
+        value="<%= userPlatforms?.codeforcesHandle || '' %>" 
+    />
+
+    <br><br>
+    <label>HackerRank Username:</label>
+    <input 
+        type="text" 
+        name="hackerrankUsername" 
+        value="<%= userPlatforms?.hackerrankUsername || '' %>" 
+    />
+    <br><br>
+    <label>CodeChef Username:</label>
+    <input 
+        type="text" 
+        name="codechefUsername" 
+        value="<%= userPlatforms?.codechefUsername || '' %>" 
+    />
+
+    <br><br>
+
+    <button type="submit">Save Profile</button>
+</form>
+</body>
+</html>

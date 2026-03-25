@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title><%= user.username %></title>
+
+<style>
+body {
+    background:#0d1117;
+    color:#e6edf3;
+    font-family:sans-serif;
+}
+
+.container {
+    max-width:1000px;
+    margin:auto;
+    padding:20px;
+}
+
+.card {
+    background:#161b22;
+    padding:20px;
+    border-radius:10px;
+    margin-bottom:20px;
+}
+
+.big {
+    font-size:28px;
+    font-weight:bold;
+}
+
+.day {
+    width:12px;
+    height:12px;
+    border-radius:2px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2><%= user.username %></h2>
+
+<div class="card">
+    <div class="big"><%= totalSolved %></div>
+    Problems Solved
+</div>
+
+<div class="card">
+    <div>Total Activity: <%= totalActivity %></div>
+    <div>Active Days: <%= activeDays %></div>
+</div>
+
+<div class="card">
+    <h3>Heatmap</h3>
+
+    <div style="display:flex; gap:10px; overflow-x:auto;">
+
+    <% months.forEach(month => { %>
+        <div>
+
+            <small><%= month.name %></small>
+
+            <div style="display:flex; gap:2px;">
+
+            <% month.weeks.forEach(week => { %>
+                <div style="display:flex; flex-direction:column; gap:2px;">
+
+                <% week.forEach(day => { %>
+                    <div class="day"
+                        style="
+                        background:
+                        <%= day.count===0?'#2d333b':
+                        day.count<3?'#0e4429':
+                        day.count<6?'#006d32':
+                        '#39d353' %>;
+                        ">
+                    </div>
+                <% }) %>
+
+                </div>
+            <% }) %>
+
+            </div>
+
+        </div>
+    <% }) %>
+
+    </div>
+
+</div>
+
+</div>
+
+</body>
+</html>

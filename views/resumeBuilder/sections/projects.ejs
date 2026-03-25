@@ -1,0 +1,100 @@
+<h2>Projects</h2>
+
+<form method="POST" action="/builder/${resumeId}/projects">
+
+<input name="title" placeholder="Project Title" required>
+
+<input name="tech" placeholder="Tech Stack (Node, MongoDB, React)">
+
+<button class="btn btn-primary">Add Project</button>
+
+</form>
+
+<hr>
+
+<% const projectSection = resume.sections.find(s => s.title === "Projects") %>
+
+<% projectSection.data.forEach(entry => { %>
+
+<div class="exp-card">
+
+<div class="project-header">
+
+<form
+method="POST"
+action="/builder/${resumeId}/projects/<%= entry._id %>/update"
+class="project-form">
+
+<input name="title"
+value="<%= entry.title %>"
+class="project-title">
+
+<input name="tech"
+value="<%= entry.subtitle %>"
+class="project-tech">
+
+<div class="project-actions">
+
+<button class="btn btn-secondary">Save</button>
+
+</form>
+
+<form
+method="POST"
+action="/builder/${resumeId}/projects/<%= entry._id %>/delete">
+
+<button class="btn-delete">×</button>
+
+</form>
+
+</div>
+
+</div>
+<ul class="bullet-list">
+
+<% entry.bullets.forEach(b => { %>
+
+<li class="bullet-item">
+
+<form
+method="POST"
+action="/builder/${resumeId}/projects/<%= entry._id %>/bullet/<%= b._id %>/update"
+style="display:flex;flex:1;gap:6px">
+
+<input
+name="bullet"
+value="<%= b.text %>"
+class="bullet-input">
+
+<button class="btn btn-secondary">Save</button>
+
+</form>
+
+<form
+method="POST"
+action="/builder/${resumeId}/projects/<%= entry._id %>/bullet/<%= b._id %>/delete">
+
+<button class="btn-delete">×</button>
+
+</form>
+
+</li>
+
+<% }) %>
+
+</ul>
+
+<form method="POST"
+action="/builder/${resumeId}/projects/<%= entry._id %>/bullet">
+
+<input name="bullet" class="bullet-input" placeholder="Add bullet">
+
+<button class="btn btn-primary">Add</button>
+
+</form>
+
+</div>
+
+<hr>
+
+<% }) %>

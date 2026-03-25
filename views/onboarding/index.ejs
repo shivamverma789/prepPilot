@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Onboarding - PrepPilot</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 900px;
+            margin: auto;
+            padding: 30px;
+        }
+
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+        }
+
+        .btn {
+            padding: 10px 18px;
+            border: none;
+            border-radius: 6px;
+            background: #4caf50;
+            color: white;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        .btn.secondary {
+            background: #777;
+        }
+
+        .skill-card {
+            border: 1px solid #ddd;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Complete Your Profile</h1>
+<p>Step <span id="stepNumber">1</span> of 3</p>
+
+<form action="/onboarding" method="POST">
+
+    <!-- STEP 1: Career Targeting -->
+    <div class="step active" id="step-1">
+    <h2>Career Goals (What role are you targeting?)</h2>
+
+    <!-- Goal Input -->
+    <input 
+        type="text" 
+        id="goalInput" 
+        placeholder="Type a goal (e.g. SDE, Frontend Developer, AI Engineer)" 
+        autocomplete="off"
+        style="width:100%; padding:10px; margin-bottom:10px;"
+    />
+
+    <!-- Suggestions Dropdown -->
+    <div id="goalSuggestions" 
+         style="border:1px solid #ccc; border-radius:6px; display:none; max-height:150px; overflow-y:auto;">
+    </div>
+
+    <!-- Added Goals Container -->
+    <h3>Selected Goals</h3>
+    <div id="goalsContainer"></div>
+
+    <!-- Hidden JSON field -->
+    <input type="hidden" name="goalsJson" id="goalsJson" />
+
+    <br>
+    <label>Target Company Type</label><br>
+    <select name="targetCompanyType">
+        <option value="product">Product-Based</option>
+        <option value="service">Service-Based</option>
+        <option value="startup">Startup</option>
+        <option value="faang">FAANG-Level</option>
+    </select>
+
+    <br>
+    <button type="button" class="btn" onclick="nextStep()">Next</button>
+</div>
+
+
+    <!-- STEP 2: Academic Context -->
+    <div class="step" id="step-2">
+        <h2>Academic Details</h2>
+
+        <label>Year</label><br>
+        <select name="year" required>
+            <option value="">Select Year</option>
+            <option value="1st">1st Year</option>
+            <option value="2nd">2nd Year</option>
+            <option value="3rd">3rd Year</option>
+            <option value="4th">4th Year</option>
+        </select>
+
+        <br><br>
+        <label>Degree</label><br>
+        <input type="text" name="degree" placeholder="B.Tech" required>
+
+        <br><br>
+        <label>Branch</label><br>
+        <input type="text" name="branch" placeholder="Computer Science">
+
+        <br><br>
+        <label>University</label><br>
+        <input type="text" name="university" placeholder="Medicaps">
+
+        <br>
+        <button type="button" class="btn secondary" onclick="prevStep()">Back</button>
+        <button type="button" class="btn" onclick="nextStep()">Next</button>
+    </div>
+
+    <!-- STEP 3: Skill Profiling (CRITICAL) -->
+    <div class="step" id="step-3">
+    <h2>Skill Profiling (Add Your Technical Skills)</h2>
+
+    <!-- Skill Input -->
+    <input 
+        type="text" 
+        id="skillInput" 
+        placeholder="Type a skill (e.g. JavaScript, DSA, React)" 
+        autocomplete="off"
+        style="width:100%; padding:10px; margin-bottom:10px;"
+    />
+
+    <!-- Suggestions Dropdown -->
+    <div id="suggestions" 
+         style="border:1px solid #ccc; border-radius:6px; display:none; max-height:150px; overflow-y:auto;">
+    </div>
+
+    <!-- Added Skills Container -->
+    <h3>Added Skills</h3>
+    <div id="skillsContainer"></div>
+
+    <!-- Hidden JSON field for backend -->
+    <input type="hidden" name="skillsJson" id="skillsJson" />
+
+    <button type="button" class="btn secondary" onclick="prevStep()">Back</button>
+    <button type="button" class="btn" onclick="nextStep()">Next</button>
+</div>
+
+<!-- STEP 4: Experience Intelligence -->
+<div class="step" id="step-4">
+    <h2>Experience & Preparation Level</h2>
+
+    <label><strong>How many projects have you built?</strong></label><br>
+    <select name="projectsCount" required>
+        <option value="0">0 (Beginner)</option>
+        <option value="1-3">1-3 Projects</option>
+        <option value="3+">3+ Projects</option>
+    </select>
+
+    <br><br>
+
+    <label><strong>Do you have any internship experience?</strong></label><br>
+    <select name="internshipExperience" required>
+        <option value="false">No</option>
+        <option value="true">Yes</option>
+    </select>
+
+    <br><br>
+
+    <label><strong>Is your resume ready?</strong></label><br>
+    <select name="resumeReady" required>
+        <option value="false">No</option>
+        <option value="true">Yes</option>
+    </select>
+
+    <br><br>
+
+    <label><strong>How many hours can you study daily?</strong></label><br>
+    <select name="dailyStudyHours" required>
+        <option value="<1">Less than 1 hour</option>
+        <option value="1-3">1-3 hours</option>
+        <option value="3-5">3-5 hours</option>
+        <option value="5+">5+ hours</option>
+    </select>
+
+    <br><br>
+    <button type="button" class="btn secondary" onclick="prevStep()">Back</button>
+    <button type="submit" class="btn">Finish & Complete Profile</button>
+</div>
+
+
+</form>
+
+<script>
+let currentStep = 1;
+const totalSteps = 4;
+
+function showStep(step) {
+    document.querySelectorAll(".step").forEach(s => s.classList.remove("active"));
+    document.getElementById("step-" + step).classList.add("active");
+    document.getElementById("stepNumber").innerText = step;
+}
+
+function nextStep() {
+    if (currentStep < totalSteps) {
+        currentStep++;
+        showStep(currentStep);
+    }
+}
+
+function prevStep() {
+    if (currentStep > 1) {
+        currentStep--;
+        showStep(currentStep);
+    }
+}
+
+// 🔥 CRITICAL: Only enable skill fields if checkbox is selected
+document.querySelectorAll(".skill-checkbox").forEach((checkbox) => {
+    checkbox.addEventListener("change", function () {
+        const card = this.closest(".skill-card");
+        const inputs = card.querySelectorAll("input[name='skillName'], select, input[type='number']");
+
+        inputs.forEach(input => {
+            input.disabled = !this.checked;
+        });
+    });
+});
+</script>
+<script>
+const TECH_SKILLS = [
+    "C", "C++", "Java", "Python", "JavaScript", "TypeScript",
+    "React", "Next.js", "Node.js", "Express",
+    "MongoDB", "MySQL", "PostgreSQL",
+    "DSA", "OOP", "DBMS", "Operating Systems", "Computer Networks",
+    "Git", "Docker", "AWS", "System Design", "Tailwind CSS"
+];
+
+let addedSkills = [];
+
+const input = document.getElementById("skillInput");
+const suggestionsBox = document.getElementById("suggestions");
+const container = document.getElementById("skillsContainer");
+const hiddenInput = document.getElementById("skillsJson");
+
+// 🔍 Show suggestions while typing
+input.addEventListener("input", () => {
+    const query = input.value.toLowerCase();
+    suggestionsBox.innerHTML = "";
+
+    if (!query) {
+        suggestionsBox.style.display = "none";
+        return;
+    }
+
+    const filtered = TECH_SKILLS.filter(skill =>
+        skill.toLowerCase().includes(query)
+    );
+
+    if (filtered.length === 0) {
+        suggestionsBox.style.display = "none";
+        return;
+    }
+
+    filtered.forEach(skill => {
+        const div = document.createElement("div");
+        div.textContent = skill;
+        div.style.padding = "8px";
+        div.style.cursor = "pointer";
+        div.onclick = () => addSkill(skill, "core");
+        suggestionsBox.appendChild(div);
+    });
+
+    suggestionsBox.style.display = "block";
+});
+
+// ➕ Add skill on Enter (custom skill support)
+input.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+        e.preventDefault();
+        const value = input.value.trim();
+        if (value) {
+            addSkill(value, "custom");
+        }
+    }
+});
+
+function addSkill(skillName, source) {
+    // Prevent duplicates
+    if (addedSkills.find(s => s.name.toLowerCase() === skillName.toLowerCase())) {
+        input.value = "";
+        suggestionsBox.style.display = "none";
+        return;
+    }
+
+    const skillObj = {
+        name: skillName,
+        source: source,
+        level: "beginner",
+        exposure: "heard",
+        confidence: 1
+    };
+
+    addedSkills.push(skillObj);
+    renderSkills();
+
+    input.value = "";
+    suggestionsBox.style.display = "none";
+    updateHiddenInput();
+}
+
+function renderSkills() {
+    container.innerHTML = "";
+
+    addedSkills.forEach((skill, index) => {
+        const card = document.createElement("div");
+        card.style.border = "1px solid #ddd";
+        card.style.padding = "12px";
+        card.style.marginBottom = "10px";
+        card.style.borderRadius = "8px";
+
+        card.innerHTML = `
+            <strong>${skill.name}</strong> (${skill.source})
+            <br/><br/>
+
+            Level:
+            <select onchange="updateSkill(${index}, 'level', this.value)">
+                <option value="beginner">Beginner</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+            </select>
+
+            <br/><br/>
+
+            Exposure:
+            <select onchange="updateSkill(${index}, 'exposure', this.value)">
+                <option value="heard">Heard</option>
+                <option value="learned">Learned</option>
+                <option value="projects">Built Projects</option>
+                <option value="confident">Confident</option>
+            </select>
+
+            <br/><br/>
+
+            Confidence (0-5):
+            <input type="number" min="0" max="5" value="1"
+                   onchange="updateSkill(${index}, 'confidence', this.value)" />
+
+            <br/><br/>
+            <button type="button" onclick="removeSkill(${index})">Remove</button>
+        `;
+
+        container.appendChild(card);
+    });
+}
+
+function updateSkill(index, key, value) {
+    if (key === "confidence") {
+        value = parseInt(value) || 1;
+    }
+    addedSkills[index][key] = value;
+    updateHiddenInput();
+}
+
+function removeSkill(index) {
+    addedSkills.splice(index, 1);
+    renderSkills();
+    updateHiddenInput();
+}
+
+function updateHiddenInput() {
+    hiddenInput.value = JSON.stringify(addedSkills);
+}
+</script>
+<script>
+const TECH_GOALS = [
+    "SDE",
+    "Software Engineer",
+    "Frontend Developer",
+    "Backend Developer",
+    "Full Stack Developer",
+    "AI Engineer",
+    "ML Engineer",
+    "DevOps Engineer",
+    "Cloud Engineer",
+    "Data Scientist"
+];
+
+let addedGoals = [];
+
+const goalInput = document.getElementById("goalInput");
+const goalSuggestions = document.getElementById("goalSuggestions");
+const goalsContainer = document.getElementById("goalsContainer");
+const goalsHiddenInput = document.getElementById("goalsJson");
+
+// Show suggestions
+goalInput.addEventListener("input", () => {
+    const query = goalInput.value.toLowerCase();
+    goalSuggestions.innerHTML = "";
+
+    if (!query) {
+        goalSuggestions.style.display = "none";
+        return;
+    }
+
+    const filtered = TECH_GOALS.filter(goal =>
+        goal.toLowerCase().includes(query)
+    );
+
+    if (filtered.length === 0) {
+        goalSuggestions.style.display = "none";
+        return;
+    }
+
+    filtered.forEach(goal => {
+        const div = document.createElement("div");
+        div.textContent = goal;
+        div.style.padding = "8px";
+        div.style.cursor = "pointer";
+        div.onclick = () => addGoal(goal, "core");
+        goalSuggestions.appendChild(div);
+    });
+
+    goalSuggestions.style.display = "block";
+});
+
+// Add custom goal on Enter
+goalInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+        e.preventDefault();
+        const value = goalInput.value.trim();
+        if (value) {
+            addGoal(value, "custom");
+        }
+    }
+});
+
+function addGoal(goalName, source) {
+    // Prevent duplicates
+    if (addedGoals.find(g => g.name.toLowerCase() === goalName.toLowerCase())) {
+        goalInput.value = "";
+        goalSuggestions.style.display = "none";
+        return;
+    }
+
+    const goalObj = {
+        name: goalName,
+        source: source
+    };
+
+    addedGoals.push(goalObj);
+    renderGoals();
+    updateGoalsHidden();
+
+    goalInput.value = "";
+    goalSuggestions.style.display = "none";
+}
+
+function renderGoals() {
+    goalsContainer.innerHTML = "";
+
+    addedGoals.forEach((goal, index) => {
+        const chip = document.createElement("div");
+        chip.style.display = "inline-block";
+        chip.style.padding = "6px 10px";
+        chip.style.margin = "5px";
+        chip.style.border = "1px solid #ccc";
+        chip.style.borderRadius = "20px";
+        chip.style.background = "#f0f0f0";
+
+        chip.innerHTML = `
+            ${goal.name} (${goal.source})
+            <button type="button" onclick="removeGoal(${index})" style="margin-left:8px;">x</button>
+        `;
+
+        goalsContainer.appendChild(chip);
+    });
+}
+
+function removeGoal(index) {
+    addedGoals.splice(index, 1);
+    renderGoals();
+    updateGoalsHidden();
+}
+
+function updateGoalsHidden() {
+    goalsHiddenInput.value = JSON.stringify(addedGoals);
+}
+</script>
+
+</body>
+</html>

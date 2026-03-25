@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Resume Builder</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial, Helvetica, sans-serif;
+background:#f4f6fb;
+
+}
+
+.container{
+display:flex;
+height:100vh;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+width:120px;
+background:#0f172a;
+color:white;
+padding:20px;
+}
+
+.sidebar h3{
+margin-bottom:20px;
+}
+
+.sidebar ul{
+list-style:none;
+padding:0;
+}
+
+.sidebar li{
+padding:10px;
+cursor:pointer;
+border-radius:6px;
+margin-bottom:5px;
+}
+
+.sidebar li:hover{
+background:#1e293b;
+}
+
+/* EDITOR PANEL */
+
+.editor{
+width:420px;
+background:white;
+padding:25px;
+border-right:1px solid #ddd;
+overflow-y:auto;
+}
+
+.editor h2{
+margin-top:0;
+}
+
+/* PREVIEW PANEL */
+
+.preview{
+flex:1;
+display:flex;
+flex-direction:column;
+align-items:center;
+padding:20px;
+overflow:auto;
+background:#f4f6fb;
+}
+.preview-wrapper{
+display:flex;
+flex-direction:column;
+align-items:center;
+width:100%;
+}
+.preview{
+background:#eef2f7;
+}
+.preview-header{
+width:794px;
+display:flex;
+align-items:center;
+gap:10px;
+margin-bottom:15px;
+}
+
+.mode-badge{
+background:#0ea5e9;
+color:white;
+padding:4px 10px;
+border-radius:12px;
+font-size:12px;
+}
+
+/* A4 PAGE */
+
+#aiReportPanel{
+margin-top:20px;
+padding:15px;
+background:#f8fafc;
+border-radius:8px;
+border:1px solid #e2e8f0;
+font-size:14px;
+}
+
+#aiReportPanel h3{
+margin-top:0;
+}
+
+#aiReportPanel ul{
+padding-left:18px;
+}
+
+.resume-page{
+width:794px;
+min-height:1123px;
+background:white;
+padding:50px;
+box-shadow:0 0 15px rgba(0,0,0,0.1);
+
+transform:scale(0.75);
+transform-origin:top center;
+}
+
+
+input{
+width:100%;
+padding:8px;
+margin-bottom:12px;
+border:1px solid #ccc;
+border-radius:5px;
+}
+
+button{
+background:#2563eb;
+color:white;
+padding:10px 15px;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+/* BUTTON SYSTEM */
+
+.btn{
+padding:6px 10px;
+border:none;
+border-radius:5px;
+font-size:13px;
+cursor:pointer;
+}
+
+.btn-primary{
+background:#2563eb;
+color:white;
+}
+
+.btn-secondary{
+background:#64748b;
+color:white;
+}
+
+.btn-delete{
+width:22px;
+height:22px;
+background:#ef4444;
+color:white;
+font-weight:bold;
+border-radius:4px;
+display:flex;
+align-items:center;
+justify-content:center;
+padding:0;
+font-size:13px;
+}
+
+.btn-delete:hover{
+background:#dc2626;
+}
+/* Skill Cards */
+
+.skill-card{
+border:1px solid #e2e8f0;
+padding:15px;
+border-radius:8px;
+margin-bottom:15px;
+background:#fafafa;
+}
+
+/* Group Header */
+
+.group-header{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:10px;
+}
+
+.group-actions{
+display:flex;
+gap:8px;
+}
+
+/* Inputs */
+
+.group-name{
+width:180px;
+padding:6px;
+font-size:14px;
+}
+
+.group-input{
+width:250px;
+padding:8px;
+margin-right:10px;
+}
+
+.skills-input{
+width:100%;
+padding:8px;
+margin-bottom:8px;
+}
+
+/* Buttons */
+
+.primary-btn{
+background:#2563eb;
+color:white;
+padding:6px 12px;
+border:none;
+border-radius:5px;
+cursor:pointer;
+}
+
+.small-btn{
+background:#64748b;
+color:white;
+padding:5px 10px;
+border:none;
+border-radius:4px;
+cursor:pointer;
+margin-left:5px;
+}
+
+.delete-btn{
+background:#ef4444;
+color:white;
+padding:5px 10px;
+border:none;
+border-radius:4px;
+cursor:pointer;
+}
+
+.exp-card{
+border:1px solid #ddd;
+padding:12px;
+border-radius:6px;
+margin-bottom:15px;
+background:#fafafa;
+}
+
+.exp-add input{
+width:100%;
+padding:7px;
+margin-bottom:8px;
+}
+
+/* EXPERIENCE CARD */
+
+.exp-card{
+border:1px solid #e5e7eb;
+border-radius:8px;
+padding:14px;
+margin-bottom:18px;
+background:white;
+}
+
+/* HEADER */
+
+.exp-header{
+display:flex;
+align-items:center;
+justify-content:space-between;
+margin-bottom:10px;
+}
+
+/* ENTRY INPUT ROW */
+
+.exp-row{
+display:flex;
+gap:8px;
+flex-wrap:wrap;
+margin-bottom:10px;
+}
+
+.exp-row input{
+padding:6px;
+font-size:13px;
+}
+
+/* INPUT WIDTHS */
+
+.exp-role{ width:150px }
+.exp-company{ width:150px }
+.exp-location{ width:120px }
+.exp-date{ width:90px }
+
+/* BULLET LIST */
+
+.bullet-list{
+padding-left:15px;
+margin-top:8px;
+}
+
+.bullet-item{
+display:flex;
+align-items:center;
+gap:6px;
+margin-bottom:6px;
+}
+
+.bullet-input{
+flex:1;
+padding:6px;
+font-size:13px;
+}
+/* PROJECT HEADER */
+
+.project-header{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:10px;
+margin-bottom:10px;
+}
+
+.project-form{
+display:flex;
+align-items:center;
+gap:8px;
+flex:1;
+}
+
+.project-title{
+width:120px;
+padding:6px;
+}
+
+.project-tech{
+width:140px;
+padding:6px;
+}
+
+.project-actions{
+display:flex;
+align-items:center;
+gap:6px;
+}
+
+/* EDUCATION CARD */
+
+.edu-card{
+border:1px solid #e5e7eb;
+padding:14px;
+border-radius:8px;
+margin-bottom:16px;
+background:white;
+}
+
+/* ROWS */
+
+.edu-row{
+display:flex;
+gap:8px;
+margin-bottom:8px;
+}
+
+.edu-input{
+width:100%;
+padding:7px;
+font-size:13px;
+}
+
+/* DATE ROW */
+
+.edu-bottom{
+align-items:center;
+}
+
+.edu-date{
+width:110px;
+padding:6px;
+}
+
+/* MOBILE SUPPORT */
+
+@media(max-width:700px){
+
+.edu-bottom{
+flex-wrap:wrap;
+}
+
+.edu-date{
+width:100%;
+}
+
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<h3>Sections</h3>
+
+<ul>
+
+<li onclick="openSection('basics')">Basics</li>
+
+<li onclick="openSection('summary')">Summary</li>
+
+<li onclick="openSection('skills')">Skills</li>
+
+<li onclick="openSection('experience')">Experience</li>
+
+<li onclick="openSection('projects')">Projects</li>
+
+<li onclick="openSection('education')">Education</li>
+
+<li onclick="openSection('review')">Review</li>
+
+</ul>
+
+</div>
+
+<!-- EDITOR PANEL -->
+
+<div class="editor" id="editorPanel">
+
+<h2>Welcome</h2>
+
+<p>Select a section from the left.</p>
+
+
+
+
+</div>
+
+<!-- PREVIEW PANEL -->
+
+<div class="preview">
+<div class="preview-wrapper">
+
+<div class="preview-header">
+
+<button onclick="showAI()" class="btn btn-secondary">
+Show AI Resume
+</button>
+
+<button onclick="showOriginal()" class="btn btn-secondary">
+Show Original
+</button>
+
+<span id="resumeMode" class="mode-badge">
+Original Resume
+</span>
+
+</div>
+
+
+<div class="resume-page" id="resumePreview">
+
+
+
+<h2><%= resume.basics.fullName || "Your Name" %></h2>
+
+<p>
+
+<%= resume.basics.email || "" %>
+
+<% if(resume.basics.phone){ %>
+ | <%= resume.basics.phone %>
+<% } %>
+
+<% if(resume.basics.location){ %>
+ | <%= resume.basics.location %>
+<% } %>
+
+<% if(resume.basics.links && resume.basics.links.length > 0){ %>
+
+<% resume.basics.links.forEach(link => { %>
+
+ | <a href="<%= link.url %>" target="_blank"><%= link.label %></a>
+
+<% }) %>
+
+<% } %>
+
+</p>
+
+<hr>
+
+<% resume.sections.forEach(section => {
+
+  let isEmpty = false;
+
+  if(section.type === "text"){
+    isEmpty = !section.data || section.data.trim() === "";
+  }
+
+  if(section.type === "grouped-list"){
+    isEmpty = !section.data || section.data.length === 0;
+  }
+
+  if(section.type === "entries"){
+    isEmpty = !section.data || section.data.length === 0;
+  }
+
+  if(isEmpty) return;
+
+%>
+
+<h3><%= section.title %></h3>
+
+<% if(section.type === "text"){ %>
+
+<p><%= section.data || "Empty" %></p>
+
+<% } %>
+
+<% if(section.type === "grouped-list"){ %>
+
+<% section.data.forEach(group => { %>
+
+<p>
+<strong><%= group.group %>:</strong>
+<%= group.items.join(", ") %>
+</p>
+
+<% }) %>
+
+<% } %>
+
+<% if(section.type === "entries"){ %>
+
+<% section.data.forEach(entry => { %>
+
+<p>
+
+<strong><%= entry.title %></strong>
+
+<% if(entry.subtitle){ %>
+ - <%= entry.subtitle %>
+<% } %>
+
+<br>
+
+<em>
+<%= entry.startDate || "" %>
+<% if(entry.endDate){ %>
+ - <%= entry.endDate %>
+<% } %>
+</em>
+
+</p>
+
+<ul>
+
+<% entry.bullets.forEach(b => { %>
+
+<li><%= b.text %></li>
+
+<% }) %>
+
+</ul>
+
+<% }) %>
+
+<% } %>
+
+<hr>
+
+<% }) %>
+
+</div>
+
+</div>
+</div>
+</div>
+
+<script>
+
+const resumeId = "<%= resume._id %>";
+
+const params = new URLSearchParams(window.location.search);
+const section = params.get("section");
+
+if(section){
+  openSection(section);
+}
+
+
+function openSection(section){
+
+if(section === "basics"){
+    document.getElementById("editorPanel").innerHTML = `
+    <%- include("sections/basics",{resume}) %>
+    `;
+}
+else if(section === "summary"){
+    document.getElementById("editorPanel").innerHTML = `
+    <%- include("sections/summary",{resume}) %>
+    `;
+}
+else if(section === "skills"){
+    document.getElementById("editorPanel").innerHTML = `
+    <%- include("sections/skills",{resume}) %>
+    `;
+}
+else if(section === "experience"){
+    document.getElementById("editorPanel").innerHTML = `
+    <%- include("sections/experience",{resume}) %>
+    `;
+}
+else if(section === "projects"){
+    document.getElementById("editorPanel").innerHTML = `
+    <%- include("sections/projects",{resume}) %>
+    `;
+}
+else if(section === "education"){
+    document.getElementById("editorPanel").innerHTML = `
+    <%- include("sections/education",{resume}) %>
+    `;
+}
+else if(section === "review"){
+
+document.getElementById("editorPanel").innerHTML = `
+
+<h2>Resume Review</h2>
+
+<div style="background:#f1f5f9;padding:15px;border-radius:8px;margin-bottom:20px">
+
+<p><strong>Total Sections:</strong> <%= resume.sections.length %></p>
+
+<p><strong>Experience Entries:</strong>
+<%= resume.sections.find(s=>s.title==="Experience").data.length %>
+</p>
+
+<p><strong>Projects:</strong>
+<%= resume.sections.find(s=>s.title==="Projects").data.length %>
+</p>
+
+<p><strong>Education Entries:</strong>
+<%= resume.sections.find(s=>s.title==="Education").data.length %>
+</p>
+
+</div>
+
+<textarea id="jdInput"
+placeholder="Paste Job Description (optional)..."
+style="width:90%;height:30px;margin-bottom:10px;padding:8px;"></textarea>
+
+<button onclick="generateAI()" class="btn btn-primary" style="width:100%">
+Generate AI Resume
+</button>
+
+<div id="aiReportPanel"></div>
+
+<br>
+
+<button onclick="downloadAI()" class="btn btn-secondary" style="width:100%">
+Download AI Resume
+</button>
+
+<br><br>
+
+<a href="/builder/${resumeId}/print">
+<button class="btn btn-secondary" style="width:100%">
+Download Original PDF
+</button>
+</a>
+
+<p style="margin-top:15px;color:#555">
+Tip: Ensure every experience and project bullet describes impact.
+</p>
+
+`;
+
+}
+else{
+
+document.getElementById("editorPanel").innerHTML =
+"<h2>"+section+"</h2><p>Editor coming soon</p>";
+
+}
+
+if(aiResume){
+  renderPreview(aiResume)
+  renderAIReport()
+  document.getElementById("resumeMode").innerText = "AI Optimized Resume"
+}
+
+}
+function renderPreview(resume){
+
+const container = document.getElementById("resumePreview")
+
+let html = ""
+
+let linksHTML = ""
+
+if(resume.basics.links && resume.basics.links.length){
+  linksHTML = resume.basics.links
+    .map(link => ` | <a href="${link.url}" target="_blank">${link.label}</a>`)
+    .join("")
+}
+
+html += `
+<h2>${resume.basics.fullName || "Your Name"}</h2>
+
+<p>
+${resume.basics.email || ""}
+${resume.basics.phone ? " | "+resume.basics.phone : ""}
+${resume.basics.location ? " | "+resume.basics.location : ""}
+${linksHTML}
+</p>
+`
+
+resume.sections.forEach(section=>{
+
+html += `<hr>`
+html += `<h3>${section.title}</h3>`
+
+if(section.type==="text"){
+html += `<p>${section.data || ""}</p>`
+}
+
+if(section.type==="grouped-list"){
+
+section.data.forEach(group=>{
+html += `<p><strong>${group.group}:</strong> ${group.items.join(", ")}</p>`
+})
+
+}
+
+if(section.type==="entries"){
+
+section.data.forEach(entry=>{
+
+html += `<p><strong>${entry.title}</strong>`
+
+if(entry.subtitle){
+html += ` - ${entry.subtitle}`
+}
+
+html += `<br><em>${entry.startDate||""}`
+
+if(entry.endDate){
+html += ` - ${entry.endDate}`
+}
+
+html += `</em></p>`
+
+if(entry.bullets && entry.bullets.length){
+
+html += `<ul>`
+
+entry.bullets.forEach(b=>{
+html += `<li>${b.text}</li>`
+})
+
+html += `</ul>`
+}
+
+})
+
+}
+
+})
+
+container.innerHTML = html
+}
+
+function cleanText(text){
+  return text
+    .replace(/\*\*/g, "")   // remove bold **
+    .replace(/\*/g, "")     // remove *
+    .replace(/`/g, "")      // remove code `
+}
+
+let originalResume = <%- JSON.stringify(resume) %>
+let aiReport = <%- JSON.stringify(resume.aiCache || null) %>
+let aiResume = <%- JSON.stringify(resume.aiCache?.optimizedResume || null) %>
+
+async function generateAI(){
+
+const jd = document.getElementById("jdInput")?.value.trim()
+
+const panel = document.getElementById("aiReportPanel")
+panel.innerHTML = "Improving resume..."
+
+try{
+
+const endpoint = jd
+? `/builder/${resumeId}/ai-enhance-jd`
+: `/builder/${resumeId}/ai-enhance`
+
+const bodyData = jd ? { jd } : {}
+
+const res = await fetch(endpoint, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify(bodyData)
+})
+
+const data = await res.json()
+
+console.log("AI RESPONSE:", data)
+
+if(!res.ok){
+  panel.innerHTML = data.error || "AI failed"
+  return
+}
+
+aiResume = data.optimizedResume
+aiReport = data
+
+renderPreview(aiResume)
+renderAIReport()
+
+document.getElementById("resumeMode").innerText =
+jd ? "JD Tailored Resume" : "AI Optimized Resume"
+
+}catch(err){
+
+console.error("FRONTEND ERROR:", err)
+panel.innerHTML = err.message || "AI failed"
+
+}
+
+}
+
+function renderAIReport(){
+
+if(!aiReport || !aiReport.atsScoreAfter) return
+
+const panel = document.getElementById("aiReportPanel")
+
+if(!panel) return
+
+panel.innerHTML = `
+<h3>AI Resume Report</h3>
+
+<p><strong>ATS Score Before:</strong> ${aiReport.atsScoreBefore}</p>
+<p><strong>ATS Score After:</strong> ${aiReport.atsScoreAfter}</p>
+
+<h4>Missing Skills</h4>
+<ul>
+${(aiReport.missingSkills || []).map(s=>`<li>${s}</li>`).join("")}
+</ul>
+
+<h4>Improvement Notes</h4>
+<ul>
+${(aiReport.improvementNotes || []).map(s=>`<li>${cleanText(s)}</li>`).join("")}
+</ul>
+`
+}
+
+
+
+function downloadAI(){
+    window.open(`/builder/${resumeId}/print?mode=ai`)
+}
+
+
+function showOriginal(){
+
+renderPreview(originalResume)
+
+// const panel = document.getElementById("aiReportPanel")
+// if(panel) panel.innerHTML = ""
+
+document.getElementById("resumeMode").innerText =
+"Original Resume"
+
+}
+
+function showAI(){
+
+    if(!aiResume){
+    alert("AI Resume not available")
+    return
+    }
+
+    renderPreview(aiResume)
+    renderAIReport()
+
+    document.getElementById("resumeMode").innerText =
+    "AI Optimized Resume"
+}
+
+setTimeout(() => {
+  if(aiResume){
+    renderAIReport()
+  }
+}, 100)
+</script>
+
+</body>
+</html>
