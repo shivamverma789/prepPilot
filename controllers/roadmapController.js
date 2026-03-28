@@ -109,7 +109,7 @@ exports.generateRoadmap = async (req, res) => {
 
     } catch (err) {
         console.error("Generate Roadmap Error:", err);
-        res.send("Error generating roadmap");
+        res.status(500).render("error", { message: process.env.NODE_ENV !== "production" ? err.message : null });
     }
 };
 
@@ -135,7 +135,7 @@ exports.getRoadmap = async (req, res) => {
         });
 
     } catch (err) {
-        console.log(err);
-        res.send("Error loading roadmap");
+        console.error("Load Roadmap Error:", err);
+        res.status(500).render("error", { message: process.env.NODE_ENV !== "production" ? err.message : null });
     }
 };

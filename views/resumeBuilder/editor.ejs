@@ -1,920 +1,719 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-
-<title>Resume Builder</title>
-
-<style>
-
-body{
-margin:0;
-font-family:Arial, Helvetica, sans-serif;
-background:#f4f6fb;
-
-}
-
-.container{
-display:flex;
-height:100vh;
-}
-
-/* SIDEBAR */
-
-.sidebar{
-width:120px;
-background:#0f172a;
-color:white;
-padding:20px;
-}
-
-.sidebar h3{
-margin-bottom:20px;
-}
-
-.sidebar ul{
-list-style:none;
-padding:0;
-}
-
-.sidebar li{
-padding:10px;
-cursor:pointer;
-border-radius:6px;
-margin-bottom:5px;
-}
-
-.sidebar li:hover{
-background:#1e293b;
-}
-
-/* EDITOR PANEL */
-
-.editor{
-width:420px;
-background:white;
-padding:25px;
-border-right:1px solid #ddd;
-overflow-y:auto;
-}
-
-.editor h2{
-margin-top:0;
-}
-
-/* PREVIEW PANEL */
-
-.preview{
-flex:1;
-display:flex;
-flex-direction:column;
-align-items:center;
-padding:20px;
-overflow:auto;
-background:#f4f6fb;
-}
-.preview-wrapper{
-display:flex;
-flex-direction:column;
-align-items:center;
-width:100%;
-}
-.preview{
-background:#eef2f7;
-}
-.preview-header{
-width:794px;
-display:flex;
-align-items:center;
-gap:10px;
-margin-bottom:15px;
-}
-
-.mode-badge{
-background:#0ea5e9;
-color:white;
-padding:4px 10px;
-border-radius:12px;
-font-size:12px;
-}
-
-/* A4 PAGE */
-
-#aiReportPanel{
-margin-top:20px;
-padding:15px;
-background:#f8fafc;
-border-radius:8px;
-border:1px solid #e2e8f0;
-font-size:14px;
-}
-
-#aiReportPanel h3{
-margin-top:0;
-}
-
-#aiReportPanel ul{
-padding-left:18px;
-}
-
-.resume-page{
-width:794px;
-min-height:1123px;
-background:white;
-padding:50px;
-box-shadow:0 0 15px rgba(0,0,0,0.1);
-
-transform:scale(0.75);
-transform-origin:top center;
-}
-
-
-input{
-width:100%;
-padding:8px;
-margin-bottom:12px;
-border:1px solid #ccc;
-border-radius:5px;
-}
-
-button{
-background:#2563eb;
-color:white;
-padding:10px 15px;
-border:none;
-border-radius:5px;
-cursor:pointer;
-}
-/* BUTTON SYSTEM */
-
-.btn{
-padding:6px 10px;
-border:none;
-border-radius:5px;
-font-size:13px;
-cursor:pointer;
-}
-
-.btn-primary{
-background:#2563eb;
-color:white;
-}
-
-.btn-secondary{
-background:#64748b;
-color:white;
-}
-
-.btn-delete{
-width:22px;
-height:22px;
-background:#ef4444;
-color:white;
-font-weight:bold;
-border-radius:4px;
-display:flex;
-align-items:center;
-justify-content:center;
-padding:0;
-font-size:13px;
-}
-
-.btn-delete:hover{
-background:#dc2626;
-}
-/* Skill Cards */
-
-.skill-card{
-border:1px solid #e2e8f0;
-padding:15px;
-border-radius:8px;
-margin-bottom:15px;
-background:#fafafa;
-}
-
-/* Group Header */
-
-.group-header{
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:10px;
-}
-
-.group-actions{
-display:flex;
-gap:8px;
-}
-
-/* Inputs */
-
-.group-name{
-width:180px;
-padding:6px;
-font-size:14px;
-}
-
-.group-input{
-width:250px;
-padding:8px;
-margin-right:10px;
-}
-
-.skills-input{
-width:100%;
-padding:8px;
-margin-bottom:8px;
-}
-
-/* Buttons */
-
-.primary-btn{
-background:#2563eb;
-color:white;
-padding:6px 12px;
-border:none;
-border-radius:5px;
-cursor:pointer;
-}
-
-.small-btn{
-background:#64748b;
-color:white;
-padding:5px 10px;
-border:none;
-border-radius:4px;
-cursor:pointer;
-margin-left:5px;
-}
-
-.delete-btn{
-background:#ef4444;
-color:white;
-padding:5px 10px;
-border:none;
-border-radius:4px;
-cursor:pointer;
-}
-
-.exp-card{
-border:1px solid #ddd;
-padding:12px;
-border-radius:6px;
-margin-bottom:15px;
-background:#fafafa;
-}
-
-.exp-add input{
-width:100%;
-padding:7px;
-margin-bottom:8px;
-}
-
-/* EXPERIENCE CARD */
-
-.exp-card{
-border:1px solid #e5e7eb;
-border-radius:8px;
-padding:14px;
-margin-bottom:18px;
-background:white;
-}
-
-/* HEADER */
-
-.exp-header{
-display:flex;
-align-items:center;
-justify-content:space-between;
-margin-bottom:10px;
-}
-
-/* ENTRY INPUT ROW */
-
-.exp-row{
-display:flex;
-gap:8px;
-flex-wrap:wrap;
-margin-bottom:10px;
-}
-
-.exp-row input{
-padding:6px;
-font-size:13px;
-}
-
-/* INPUT WIDTHS */
-
-.exp-role{ width:150px }
-.exp-company{ width:150px }
-.exp-location{ width:120px }
-.exp-date{ width:90px }
-
-/* BULLET LIST */
-
-.bullet-list{
-padding-left:15px;
-margin-top:8px;
-}
-
-.bullet-item{
-display:flex;
-align-items:center;
-gap:6px;
-margin-bottom:6px;
-}
-
-.bullet-input{
-flex:1;
-padding:6px;
-font-size:13px;
-}
-/* PROJECT HEADER */
-
-.project-header{
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:10px;
-margin-bottom:10px;
-}
-
-.project-form{
-display:flex;
-align-items:center;
-gap:8px;
-flex:1;
-}
-
-.project-title{
-width:120px;
-padding:6px;
-}
-
-.project-tech{
-width:140px;
-padding:6px;
-}
-
-.project-actions{
-display:flex;
-align-items:center;
-gap:6px;
-}
-
-/* EDUCATION CARD */
-
-.edu-card{
-border:1px solid #e5e7eb;
-padding:14px;
-border-radius:8px;
-margin-bottom:16px;
-background:white;
-}
-
-/* ROWS */
-
-.edu-row{
-display:flex;
-gap:8px;
-margin-bottom:8px;
-}
-
-.edu-input{
-width:100%;
-padding:7px;
-font-size:13px;
-}
-
-/* DATE ROW */
-
-.edu-bottom{
-align-items:center;
-}
-
-.edu-date{
-width:110px;
-padding:6px;
-}
-
-/* MOBILE SUPPORT */
-
-@media(max-width:700px){
-
-.edu-bottom{
-flex-wrap:wrap;
-}
-
-.edu-date{
-width:100%;
-}
-
-}
-</style>
-
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Resume Editor — PrepPilot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --blue:#2563eb;--blue-dark:#1d4ed8;--blue-mid:#3b82f6;
+      --blue-light:#eff6ff;--blue-pale:#dbeafe;
+      --white:#fff;--gray-50:#f8fafc;--gray-100:#f1f5f9;
+      --gray-200:#e2e8f0;--gray-400:#94a3b8;--gray-500:#64748b;
+      --gray-600:#475569;--gray-700:#334155;--gray-800:#1e293b;--gray-900:#0f172a;
+      --green:#16a34a;--red:#dc2626;
+      --sidebar-w:200px;--editor-w:380px;
+    }
+    body{font-family:'Inter',sans-serif;background:var(--gray-100);color:var(--gray-800);height:100vh;overflow:hidden;display:flex;flex-direction:column}
+
+    /* TOP BAR */
+    .topbar{height:52px;background:var(--gray-900);display:flex;align-items:center;padding:0 16px;gap:12px;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,0.08)}
+    .topbar-brand{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800;color:white;text-decoration:none;letter-spacing:-0.3px}
+    .topbar-brand-icon{width:28px;height:28px;background:linear-gradient(135deg,var(--blue),var(--blue-mid));border-radius:7px;display:flex;align-items:center;justify-content:center}
+    .topbar-divider{width:1px;height:20px;background:rgba(255,255,255,0.15)}
+    .topbar-title{font-size:13px;font-weight:600;color:rgba(255,255,255,0.7);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:200px}
+    .topbar-spacer{flex:1}
+    .topbar-btn{padding:6px 12px;border-radius:7px;font-size:12px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;border:none;text-decoration:none;display:inline-flex;align-items:center;gap:5px;transition:all 0.15s}
+    .topbar-btn-ghost{background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.8);border:1px solid rgba(255,255,255,0.12)}
+    .topbar-btn-ghost:hover{background:rgba(255,255,255,0.15)}
+    .topbar-btn-primary{background:var(--blue);color:white}
+    .topbar-btn-primary:hover{background:var(--blue-dark)}
+    .mode-badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;background:rgba(59,130,246,0.25);color:#93c5fd;white-space:nowrap}
+
+    /* LAYOUT */
+    .workspace{display:flex;flex:1;overflow:hidden}
+
+    /* SECTION SIDEBAR */
+    .section-sidebar{width:var(--sidebar-w);background:var(--gray-900);padding:16px 10px;overflow-y:auto;flex-shrink:0;border-right:1px solid rgba(255,255,255,0.06)}
+    .section-sidebar-title{font-size:10px;font-weight:700;color:rgba(255,255,255,0.35);letter-spacing:1px;text-transform:uppercase;padding:0 8px;margin-bottom:10px}
+    .section-nav-item{display:flex;align-items:center;gap:8px;padding:9px 10px;border-radius:8px;font-size:13px;font-weight:500;color:rgba(255,255,255,0.6);cursor:pointer;transition:all 0.15s;margin-bottom:2px;border:none;background:none;width:100%;text-align:left;font-family:'Inter',sans-serif}
+    .section-nav-item:hover{background:rgba(255,255,255,0.08);color:white}
+    .section-nav-item.active{background:rgba(37,99,235,0.3);color:#93c5fd;font-weight:600}
+    .section-nav-icon{width:26px;height:26px;border-radius:6px;background:rgba(255,255,255,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .section-nav-item.active .section-nav-icon{background:rgba(37,99,235,0.4)}
+
+    /* EDITOR PANEL */
+    .editor-panel{width:var(--editor-w);background:var(--white);border-right:1px solid var(--gray-200);overflow-y:auto;flex-shrink:0;display:flex;flex-direction:column}
+    .editor-panel-header{padding:16px 20px;border-bottom:1px solid var(--gray-100);flex-shrink:0}
+    .editor-panel-title{font-size:15px;font-weight:800;color:var(--gray-900);letter-spacing:-0.3px}
+    .editor-panel-body{padding:16px 20px;flex:1}
+
+    /* SECTION PANELS — all hidden by default */
+    .section-panel{display:none}
+    .section-panel.active{display:block}
+
+    /* PREVIEW PANEL */
+    .preview-panel{flex:1;background:var(--gray-100);overflow:auto;display:flex;flex-direction:column;align-items:center;padding:20px 16px;position:relative}
+
+    /* SCALE WRAPPER — shrinks A4 to fit the panel */
+    .preview-scale-wrap{
+      flex-shrink:0;
+      position:relative;
+    }
+
+    /* A4 RESUME PAGE — always 794px wide, scaled down via transform */
+    .resume-page{
+      width:794px;
+      min-height:1123px;
+      background:white;
+      padding:48px 52px;
+      box-shadow:0 4px 32px rgba(0,0,0,0.15);
+      font-family:'Times New Roman',serif;
+      font-size:11pt;
+      line-height:1.4;
+      color:#111;
+      transform-origin:top left;
+      overflow:hidden;
+      word-wrap:break-word;
+      overflow-wrap:break-word;
+      position:relative;
+    }
+    .resume-page h2{font-size:18pt;font-weight:700;margin-bottom:4px;font-family:'Arial',sans-serif;word-break:break-word}
+    .resume-page .contact-line{font-size:10pt;color:#444;margin-bottom:12px;word-break:break-all}
+    .resume-page .contact-line a{color:#1d4ed8;text-decoration:none}
+    .resume-page hr{border:none;border-top:1.5px solid #111;margin:8px 0}
+    .resume-page h3{font-size:11pt;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;margin:12px 0 6px;font-family:'Arial',sans-serif}
+    .resume-page p{margin-bottom:4px;word-break:break-word}
+    .resume-page ul{padding-left:18px;margin-bottom:6px}
+    .resume-page li{margin-bottom:2px;word-break:break-word}
+
+    /* ── AI GENERATION OVERLAY — sits over the preview panel only ── */
+    .ai-overlay{
+      position:absolute;
+      inset:0;
+      z-index:20;
+      display:none;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      background:rgba(248,250,252,0.96);
+      backdrop-filter:blur(2px);
+      
+    }
+    .ai-overlay.active{ display:flex; }
+
+    .ai-overlay-inner{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:14px;
+      text-align:center;
+    }
+
+    /* Simple dual-ring spinner in brand blue */
+    .ai-spin{
+      width:44px; height:44px;
+      position:relative;
+    }
+    .ai-spin::before,
+    .ai-spin::after{
+      content:'';
+      position:absolute;
+      inset:0;
+      border-radius:50%;
+      border:3px solid transparent;
+    }
+    .ai-spin::before{
+      border-top-color:#2563eb;
+      border-right-color:#dbeafe;
+      animation:aiSpin 0.9s linear infinite;
+    }
+    .ai-spin::after{
+      inset:8px;
+      border-top-color:#3b82f6;
+      animation:aiSpin 0.6s linear infinite reverse;
+    }
+    @keyframes aiSpin{ to{ transform:rotate(360deg); } }
+
+    .ai-overlay-label{
+      font-size:13px;
+      font-weight:600;
+      color:#1e293b;
+      font-family:'Inter',sans-serif;
+    }
+    .ai-overlay-sub{
+      font-size:12px;
+      color:#94a3b8;
+      font-family:'Inter',sans-serif;
+    }
+
+    /* ── WAVE REVEAL — over the preview panel only ── */
+    .wave-reveal{
+      position:absolute;
+      inset:0;
+      z-index:19;
+      pointer-events:none;
+      display:none;
+      overflow:hidden;
+    }
+    .wave-reveal.playing{ display:block; }
+
+    .wave-reveal-fill{
+      position:absolute;
+      left:0; right:0;
+      top:-100%;
+      height:100%;
+      background:linear-gradient(180deg, #eff6ff 0%, #dbeafe 50%, #bfdbfe 100%);
+      animation:waveDown 1.2s cubic-bezier(0.4,0,0.2,1) forwards;
+    }
+    @keyframes waveDown{
+      0%  { top:-100%; }
+      42% { top:0%; }
+      58% { top:0%; }
+      100%{ top:100%; }
+    }
+
+    /* Wavy leading edge */
+    .wave-reveal-edge{
+      position:absolute;
+      left:-4%; right:-4%;
+      height:48px;
+      top:-100%;
+      animation:waveEdgeDown 1.2s cubic-bezier(0.4,0,0.2,1) forwards;
+    }
+    @keyframes waveEdgeDown{
+      0%  { top:-100%; }
+      42% { top:calc(100% - 48px); }
+      58% { top:calc(100% - 48px); }
+      100%{ top:200%; }
+    }
+
+    /* AI REPORT */
+    .ai-report{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:10px;padding:16px;margin-top:16px;font-size:13px}
+    .ai-report h4{font-size:13px;font-weight:700;color:var(--gray-800);margin-bottom:10px}
+    .ai-score-row{display:flex;gap:12px;margin-bottom:12px}
+    .ai-score-item{background:var(--white);border:1px solid var(--gray-200);border-radius:8px;padding:10px 14px;flex:1;text-align:center}
+    .ai-score-val{font-size:20px;font-weight:800;color:var(--blue)}
+    .ai-score-label{font-size:11px;color:var(--gray-400);margin-top:2px}
+    .ai-list{list-style:none;display:flex;flex-direction:column;gap:5px;padding:0}
+    .ai-list li{display:flex;align-items:flex-start;gap:6px;font-size:12px;color:var(--gray-600);line-height:1.4}
+    .ai-list li::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-top:5px}
+
+    /* WELCOME STATE */
+    .welcome-state{display:flex;flex-direction:column;align-items:center;justify-content:center;height:200px;text-align:center;padding:40px;color:var(--gray-400)}
+    .welcome-state p{font-size:13px;margin-top:12px}
+
+    /* REVIEW PANEL STYLES */
+    .review-overview{background:var(--gray-50);border:1px solid var(--gray-200);border-radius:10px;padding:14px;margin-bottom:14px}
+    .review-overview-title{font-size:13px;font-weight:700;color:var(--gray-800);margin-bottom:8px}
+    .review-stat{display:flex;justify-content:space-between;font-size:13px;color:var(--gray-600);padding:4px 0;border-bottom:1px solid var(--gray-100)}
+    .review-stat:last-child{border-bottom:none}
+    .review-stat strong{color:var(--gray-800)}
+    .jd-textarea{width:100%;height:80px;padding:10px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:13px;font-family:'Inter',sans-serif;resize:vertical;outline:none;background:var(--gray-50);color:var(--gray-800);transition:border-color 0.2s}
+    .jd-textarea:focus{border-color:var(--blue);background:var(--white)}
+    .review-btn{width:100%;padding:11px;border:none;border-radius:9px;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:all 0.15s;margin-bottom:8px}
+    .review-btn-primary{background:linear-gradient(135deg,var(--blue),var(--blue-mid));color:white;box-shadow:0 2px 8px rgba(37,99,235,0.25)}
+    .review-btn-primary:hover{transform:translateY(-1px)}
+    .review-btn-secondary{background:var(--gray-100);color:var(--gray-700);border:1.5px solid var(--gray-200)}
+    .review-btn-secondary:hover{border-color:var(--blue);color:var(--blue)}
+
+    /* MOBILE TAB BAR */
+    .mobile-tabs{display:none;height:52px;background:var(--gray-900);flex-shrink:0;position:fixed;bottom:0;left:0;right:0;z-index:50;border-top:1px solid rgba(255,255,255,0.1)}
+    .mobile-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:10px;font-weight:600;color:rgba(255,255,255,0.4);cursor:pointer;border:none;background:none;font-family:'Inter',sans-serif;transition:color 0.15s;padding:6px 0}
+    .mobile-tab.active{color:#93c5fd}
+    .mobile-tab svg{opacity:0.6}
+    .mobile-tab.active svg{opacity:1}
+
+    @media(max-width:1100px){:root{--editor-w:320px}}
+
+    @media(max-width:768px){
+      /* full-page scroll layout */
+      body{overflow:auto;height:auto;min-height:100vh}
+
+      /* topbar stays fixed */
+      .topbar{position:fixed;top:0;left:0;right:0;z-index:100}
+
+      /* workspace fills below topbar, above mobile tabs */
+      .workspace{
+        flex-direction:column;
+        margin-top:52px;   /* topbar height */
+        margin-bottom:52px; /* mobile tabs height */
+        overflow:visible;
+        flex:none;
+        min-height:calc(100vh - 104px);
+      }
+
+      /* section sidebar: compact icon-only horizontal strip */
+      .section-sidebar{
+        width:100%;height:auto;
+        padding:6px 8px;
+        display:flex;flex-direction:row;gap:4px;
+        overflow-x:auto;
+        border-right:none;
+        border-bottom:1px solid rgba(255,255,255,0.08);
+        flex-shrink:0;
+        position:sticky;top:52px;z-index:40;
+      }
+      .section-sidebar::-webkit-scrollbar{display:none}
+      .section-sidebar-title{display:none}
+      .section-nav-item{
+        flex-direction:column;gap:2px;
+        padding:6px 10px;
+        min-width:52px;max-width:64px;
+        font-size:9px;text-align:center;
+        border-radius:8px;margin-bottom:0;flex-shrink:0;
+      }
+      .section-nav-item span:last-child{font-size:9px;line-height:1.2}
+      .section-nav-icon{width:20px;height:20px;margin:0 auto}
+
+      /* editor panel: natural height, full width */
+      .editor-panel{
+        width:100%;border-right:none;
+        border-bottom:1px solid var(--gray-200);
+        overflow:visible;flex-shrink:0;
+      }
+      .editor-panel-body{padding:12px 14px}
+
+      /* preview panel: fixed height so scaling works */
+      .preview-panel{
+        width:100%;
+        height:calc(100vw * 1.414); /* A4 aspect ratio */
+        min-height:400px;
+        max-height:80vh;
+        padding:12px;
+        overflow:hidden;
+        flex-shrink:0;
+      }
+
+      .mobile-tabs{display:flex}
+      .mobile-hide{display:none!important}
+    }
+
+    @media(max-width:480px){
+      .topbar-title,.topbar-btn-ghost,.mode-badge{display:none}
+    }
+  </style>
 </head>
-
 <body>
 
-<div class="container">
-
-<!-- SIDEBAR -->
-
-<div class="sidebar">
-
-<h3>Sections</h3>
-
-<ul>
-
-<li onclick="openSection('basics')">Basics</li>
-
-<li onclick="openSection('summary')">Summary</li>
-
-<li onclick="openSection('skills')">Skills</li>
-
-<li onclick="openSection('experience')">Experience</li>
-
-<li onclick="openSection('projects')">Projects</li>
-
-<li onclick="openSection('education')">Education</li>
-
-<li onclick="openSection('review')">Review</li>
-
-</ul>
-
+<!-- TOP BAR -->
+<div class="topbar">
+  <a href="/builder" class="topbar-brand">
+    <div class="topbar-brand-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    PrepPilot
+  </a>
+  <div class="topbar-divider"></div>
+  <span class="topbar-title"><%= resume.title || 'Untitled Resume' %></span>
+  <div class="topbar-spacer"></div>
+  <span id="resumeMode" class="mode-badge">Original</span>
+  <button class="topbar-btn topbar-btn-ghost" onclick="showOriginal()">Original</button>
+  <button class="topbar-btn topbar-btn-ghost" onclick="showAI()">AI Version</button>
+  <a href="/builder/<%= resume._id %>/print" class="topbar-btn topbar-btn-primary">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Download PDF
+  </a>
 </div>
 
-<!-- EDITOR PANEL -->
-
-<div class="editor" id="editorPanel">
-
-<h2>Welcome</h2>
-
-<p>Select a section from the left.</p>
-
-
-
-
-</div>
-
-<!-- PREVIEW PANEL -->
-
-<div class="preview">
-<div class="preview-wrapper">
-
-<div class="preview-header">
-
-<button onclick="showAI()" class="btn btn-secondary">
-Show AI Resume
-</button>
-
-<button onclick="showOriginal()" class="btn btn-secondary">
-Show Original
-</button>
-
-<span id="resumeMode" class="mode-badge">
-Original Resume
-</span>
-
-</div>
-
-
-<div class="resume-page" id="resumePreview">
-
-
-
-<h2><%= resume.basics.fullName || "Your Name" %></h2>
-
-<p>
-
-<%= resume.basics.email || "" %>
-
-<% if(resume.basics.phone){ %>
- | <%= resume.basics.phone %>
-<% } %>
-
-<% if(resume.basics.location){ %>
- | <%= resume.basics.location %>
-<% } %>
-
-<% if(resume.basics.links && resume.basics.links.length > 0){ %>
-
-<% resume.basics.links.forEach(link => { %>
-
- | <a href="<%= link.url %>" target="_blank"><%= link.label %></a>
-
-<% }) %>
-
-<% } %>
-
-</p>
-
-<hr>
-
-<% resume.sections.forEach(section => {
-
-  let isEmpty = false;
-
-  if(section.type === "text"){
-    isEmpty = !section.data || section.data.trim() === "";
-  }
-
-  if(section.type === "grouped-list"){
-    isEmpty = !section.data || section.data.length === 0;
-  }
-
-  if(section.type === "entries"){
-    isEmpty = !section.data || section.data.length === 0;
-  }
-
-  if(isEmpty) return;
-
-%>
-
-<h3><%= section.title %></h3>
-
-<% if(section.type === "text"){ %>
-
-<p><%= section.data || "Empty" %></p>
-
-<% } %>
-
-<% if(section.type === "grouped-list"){ %>
-
-<% section.data.forEach(group => { %>
-
-<p>
-<strong><%= group.group %>:</strong>
-<%= group.items.join(", ") %>
-</p>
-
-<% }) %>
-
-<% } %>
-
-<% if(section.type === "entries"){ %>
-
-<% section.data.forEach(entry => { %>
-
-<p>
-
-<strong><%= entry.title %></strong>
-
-<% if(entry.subtitle){ %>
- - <%= entry.subtitle %>
-<% } %>
-
-<br>
-
-<em>
-<%= entry.startDate || "" %>
-<% if(entry.endDate){ %>
- - <%= entry.endDate %>
-<% } %>
-</em>
-
-</p>
-
-<ul>
-
-<% entry.bullets.forEach(b => { %>
-
-<li><%= b.text %></li>
-
-<% }) %>
-
-</ul>
-
-<% }) %>
-
-<% } %>
-
-<hr>
-
-<% }) %>
-
-</div>
-
-</div>
-</div>
+<div class="workspace">
+
+  <!-- SECTION SIDEBAR -->
+  <div class="section-sidebar">
+    <div class="section-sidebar-title">Sections</div>
+    <button class="section-nav-item" id="nav-basics" onclick="openSection('basics')">
+      <span class="section-nav-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+      <span>Basics</span>
+    </button>
+    <button class="section-nav-item" id="nav-summary" onclick="openSection('summary')">
+      <span class="section-nav-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="17" y1="10" x2="3" y2="10"/><line x1="21" y1="6" x2="3" y2="6"/><line x1="21" y1="14" x2="3" y2="14"/><line x1="17" y1="18" x2="3" y2="18"/></svg></span>
+      <span>Summary</span>
+    </button>
+    <button class="section-nav-item" id="nav-skills" onclick="openSection('skills')">
+      <span class="section-nav-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg></span>
+      <span>Skills</span>
+    </button>
+    <button class="section-nav-item" id="nav-experience" onclick="openSection('experience')">
+      <span class="section-nav-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></span>
+      <span>Experience</span>
+    </button>
+    <button class="section-nav-item" id="nav-projects" onclick="openSection('projects')">
+      <span class="section-nav-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg></span>
+      <span>Projects</span>
+    </button>
+    <button class="section-nav-item" id="nav-education" onclick="openSection('education')">
+      <span class="section-nav-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></span>
+      <span>Education</span>
+    </button>
+    <button class="section-nav-item" id="nav-review" onclick="openSection('review')">
+      <span class="section-nav-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
+      <span>AI Review</span>
+    </button>
+  </div>
+
+  <!-- EDITOR PANEL -->
+  <div class="editor-panel">
+    <div class="editor-panel-header">
+      <div class="editor-panel-title" id="editorTitle">Select a section</div>
+    </div>
+    <div class="editor-panel-body">
+
+      <!-- WELCOME -->
+      <div class="section-panel active" id="panel-welcome">
+        <div class="welcome-state">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <p>Select a section from the left to start editing</p>
+        </div>
+      </div>
+
+      <!-- BASICS -->
+      <div class="section-panel" id="panel-basics">
+        <%- include('sections/basics', {resume}) %>
+      </div>
+
+      <!-- SUMMARY -->
+      <div class="section-panel" id="panel-summary">
+        <%- include('sections/summary', {resume}) %>
+      </div>
+
+      <!-- SKILLS -->
+      <div class="section-panel" id="panel-skills">
+        <%- include('sections/skills', {resume}) %>
+      </div>
+
+      <!-- EXPERIENCE -->
+      <div class="section-panel" id="panel-experience">
+        <%- include('sections/experience', {resume}) %>
+      </div>
+
+      <!-- PROJECTS -->
+      <div class="section-panel" id="panel-projects">
+        <%- include('sections/projects', {resume}) %>
+      </div>
+
+      <!-- EDUCATION -->
+      <div class="section-panel" id="panel-education">
+        <%- include('sections/education', {resume}) %>
+      </div>
+
+      <!-- AI REVIEW -->
+      <div class="section-panel" id="panel-review">
+        <% const expSection = resume.sections.find(s => s.title === 'Experience'); %>
+        <% const projSection = resume.sections.find(s => s.title === 'Projects'); %>
+        <% const eduSection  = resume.sections.find(s => s.title === 'Education'); %>
+        <div class="review-overview">
+          <div class="review-overview-title">Resume Overview</div>
+          <div class="review-stat"><span>Experience entries</span><strong><%= expSection?.data?.length || 0 %></strong></div>
+          <div class="review-stat"><span>Projects</span><strong><%= projSection?.data?.length || 0 %></strong></div>
+          <div class="review-stat"><span>Education entries</span><strong><%= eduSection?.data?.length || 0 %></strong></div>
+        </div>
+        <div style="margin-bottom:12px;">
+          <label style="display:block;font-size:12px;font-weight:600;color:var(--gray-600);margin-bottom:6px;">Job Description (optional)</label>
+          <textarea id="jdInput" class="jd-textarea" placeholder="Paste job description for JD-tailored AI enhancement..."></textarea>
+        </div>
+        <button onclick="generateAI()" class="review-btn review-btn-primary">Generate AI Resume</button>
+        <button onclick="downloadAI()" class="review-btn review-btn-secondary">Download AI Resume PDF</button>
+        <a href="/builder/<%= resume._id %>/print" style="display:block">
+          <button class="review-btn review-btn-secondary" style="width:100%">Download Original PDF</button>
+        </a>
+        <div id="aiReportPanel"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PREVIEW PANEL -->
+  <div class="preview-panel" id="previewPanel">
+    <div class="preview-scale-wrap" id="previewScaleWrap">
+      <div class="resume-page" id="resumePreview">
+      <!-- filled by renderPreview() on load -->
+    </div><!-- end resume-page -->
+
+    <!-- Overlay: shown while AI is generating -->
+    <div class="ai-overlay" id="aiOverlay">
+      <div class="ai-overlay-inner">
+        <div class="ai-spin"></div>
+        <div class="ai-overlay-label">Generating AI resume...</div>
+        <div class="ai-overlay-sub">This may take a moment</div>
+      </div>
+    </div>
+
+    <!-- Wave reveal: plays when AI result arrives -->
+    <div class="wave-reveal" id="waveReveal">
+      <div class="wave-reveal-fill">
+        <svg style="position:absolute;bottom:-1px;left:-4%;width:108%;height:48px" viewBox="0 0 1200 48" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0,24 C200,48 400,0 600,24 C800,48 1000,0 1200,24 L1200,48 L0,48 Z" fill="#dbeafe"/>
+        </svg>
+      </div>
+    </div>
+
+    </div><!-- end preview-scale-wrap -->
+  </div><!-- end preview-panel -->
+
+</div><!-- end workspace -->
+
+<!-- MOBILE TAB BAR -->
+<div class="mobile-tabs" id="mobileTabs">
+  <button class="mobile-tab active" id="tab-edit" onclick="mobileTab('edit')">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    Edit
+  </button>
+  <button class="mobile-tab" id="tab-preview" onclick="mobileTab('preview')">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+    Preview
+  </button>
+  <a href="/builder/<%= resume._id %>/print" style="flex:1;text-decoration:none">
+    <button class="mobile-tab" style="width:100%">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      PDF
+    </button>
+  </a>
 </div>
 
 <script>
-
 const resumeId = "<%= resume._id %>";
+let originalResume = <%- JSON.stringify(resume) %>;
+let aiReport = <%- JSON.stringify(resume.aiCache || null) %>;
+let aiResume = <%- JSON.stringify(resume.aiCache?.optimizedResume || null) %>;
 
-const params = new URLSearchParams(window.location.search);
-const section = params.get("section");
+const sectionTitles = {
+  basics:'Basic Info', summary:'Professional Summary', skills:'Skills',
+  experience:'Experience', projects:'Projects', education:'Education', review:'AI Review'
+};
 
-if(section){
-  openSection(section);
+// ── PREVIEW SCALING ──────────────────────────────────────────────
+const PAGE_W = 794;
+const PAGE_H = 1123;
+
+function scalePreview() {
+  const panel = document.getElementById('previewPanel');
+  const wrap  = document.getElementById('previewScaleWrap');
+  const page  = document.getElementById('resumePreview');
+  if (!panel || !wrap || !page) return;
+
+  const availW = panel.clientWidth  - 32; // 16px padding each side
+  const availH = panel.clientHeight - 32;
+
+  // scale to fit width, but never exceed 1
+  const scaleByW = Math.min(availW / PAGE_W, 1);
+  // also try to fit height so full page is visible
+  const scaleByH = Math.min(availH / PAGE_H, 1);
+  const scale = Math.min(scaleByW, scaleByH);
+
+  page.style.transform = `scale(${scale})`;
+  page.style.transformOrigin = 'top left';
+
+  // make the wrapper exactly the scaled size so the panel scrolls correctly
+  wrap.style.width  = Math.round(PAGE_W * scale) + 'px';
+  wrap.style.height = Math.round(PAGE_H * scale) + 'px';
 }
 
+window.addEventListener('resize', scalePreview);
+// run after paint so panel dimensions are known
+requestAnimationFrame(() => { scalePreview(); });
 
-function openSection(section){
+// ── SECTION SWITCHING ────────────────────────────────────────────
+function openSection(name) {
+  document.querySelectorAll('.section-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.section-nav-item').forEach(b => b.classList.remove('active'));
 
-if(section === "basics"){
-    document.getElementById("editorPanel").innerHTML = `
-    <%- include("sections/basics",{resume}) %>
-    `;
-}
-else if(section === "summary"){
-    document.getElementById("editorPanel").innerHTML = `
-    <%- include("sections/summary",{resume}) %>
-    `;
-}
-else if(section === "skills"){
-    document.getElementById("editorPanel").innerHTML = `
-    <%- include("sections/skills",{resume}) %>
-    `;
-}
-else if(section === "experience"){
-    document.getElementById("editorPanel").innerHTML = `
-    <%- include("sections/experience",{resume}) %>
-    `;
-}
-else if(section === "projects"){
-    document.getElementById("editorPanel").innerHTML = `
-    <%- include("sections/projects",{resume}) %>
-    `;
-}
-else if(section === "education"){
-    document.getElementById("editorPanel").innerHTML = `
-    <%- include("sections/education",{resume}) %>
-    `;
-}
-else if(section === "review"){
+  const panel = document.getElementById('panel-' + name);
+  const nav   = document.getElementById('nav-' + name);
+  if (panel) panel.classList.add('active');
+  if (nav)   nav.classList.add('active');
 
-document.getElementById("editorPanel").innerHTML = `
+  document.getElementById('editorTitle').textContent = sectionTitles[name] || name;
 
-<h2>Resume Review</h2>
+  const url = new URL(window.location.href);
+  url.searchParams.set('section', name);
+  window.history.replaceState({}, '', url);
 
-<div style="background:#f1f5f9;padding:15px;border-radius:8px;margin-bottom:20px">
+  if (aiResume) {
+    renderPreview(aiResume);
+    document.getElementById('resumeMode').textContent = 'AI Version';
+  }
 
-<p><strong>Total Sections:</strong> <%= resume.sections.length %></p>
-
-<p><strong>Experience Entries:</strong>
-<%= resume.sections.find(s=>s.title==="Experience").data.length %>
-</p>
-
-<p><strong>Projects:</strong>
-<%= resume.sections.find(s=>s.title==="Projects").data.length %>
-</p>
-
-<p><strong>Education Entries:</strong>
-<%= resume.sections.find(s=>s.title==="Education").data.length %>
-</p>
-
-</div>
-
-<textarea id="jdInput"
-placeholder="Paste Job Description (optional)..."
-style="width:90%;height:30px;margin-bottom:10px;padding:8px;"></textarea>
-
-<button onclick="generateAI()" class="btn btn-primary" style="width:100%">
-Generate AI Resume
-</button>
-
-<div id="aiReportPanel"></div>
-
-<br>
-
-<button onclick="downloadAI()" class="btn btn-secondary" style="width:100%">
-Download AI Resume
-</button>
-
-<br><br>
-
-<a href="/builder/${resumeId}/print">
-<button class="btn btn-secondary" style="width:100%">
-Download Original PDF
-</button>
-</a>
-
-<p style="margin-top:15px;color:#555">
-Tip: Ensure every experience and project bullet describes impact.
-</p>
-
-`;
-
-}
-else{
-
-document.getElementById("editorPanel").innerHTML =
-"<h2>"+section+"</h2><p>Editor coming soon</p>";
-
+  // on mobile, switch to edit tab when a section is selected
+  if (window.innerWidth <= 768) mobileTab('edit');
 }
 
-if(aiResume){
-  renderPreview(aiResume)
-  renderAIReport()
-  document.getElementById("resumeMode").innerText = "AI Optimized Resume"
+// ── MOBILE TABS ──────────────────────────────────────────────────
+function mobileTab(tab) {
+  if (window.innerWidth > 768) return;
+
+  const sidebar     = document.querySelector('.section-sidebar');
+  const editorPanel = document.querySelector('.editor-panel');
+  const previewPanel = document.getElementById('previewPanel');
+
+  document.getElementById('tab-edit').classList.toggle('active', tab === 'edit');
+  document.getElementById('tab-preview').classList.toggle('active', tab === 'preview');
+
+  if (tab === 'edit') {
+    sidebar     && sidebar.classList.remove('mobile-hide');
+    editorPanel && editorPanel.classList.remove('mobile-hide');
+    previewPanel && previewPanel.classList.add('mobile-hide');
+    // scroll to top of editor
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  } else {
+    sidebar     && sidebar.classList.add('mobile-hide');
+    editorPanel && editorPanel.classList.add('mobile-hide');
+    previewPanel && previewPanel.classList.remove('mobile-hide');
+    // give browser a frame to show the panel, then scale
+    requestAnimationFrame(() => {
+      requestAnimationFrame(scalePreview);
+    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
 }
 
-}
-function renderPreview(resume){
+// ── PREVIEW RENDER ───────────────────────────────────────────────
+function renderPreview(resume) {
+  const c = document.getElementById('resumePreview');
+  const linksHTML = (resume.basics.links || [])
+    .filter(l => l.url)
+    .map(l => ` | <a href="${l.url}" target="_blank">${l.label}</a>`)
+    .join('');
 
-const container = document.getElementById("resumePreview")
+  let html = `<h2>${resume.basics.fullName || 'Your Name'}</h2>
+    <div class="contact-line">
+      ${resume.basics.email || ''}
+      ${resume.basics.phone ? ' | ' + resume.basics.phone : ''}
+      ${resume.basics.location ? ' | ' + resume.basics.location : ''}
+      ${linksHTML}
+    </div><hr/>`;
 
-let html = ""
+  (resume.sections || []).forEach(s => {
+    const empty = s.type === 'text'
+      ? (!s.data || !s.data.trim())
+      : (!s.data || !s.data.length);
+    if (empty) return;
 
-let linksHTML = ""
+    html += `<h3>${s.title}</h3>`;
+    if (s.type === 'text') html += `<p>${s.data}</p>`;
+    if (s.type === 'grouped-list') {
+      s.data.forEach(g => { html += `<p><strong>${g.group}:</strong> ${g.items.join(', ')}</p>`; });
+    }
+    if (s.type === 'entries') {
+      s.data.forEach(e => {
+        html += `<p><strong>${e.title}</strong>${e.subtitle ? ' — ' + e.subtitle : ''}<br/>
+          <em>${e.startDate || ''}${e.endDate ? ' – ' + e.endDate : ''}</em></p>`;
+        if (e.bullets && e.bullets.length) {
+          html += `<ul>${e.bullets.map(b => `<li>${b.text}</li>`).join('')}</ul>`;
+        }
+      });
+    }
+    html += `<hr/>`;
+  });
 
-if(resume.basics.links && resume.basics.links.length){
-  linksHTML = resume.basics.links
-    .map(link => ` | <a href="${link.url}" target="_blank">${link.label}</a>`)
-    .join("")
-}
-
-html += `
-<h2>${resume.basics.fullName || "Your Name"}</h2>
-
-<p>
-${resume.basics.email || ""}
-${resume.basics.phone ? " | "+resume.basics.phone : ""}
-${resume.basics.location ? " | "+resume.basics.location : ""}
-${linksHTML}
-</p>
-`
-
-resume.sections.forEach(section=>{
-
-html += `<hr>`
-html += `<h3>${section.title}</h3>`
-
-if(section.type==="text"){
-html += `<p>${section.data || ""}</p>`
-}
-
-if(section.type==="grouped-list"){
-
-section.data.forEach(group=>{
-html += `<p><strong>${group.group}:</strong> ${group.items.join(", ")}</p>`
-})
-
-}
-
-if(section.type==="entries"){
-
-section.data.forEach(entry=>{
-
-html += `<p><strong>${entry.title}</strong>`
-
-if(entry.subtitle){
-html += ` - ${entry.subtitle}`
+  c.innerHTML = html;
+  requestAnimationFrame(scalePreview);
 }
 
-html += `<br><em>${entry.startDate||""}`
-
-if(entry.endDate){
-html += ` - ${entry.endDate}`
+// ── AI ───────────────────────────────────────────────────────────
+function showAIOverlay() {
+  document.getElementById('aiOverlay').classList.add('active');
 }
 
-html += `</em></p>`
-
-if(entry.bullets && entry.bullets.length){
-
-html += `<ul>`
-
-entry.bullets.forEach(b=>{
-html += `<li>${b.text}</li>`
-})
-
-html += `</ul>`
+function hideAIOverlay() {
+  document.getElementById('aiOverlay').classList.remove('active');
 }
 
-})
-
+function playWaveReveal(callback) {
+  const wave = document.getElementById('waveReveal');
+  wave.classList.add('playing');
+  // swap content at midpoint (42% of 1200ms ≈ 500ms)
+  setTimeout(callback, 500);
+  // remove after animation finishes
+  setTimeout(() => wave.classList.remove('playing'), 1200);
 }
 
-})
+async function generateAI() {
+  const jd = document.getElementById('jdInput')?.value.trim();
+  const panel = document.getElementById('aiReportPanel');
+  if (panel) panel.innerHTML = '';
 
-container.innerHTML = html
-}
+  showAIOverlay();
 
-function cleanText(text){
-  return text
-    .replace(/\*\*/g, "")   // remove bold **
-    .replace(/\*/g, "")     // remove *
-    .replace(/`/g, "")      // remove code `
-}
+  try {
+    const endpoint = jd ? `/builder/${resumeId}/ai-enhance-jd` : `/builder/${resumeId}/ai-enhance`;
+    const res = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(jd ? { jd } : {})
+    });
+    const data = await res.json();
 
-let originalResume = <%- JSON.stringify(resume) %>
-let aiReport = <%- JSON.stringify(resume.aiCache || null) %>
-let aiResume = <%- JSON.stringify(resume.aiCache?.optimizedResume || null) %>
+    hideAIOverlay();
 
-async function generateAI(){
-
-const jd = document.getElementById("jdInput")?.value.trim()
-
-const panel = document.getElementById("aiReportPanel")
-panel.innerHTML = "Improving resume..."
-
-try{
-
-const endpoint = jd
-? `/builder/${resumeId}/ai-enhance-jd`
-: `/builder/${resumeId}/ai-enhance`
-
-const bodyData = jd ? { jd } : {}
-
-const res = await fetch(endpoint, {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify(bodyData)
-})
-
-const data = await res.json()
-
-console.log("AI RESPONSE:", data)
-
-if(!res.ok){
-  panel.innerHTML = data.error || "AI failed"
-  return
-}
-
-aiResume = data.optimizedResume
-aiReport = data
-
-renderPreview(aiResume)
-renderAIReport()
-
-document.getElementById("resumeMode").innerText =
-jd ? "JD Tailored Resume" : "AI Optimized Resume"
-
-}catch(err){
-
-console.error("FRONTEND ERROR:", err)
-panel.innerHTML = err.message || "AI failed"
-
-}
-
-}
-
-function renderAIReport(){
-
-if(!aiReport || !aiReport.atsScoreAfter) return
-
-const panel = document.getElementById("aiReportPanel")
-
-if(!panel) return
-
-panel.innerHTML = `
-<h3>AI Resume Report</h3>
-
-<p><strong>ATS Score Before:</strong> ${aiReport.atsScoreBefore}</p>
-<p><strong>ATS Score After:</strong> ${aiReport.atsScoreAfter}</p>
-
-<h4>Missing Skills</h4>
-<ul>
-${(aiReport.missingSkills || []).map(s=>`<li>${s}</li>`).join("")}
-</ul>
-
-<h4>Improvement Notes</h4>
-<ul>
-${(aiReport.improvementNotes || []).map(s=>`<li>${cleanText(s)}</li>`).join("")}
-</ul>
-`
-}
-
-
-
-function downloadAI(){
-    window.open(`/builder/${resumeId}/print?mode=ai`)
-}
-
-
-function showOriginal(){
-
-renderPreview(originalResume)
-
-// const panel = document.getElementById("aiReportPanel")
-// if(panel) panel.innerHTML = ""
-
-document.getElementById("resumeMode").innerText =
-"Original Resume"
-
-}
-
-function showAI(){
-
-    if(!aiResume){
-    alert("AI Resume not available")
-    return
+    if (!res.ok) {
+      if (panel) panel.innerHTML = `<div style="color:var(--red);font-size:13px;padding:10px;background:#fee2e2;border-radius:8px;margin-top:10px;">${data.error || 'AI enhancement failed'}</div>`;
+      return;
     }
 
-    renderPreview(aiResume)
-    renderAIReport()
+    aiResume = data.optimizedResume;
+    aiReport = data;
 
-    document.getElementById("resumeMode").innerText =
-    "AI Optimized Resume"
+    // Wave reveal swaps the content smoothly
+    playWaveReveal(() => {
+      renderPreview(aiResume);
+      document.getElementById('resumeMode').textContent = jd ? 'JD Tailored' : 'AI Optimized';
+    });
+    renderAIReport();
+
+  } catch (err) {
+    hideAIOverlay();
+    if (panel) panel.innerHTML = `<div style="color:var(--red);font-size:13px;padding:10px;background:#fee2e2;border-radius:8px;margin-top:10px;">${err.message}</div>`;
+  }
 }
 
-setTimeout(() => {
-  if(aiResume){
-    renderAIReport()
-  }
-}, 100)
-</script>
+function renderAIReport() {
+  const panel = document.getElementById('aiReportPanel');
+  if (!panel || !aiReport || !aiReport.atsScoreAfter) return;
+  panel.innerHTML = `
+    <div class="ai-report">
+      <h4>AI Report</h4>
+      <div class="ai-score-row">
+        <div class="ai-score-item"><div class="ai-score-val">${aiReport.atsScoreBefore}</div><div class="ai-score-label">Before</div></div>
+        <div class="ai-score-item"><div class="ai-score-val" style="color:var(--green)">${aiReport.atsScoreAfter}</div><div class="ai-score-label">After</div></div>
+      </div>
+      ${aiReport.missingSkills?.length ? `<div style="font-size:12px;font-weight:700;color:var(--gray-700);margin-bottom:6px;">Missing Skills</div><ul class="ai-list">${aiReport.missingSkills.map(s => `<li>${s}</li>`).join('')}</ul>` : ''}
+      ${aiReport.improvementNotes?.length ? `<div style="font-size:12px;font-weight:700;color:var(--gray-700);margin:10px 0 6px;">Improvements</div><ul class="ai-list">${aiReport.improvementNotes.map(n => `<li>${n.replace(/\*\*/g, '')}</li>`).join('')}</ul>` : ''}
+    </div>`;
+}
 
+function showOriginal() {
+  playWaveReveal(() => {
+    renderPreview(originalResume);
+    document.getElementById('resumeMode').textContent = 'Original';
+  });
+}
+function showAI() {
+  if (!aiResume) { alert('Generate AI resume first from the AI Review section.'); return; }
+  playWaveReveal(() => {
+    renderPreview(aiResume);
+    renderAIReport();
+    document.getElementById('resumeMode').textContent = 'AI Version';
+  });
+}
+function downloadAI() { window.open(`/builder/${resumeId}/print?mode=ai`); }
+
+// ── INIT ─────────────────────────────────────────────────────────
+renderPreview(originalResume);
+
+const params = new URLSearchParams(window.location.search);
+const initSection = params.get('section');
+if (initSection) openSection(initSection);
+
+if (aiResume) {
+  renderPreview(aiResume);
+  document.getElementById('resumeMode').textContent = 'AI Version';
+  setTimeout(renderAIReport, 100);
+}
+
+// on mobile, start in edit mode (hide preview panel)
+if (window.innerWidth <= 768) {
+  document.getElementById('previewPanel').classList.add('mobile-hide');
+}
+</script>
 </body>
 </html>

@@ -1,37 +1,56 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Onboarding - PrepPilot</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quick Setup — PrepPilot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--blue:#2563eb;--blue-mid:#3b82f6;--blue-light:#eff6ff;--white:#fff;--gray-50:#f8fafc;--gray-200:#e2e8f0;--gray-400:#94a3b8;--gray-600:#475569;--gray-800:#1e293b;--gray-900:#0f172a}
+    body{font-family:'Inter',sans-serif;background:var(--gray-50);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+    .card{background:var(--white);border-radius:20px;border:1px solid var(--gray-200);padding:40px;width:100%;max-width:480px;box-shadow:0 8px 32px rgba(37,99,235,0.08);animation:fadeUp 0.4s ease both}
+    .brand{display:flex;align-items:center;gap:10px;margin-bottom:28px}
+    .brand-icon{width:36px;height:36px;background:linear-gradient(135deg,var(--blue),var(--blue-mid));border-radius:10px;display:flex;align-items:center;justify-content:center}
+    .brand-name{font-size:18px;font-weight:800;color:var(--gray-900);letter-spacing:-0.4px}
+    h1{font-size:22px;font-weight:800;color:var(--gray-900);margin-bottom:6px;letter-spacing:-0.4px}
+    p{font-size:14px;color:var(--gray-400);margin-bottom:28px;line-height:1.5}
+    .form-group{margin-bottom:18px}
+    label{display:block;font-size:13px;font-weight:600;color:var(--gray-600);margin-bottom:7px}
+    input[type="text"],input[type="number"]{width:100%;padding:11px 14px;border:1.5px solid var(--gray-200);border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;color:var(--gray-800);background:var(--gray-50);outline:none;transition:border-color 0.2s,box-shadow 0.2s}
+    input:focus{border-color:var(--blue);background:var(--white);box-shadow:0 0 0 4px rgba(37,99,235,0.08)}
+    .btn-primary{width:100%;padding:13px;background:linear-gradient(135deg,var(--blue),var(--blue-mid));color:white;border:none;border-radius:10px;font-size:15px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:all 0.15s;box-shadow:0 4px 14px rgba(37,99,235,0.3);margin-top:8px}
+    .btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(37,99,235,0.4)}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  </style>
 </head>
 <body>
-    <h2>Complete Your Profile</h2>
-
-    <form action="/onboarding" method="POST">
-        <div>
-            <label>Current Year (1-4):</label>
-            <input type="number" name="year" required />
-        </div>
-        <br>
-
-        <div>
-            <label>Target Goal (comma separated):</label>
-            <input type="text" name="goal" placeholder="SDE at MNC, Backend Engineer" required />
-        </div>
-        <br>
-
-        <div>
-            <label>Skills (comma separated):</label>
-            <input type="text" name="skills" placeholder="C++, DSA, Node.js" required />
-        </div>
-        <br>
-
-        <div>
-            <label>Degree / Branch:</label>
-            <input type="text" name="degree" placeholder="B.Tech CSE" required />
-        </div>
-        <br>
-
-        <button type="submit">Save & Continue</button>
-    </form>
+<div class="card">
+  <div class="brand">
+    <div class="brand-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <span class="brand-name">PrepPilot</span>
+  </div>
+  <h1>Quick Profile Setup</h1>
+  <p>Just a few details to get you started. You can update everything later from your profile.</p>
+  <form action="/onboarding" method="POST">
+    <div class="form-group">
+      <label>Current Year (1–4)</label>
+      <input type="number" name="year" min="1" max="4" placeholder="e.g. 2" required/>
+    </div>
+    <div class="form-group">
+      <label>Target Goal</label>
+      <input type="text" name="goal" placeholder="e.g. SDE at MNC, Backend Engineer" required/>
+    </div>
+    <div class="form-group">
+      <label>Skills (comma separated)</label>
+      <input type="text" name="skills" placeholder="e.g. C++, DSA, Node.js" required/>
+    </div>
+    <div class="form-group">
+      <label>Degree / Branch</label>
+      <input type="text" name="degree" placeholder="e.g. B.Tech CSE" required/>
+    </div>
+    <button type="submit" class="btn-primary">Save and Continue</button>
+  </form>
+</div>
 </body>
 </html>

@@ -1,100 +1,82 @@
-<h2>Projects</h2>
+<style>
+.sec-input{width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:12px;font-family:'Inter',sans-serif;color:#1e293b;background:#f8fafc;outline:none;transition:border-color 0.2s}
+.sec-input:focus{border-color:#2563eb;background:#fff}
+.sec-label{font-size:12px;font-weight:600;color:#475569;margin-bottom:5px;display:block}
+.add-card{background:#f8fafc;border:1.5px dashed #e2e8f0;border-radius:10px;padding:14px;margin-bottom:16px}
+.add-card-title{font-size:13px;font-weight:700;color:#334155;margin-bottom:10px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.sec-btn{padding:9px 14px;background:linear-gradient(135deg,#2563eb,#3b82f6);color:white;border:none;border-radius:7px;font-size:12px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:all 0.15s}
+.sec-btn:hover{transform:translateY(-1px)}
+.entry-card{background:#fff;border:1.5px solid #e2e8f0;border-radius:10px;padding:14px;margin-bottom:12px}
+.entry-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.entry-title{font-size:13px;font-weight:700;color:#1e293b}
+.entry-sub{font-size:11px;color:#64748b}
+.btn-del{padding:5px 8px;background:transparent;border:1.5px solid #fecaca;border-radius:6px;font-size:11px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;color:#dc2626}
+.btn-del:hover{background:#fee2e2}
+.btn-save{padding:6px 12px;background:#f1f5f9;border:1.5px solid #e2e8f0;border-radius:6px;font-size:11px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;color:#475569}
+.btn-save:hover{border-color:#2563eb;color:#2563eb}
+.bullet-list{margin-top:10px;display:flex;flex-direction:column;gap:6px}
+.bullet-row{display:flex;gap:6px;align-items:center}
+.bullet-input{flex:1;padding:7px 10px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:12px;font-family:'Inter',sans-serif;color:#1e293b;background:#f8fafc;outline:none}
+.bullet-input:focus{border-color:#2563eb;background:#fff}
+.add-bullet-row{display:flex;gap:6px;margin-top:8px}
+.divider{height:1px;background:#f1f5f9;margin:10px 0}
+</style>
 
-<form method="POST" action="/builder/${resumeId}/projects">
+<% const projectSection = resume.sections.find(s => s.title === 'Projects') %>
 
-<input name="title" placeholder="Project Title" required>
-
-<input name="tech" placeholder="Tech Stack (Node, MongoDB, React)">
-
-<button class="btn btn-primary">Add Project</button>
-
-</form>
-
-<hr>
-
-<% const projectSection = resume.sections.find(s => s.title === "Projects") %>
+<div class="add-card">
+  <div class="add-card-title">Add Project</div>
+  <form method="POST" action="/builder/<%= resume._id %>/projects">
+    <div class="grid-2">
+      <div><label class="sec-label">Project Title</label><input name="title" class="sec-input" placeholder="PrepPilot" required/></div>
+      <div><label class="sec-label">Tech Stack</label><input name="tech" class="sec-input" placeholder="Node.js, MongoDB, React"/></div>
+    </div>
+    <button type="submit" class="sec-btn">Add Project</button>
+  </form>
+</div>
 
 <% projectSection.data.forEach(entry => { %>
-
-<div class="exp-card">
-
-<div class="project-header">
-
-<form
-method="POST"
-action="/builder/${resumeId}/projects/<%= entry._id %>/update"
-class="project-form">
-
-<input name="title"
-value="<%= entry.title %>"
-class="project-title">
-
-<input name="tech"
-value="<%= entry.subtitle %>"
-class="project-tech">
-
-<div class="project-actions">
-
-<button class="btn btn-secondary">Save</button>
-
-</form>
-
-<form
-method="POST"
-action="/builder/${resumeId}/projects/<%= entry._id %>/delete">
-
-<button class="btn-delete">×</button>
-
-</form>
-
-</div>
-
-</div>
-<ul class="bullet-list">
-
-<% entry.bullets.forEach(b => { %>
-
-<li class="bullet-item">
-
-<form
-method="POST"
-action="/builder/${resumeId}/projects/<%= entry._id %>/bullet/<%= b._id %>/update"
-style="display:flex;flex:1;gap:6px">
-
-<input
-name="bullet"
-value="<%= b.text %>"
-class="bullet-input">
-
-<button class="btn btn-secondary">Save</button>
-
-</form>
-
-<form
-method="POST"
-action="/builder/${resumeId}/projects/<%= entry._id %>/bullet/<%= b._id %>/delete">
-
-<button class="btn-delete">×</button>
-
-</form>
-
-</li>
-
+  <div class="entry-card">
+    <div class="entry-header">
+      <div>
+        <div class="entry-title"><%= entry.title %></div>
+        <div class="entry-sub"><%= entry.subtitle %></div>
+      </div>
+      <form method="POST" action="/builder/<%= resume._id %>/projects/<%= entry._id %>/delete">
+        <button type="submit" class="btn-del">Delete</button>
+      </form>
+    </div>
+    <form method="POST" action="/builder/<%= resume._id %>/projects/<%= entry._id %>/update">
+      <div class="grid-2">
+        <input name="title" value="<%= entry.title %>" class="sec-input" placeholder="Project Title"/>
+        <input name="tech" value="<%= entry.subtitle %>" class="sec-input" placeholder="Tech Stack"/>
+      </div>
+      <button type="submit" class="btn-save" style="margin-top:6px">Save Changes</button>
+    </form>
+    <div class="divider"></div>
+    <div class="bullet-list">
+      <% entry.bullets.forEach(b => { %>
+        <div class="bullet-row">
+          <form method="POST" action="/builder/<%= resume._id %>/projects/<%= entry._id %>/bullet/<%= b._id %>/update" style="display:flex;flex:1;gap:6px">
+            <input name="bullet" value="<%= b.text %>" class="bullet-input"/>
+            <button type="submit" class="btn-save">Save</button>
+          </form>
+          <form method="POST" action="/builder/<%= resume._id %>/projects/<%= entry._id %>/bullet/<%= b._id %>/delete">
+            <button type="submit" class="btn-del">×</button>
+          </form>
+        </div>
+      <% }) %>
+    </div>
+    <form method="POST" action="/builder/<%= resume._id %>/projects/<%= entry._id %>/bullet">
+      <div class="add-bullet-row">
+        <input name="bullet" class="bullet-input" placeholder="Describe what you built and its impact..."/>
+        <button type="submit" class="sec-btn">Add</button>
+      </div>
+    </form>
+  </div>
 <% }) %>
 
-</ul>
-
-<form method="POST"
-action="/builder/${resumeId}/projects/<%= entry._id %>/bullet">
-
-<input name="bullet" class="bullet-input" placeholder="Add bullet">
-
-<button class="btn btn-primary">Add</button>
-
-</form>
-
-</div>
-
-<hr>
-
-<% }) %>
+<% if (projectSection.data.length === 0) { %>
+  <div style="text-align:center;padding:24px;color:#94a3b8;font-size:13px;background:#f8fafc;border-radius:10px;border:1.5px dashed #e2e8f0;">No projects added yet.</div>
+<% } %>

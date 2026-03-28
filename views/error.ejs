@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Something went wrong — PrepPilot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --blue:#2563eb;--blue-mid:#3b82f6;--blue-light:#eff6ff;--blue-pale:#dbeafe;
+      --white:#fff;--gray-50:#f8fafc;--gray-100:#f1f5f9;--gray-200:#e2e8f0;
+      --gray-400:#94a3b8;--gray-500:#64748b;--gray-700:#334155;--gray-900:#0f172a;
+    }
+    html{scroll-behavior:smooth}
+    body{
+      font-family:'Inter',sans-serif;
+      background:var(--gray-50);
+      min-height:100vh;
+      display:flex;flex-direction:column;
+      align-items:center;justify-content:center;
+      padding:24px;
+      overflow:hidden;
+      position:relative;
+    }
+
+    /* Animated background blobs */
+    .blob{
+      position:fixed;border-radius:50%;filter:blur(80px);
+      opacity:0.12;pointer-events:none;
+      animation:blobFloat ease-in-out infinite;
+    }
+    .blob-1{width:500px;height:500px;background:var(--blue);top:-150px;left:-150px;animation-duration:10s}
+    .blob-2{width:400px;height:400px;background:#818cf8;bottom:-120px;right:-120px;animation-duration:13s;animation-delay:-4s}
+    @keyframes blobFloat{
+      0%,100%{transform:translate(0,0) scale(1)}
+      50%{transform:translate(20px,-20px) scale(1.06)}
+    }
+
+    /* Card */
+    .card{
+      background:var(--white);
+      border-radius:24px;
+      border:1px solid var(--gray-200);
+      box-shadow:0 20px 60px rgba(37,99,235,0.1);
+      padding:52px 48px;
+      max-width:520px;width:100%;
+      text-align:center;
+      position:relative;z-index:1;
+      animation:cardIn 0.5s cubic-bezier(0.16,1,0.3,1) both;
+    }
+    @keyframes cardIn{
+      from{opacity:0;transform:translateY(24px) scale(0.97)}
+      to{opacity:1;transform:translateY(0) scale(1)}
+    }
+
+    /* GIF container */
+    .gif-wrap{
+      width:200px;height:200px;
+      margin:0 auto 28px;
+      border-radius:20px;
+      overflow:hidden;
+      background:var(--blue-light);
+      display:flex;align-items:center;justify-content:center;
+      box-shadow:0 8px 24px rgba(37,99,235,0.15);
+    }
+    .gif-wrap img{
+      width:100%;height:100%;
+      object-fit:cover;
+    }
+
+    /* Status badge */
+    .status-badge{
+      display:inline-flex;align-items:center;gap:6px;
+      background:var(--blue-light);color:var(--blue);
+      padding:5px 14px;border-radius:20px;
+      font-size:12px;font-weight:700;letter-spacing:0.3px;
+      margin-bottom:16px;
+      border:1px solid var(--blue-pale);
+    }
+    .status-dot{
+      width:6px;height:6px;border-radius:50%;
+      background:var(--blue);
+      animation:dotPulse 1.5s ease-in-out infinite;
+    }
+    @keyframes dotPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(1.4)}}
+
+    h1{
+      font-size:28px;font-weight:800;
+      color:var(--gray-900);letter-spacing:-0.5px;
+      margin-bottom:10px;
+    }
+    p{
+      font-size:15px;color:var(--gray-500);
+      line-height:1.65;margin-bottom:32px;
+    }
+
+    /* Buttons */
+    .btn-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+    .btn{
+      padding:12px 24px;border-radius:10px;
+      font-size:14px;font-weight:600;font-family:'Inter',sans-serif;
+      cursor:pointer;border:none;text-decoration:none;
+      display:inline-flex;align-items:center;gap:7px;
+      transition:all 0.15s;
+    }
+    .btn-primary{
+      background:linear-gradient(135deg,var(--blue),var(--blue-mid));
+      color:white;
+      box-shadow:0 4px 14px rgba(37,99,235,0.3);
+    }
+    .btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(37,99,235,0.4)}
+    .btn-ghost{
+      background:transparent;color:var(--gray-700);
+      border:1.5px solid var(--gray-200);
+    }
+    .btn-ghost:hover{background:var(--gray-100);border-color:var(--gray-400)}
+
+    /* Error code */
+    .error-code{
+      margin-top:28px;
+      padding:12px 16px;
+      background:var(--gray-50);
+      border:1px solid var(--gray-200);
+      border-radius:10px;
+      font-size:12px;color:var(--gray-400);
+      font-family:'Courier New',monospace;
+      text-align:left;
+      word-break:break-all;
+      display:<%= typeof message !== 'undefined' && message ? 'block' : 'none' %>;
+    }
+
+    /* Brand */
+    .brand{
+      position:fixed;top:20px;left:24px;
+      display:flex;align-items:center;gap:8px;
+      font-size:16px;font-weight:800;color:var(--gray-900);
+      text-decoration:none;z-index:10;
+    }
+    .brand-icon{
+      width:30px;height:30px;
+      background:linear-gradient(135deg,var(--blue),var(--blue-mid));
+      border-radius:8px;display:flex;align-items:center;justify-content:center;
+    }
+
+    @media(max-width:480px){
+      .card{padding:36px 24px}
+      h1{font-size:22px}
+    }
+  </style>
+</head>
+<body>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+
+<a href="/" class="brand">
+  <div class="brand-icon">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+      <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  PrepPilot
+</a>
+
+<div class="card">
+
+  <div class="gif-wrap">
+    <!-- Under construction / repair GIF from a public CDN -->
+    <img
+      src="https://media.giphy.com/media/3o7TKSjRrfIPjeiVyM/giphy.gif"
+      alt="Under repair"
+      onerror="this.src='https://media.giphy.com/media/xT9IgzoKnwFNmISR8I/giphy.gif'"
+    />
+  </div>
+
+  <div class="status-badge">
+    <span class="status-dot"></span>
+    We're on it
+  </div>
+
+  <h1>Something went wrong</h1>
+  <p>
+    Our team has been notified and is working on a fix.<br/>
+    Try going back or returning to the dashboard.
+  </p>
+
+  <div class="btn-row">
+    <a href="javascript:history.back()" class="btn btn-ghost">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+      </svg>
+      Go Back
+    </a>
+    <a href="/dashboard" class="btn btn-primary">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/>
+        <rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+      </svg>
+      Back to Dashboard
+    </a>
+  </div>
+
+  <% if (typeof message !== 'undefined' && message) { %>
+    <div class="error-code">
+      Error: <%= message %>
+    </div>
+  <% } %>
+
+</div>
+
+</body>
+</html>

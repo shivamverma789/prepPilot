@@ -14,11 +14,10 @@ exports.getSubtopicAssessment = async (req, res) => {
         const { taskId, subtopicId } = req.params;
 
         // 1️⃣ Fetch task & subtopic
-        const task = await Task.findById(taskId);
-        if (!task) return res.send("Task not found");
+        if (!task) return res.status(404).render("error", { message: "Task not found" });
 
         const subtopic = task.subtopics.id(subtopicId);
-        if (!subtopic) return res.send("Subtopic not found");
+        if (!subtopic) return res.status(404).render("error", { message: "Subtopic not found" });
 
         // 2️⃣ Get latest assessment attempt (IMPORTANT)
         let latestAssessment = await Assessment.findOne({
@@ -66,7 +65,7 @@ exports.getSubtopicAssessment = async (req, res) => {
             }));
 
             if (!questions || questions.length === 0) {
-                return res.send("Failed to generate assessment questions");
+                return res.status(500).render("error", { message: "Failed to generate assessment questions. Please try again." });
             }
 
             // 6️⃣ Create NEW assessment attempt (not overwrite old)
@@ -90,7 +89,7 @@ exports.getSubtopicAssessment = async (req, res) => {
 
     } catch (err) {
         console.error("Get Assessment Error:", err);
-        res.send("Error loading assessment");
+        res.status(500).render("error", { message: process.env.NODE_ENV !== "production" ? err.message : null });
     }
 };
 
@@ -108,7 +107,7 @@ exports.submitAssessment = async (req, res) => {
 
         const assessment = await Assessment.findById(assessmentId);
         if (!assessment) {
-            return res.send("Assessment not found");
+            return res.status(404).render("error", { message: "Assessment not found" });
         }
 
         let score = 0;
@@ -204,6 +203,6 @@ exports.submitAssessment = async (req, res) => {
 
     } catch (err) {
         console.error("Submit Assessment Error:", err);
-        res.send("Error submitting assessment");
+        res.status(500).render("error", { message: process.env.NODE_ENV !== "production" ? err.message : null });
     }
 };

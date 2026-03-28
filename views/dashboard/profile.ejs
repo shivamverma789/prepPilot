@@ -1,286 +1,280 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Edit Profile - PrepPilot</title>
-    <style>
-        body { font-family: Arial; max-width: 900px; margin: auto; padding: 30px; }
-        h2 { margin-bottom: 10px; }
-        .section { margin-bottom: 40px; }
-        .suggestions {
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            display: none;
-            max-height: 150px;
-            overflow-y: auto;
-        }
-        .suggestions div {
-            padding: 8px;
-            cursor: pointer;
-        }
-        .suggestions div:hover {
-            background: #f2f2f2;
-        }
-        .card {
-            border: 1px solid #ddd;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-        .btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 6px;
-            background: #4caf50;
-            color: white;
-            cursor: pointer;
-        }
-        .note {
-            background:#e8f5e9;
-            padding:10px;
-            border-radius:6px;
-            margin-bottom:15px;
-        }
-    </style>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Edit Profile — PrepPilot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --blue:#2563eb; --blue-dark:#1d4ed8; --blue-mid:#3b82f6;
+      --blue-light:#eff6ff; --blue-pale:#dbeafe;
+      --white:#fff; --gray-50:#f8fafc; --gray-100:#f1f5f9;
+      --gray-200:#e2e8f0; --gray-300:#cbd5e1; --gray-400:#94a3b8;
+      --gray-500:#64748b; --gray-600:#475569; --gray-700:#334155;
+      --gray-800:#1e293b; --gray-900:#0f172a;
+      --green:#16a34a; --green-light:#dcfce7;
+      --sidebar-w:260px; --navbar-h:64px; --radius:14px;
+      --shadow-sm:0 1px 3px rgba(0,0,0,0.06); --shadow:0 4px 16px rgba(0,0,0,0.07);
+    }
+    body { font-family:'Inter',sans-serif; background:var(--gray-50); color:var(--gray-800); min-height:100vh; }
+    .navbar { position:fixed; top:0; left:0; right:0; height:var(--navbar-h); background:var(--white); border-bottom:1px solid var(--gray-200); display:flex; align-items:center; padding:0 24px; z-index:100; gap:16px; }
+    .nav-brand { display:flex; align-items:center; gap:10px; font-size:18px; font-weight:800; color:var(--gray-900); text-decoration:none; letter-spacing:-0.5px; }
+    .nav-brand-icon { width:36px; height:36px; background:linear-gradient(135deg,var(--blue),var(--blue-mid)); border-radius:10px; display:flex; align-items:center; justify-content:center; }
+    .nav-spacer { flex:1; }
+    .nav-btn { padding:8px 16px; border-radius:8px; font-size:13px; font-weight:600; font-family:'Inter',sans-serif; cursor:pointer; border:none; text-decoration:none; display:inline-flex; align-items:center; gap:6px; transition:all 0.15s; }
+    .nav-btn-ghost { background:transparent; color:var(--gray-600); border:1.5px solid var(--gray-200); }
+    .nav-btn-ghost:hover { background:var(--gray-100); }
+    .hamburger { display:none; background:none; border:none; cursor:pointer; padding:6px; border-radius:8px; color:var(--gray-600); }
+    .sidebar { position:fixed; top:var(--navbar-h); left:0; width:var(--sidebar-w); height:calc(100vh - var(--navbar-h)); background:var(--white); border-right:1px solid var(--gray-200); padding:24px 16px; overflow-y:auto; z-index:90; transition:transform 0.3s cubic-bezier(0.16,1,0.3,1); }
+    .sidebar-section { margin-bottom:28px; }
+    .sidebar-label { font-size:10px; font-weight:700; color:var(--gray-400); letter-spacing:1px; text-transform:uppercase; padding:0 12px; margin-bottom:8px; }
+    .sidebar-link { display:flex; align-items:center; gap:12px; padding:10px 12px; border-radius:10px; font-size:14px; font-weight:500; color:var(--gray-600); text-decoration:none; transition:all 0.15s; margin-bottom:2px; }
+    .sidebar-link:hover { background:var(--gray-100); color:var(--gray-800); }
+    .sidebar-link.active { background:var(--blue-light); color:var(--blue); font-weight:600; }
+    .s-icon { width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; background:var(--gray-100); }
+    .sidebar-link.active .s-icon { background:var(--blue-pale); }
+    .sidebar-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:89; }
+    .main { margin-left:var(--sidebar-w); margin-top:var(--navbar-h); padding:32px; display:flex; justify-content:center; }
+    .content-wrap { width:100%; max-width:720px; }
+    .page-header { margin-bottom:28px; animation:fadeUp 0.4s ease both; }
+    .page-header h1 { font-size:26px; font-weight:800; color:var(--gray-900); letter-spacing:-0.5px; }
+    .page-header p { font-size:14px; color:var(--gray-500); margin-top:4px; }
+    .success-banner { background:var(--green-light); border:1px solid #bbf7d0; border-radius:10px; padding:12px 16px; font-size:14px; font-weight:600; color:var(--green); margin-bottom:20px; display:flex; align-items:center; gap:8px; animation:fadeUp 0.3s ease both; }
+    .card { background:var(--white); border-radius:var(--radius); border:1px solid var(--gray-200); padding:24px; margin-bottom:16px; box-shadow:var(--shadow-sm); animation:fadeUp 0.4s ease both; }
+    .card-title { font-size:15px; font-weight:700; color:var(--gray-800); margin-bottom:18px; display:flex; align-items:center; gap:8px; }
+    .form-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .form-group { display:flex; flex-direction:column; gap:6px; }
+    .form-group label { font-size:13px; font-weight:600; color:var(--gray-600); }
+    .input-field { width:100%; padding:11px 14px; border:1.5px solid var(--gray-200); border-radius:10px; font-size:14px; font-family:'Inter',sans-serif; color:var(--gray-800); background:var(--gray-50); outline:none; transition:border-color 0.2s,box-shadow 0.2s,background 0.2s; }
+    .input-field:focus { border-color:var(--blue); background:var(--white); box-shadow:0 0 0 4px rgba(37,99,235,0.08); }
+    .styled-select { width:100%; padding:11px 14px; border:1.5px solid var(--gray-200); border-radius:10px; font-size:14px; font-family:'Inter',sans-serif; color:var(--gray-800); background:var(--gray-50); outline:none; cursor:pointer; transition:border-color 0.2s; appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; }
+    .styled-select:focus { border-color:var(--blue); }
+    .autocomplete-wrap { position:relative; }
+    .suggestions-dropdown { position:absolute; top:calc(100% + 4px); left:0; right:0; background:var(--white); border:1.5px solid var(--gray-200); border-radius:10px; box-shadow:0 8px 24px rgba(0,0,0,0.1); z-index:50; display:none; max-height:180px; overflow-y:auto; }
+    .suggestion-item { padding:10px 14px; font-size:14px; cursor:pointer; color:var(--gray-700); transition:background 0.1s; }
+    .suggestion-item:hover { background:var(--blue-light); color:var(--blue); }
+    .tags-wrap { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; min-height:20px; }
+    .tag { display:inline-flex; align-items:center; gap:6px; background:var(--blue-light); color:var(--blue-dark); padding:5px 12px; border-radius:20px; font-size:13px; font-weight:600; }
+    .tag.custom { background:#fef3c7; color:#92400e; }
+    .tag-remove { background:none; border:none; cursor:pointer; color:inherit; opacity:0.6; padding:0; line-height:1; font-size:14px; display:flex; align-items:center; }
+    .tag-remove:hover { opacity:1; }
+    .skill-card { display:flex; align-items:center; gap:12px; padding:12px 14px; border:1.5px solid var(--gray-200); border-radius:10px; margin-bottom:8px; background:var(--white); }
+    .skill-card-name { font-size:14px; font-weight:600; color:var(--gray-800); flex:1; }
+    .skill-card-selects { display:flex; gap:8px; flex-wrap:wrap; }
+    .mini-select { padding:5px 10px; border:1.5px solid var(--gray-200); border-radius:8px; font-size:12px; font-family:'Inter',sans-serif; color:var(--gray-700); background:var(--gray-50); outline:none; cursor:pointer; transition:border-color 0.15s; }
+    .mini-select:focus { border-color:var(--blue); }
+    .skill-remove { background:none; border:none; cursor:pointer; color:var(--gray-400); padding:4px; border-radius:6px; display:flex; align-items:center; transition:color 0.15s,background 0.15s; }
+    .skill-remove:hover { color:#dc2626; background:#fee2e2; }
+    .exp-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+    .exp-option { position:relative; }
+    .exp-option input[type="radio"] { position:absolute; opacity:0; width:0; height:0; }
+    .exp-card { padding:10px 14px; border:1.5px solid var(--gray-200); border-radius:10px; cursor:pointer; text-align:center; font-size:13px; font-weight:600; color:var(--gray-600); transition:all 0.15s; }
+    .exp-card:hover { border-color:var(--blue); color:var(--blue); background:var(--blue-light); }
+    .exp-option input:checked + .exp-card { border-color:var(--blue); background:var(--blue-light); color:var(--blue); }
+    .toggle-row { display:flex; gap:8px; }
+    .toggle-opt { position:relative; flex:1; }
+    .toggle-opt input[type="radio"] { position:absolute; opacity:0; width:0; height:0; }
+    .toggle-btn { display:block; padding:10px; border:1.5px solid var(--gray-200); border-radius:10px; cursor:pointer; text-align:center; font-size:13px; font-weight:600; color:var(--gray-600); transition:all 0.15s; }
+    .toggle-btn:hover { border-color:var(--blue); color:var(--blue); background:var(--blue-light); }
+    .toggle-opt input:checked + .toggle-btn { border-color:var(--blue); background:var(--blue-light); color:var(--blue); }
+    .btn-primary { width:100%; padding:13px; background:linear-gradient(135deg,var(--blue),var(--blue-mid)); color:white; border:none; border-radius:10px; font-size:15px; font-weight:700; font-family:'Inter',sans-serif; cursor:pointer; transition:all 0.15s; box-shadow:0 4px 14px rgba(37,99,235,0.3); margin-top:8px; }
+    .btn-primary:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(37,99,235,0.4); }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+    @media(max-width:768px) { .hamburger{display:flex} .sidebar{transform:translateX(-100%)} .sidebar.open{transform:translateX(0);box-shadow:4px 0 24px rgba(0,0,0,0.12)} .sidebar-overlay.open{display:block} .main{margin-left:0;padding:20px 16px} .form-grid-2{grid-template-columns:1fr} }
+  </style>
 </head>
 <body>
 
-<h2>Edit Profile</h2>
+<nav class="navbar">
+  <button class="hamburger" id="hamburgerBtn"><svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="19" y2="6"/><line x1="3" y1="11" x2="19" y2="11"/><line x1="3" y1="16" x2="19" y2="16"/></svg></button>
+  <a href="/dashboard" class="nav-brand">
+    <div class="nav-brand-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    PrepPilot
+  </a>
+  <div class="nav-spacer"></div>
+  <a href="/dashboard" class="nav-btn nav-btn-ghost">Dashboard</a>
+</nav>
 
-<% if (updated) { %>
-    <div class="note">Profile updated successfully.</div>
-<% } %>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-section">
+    <div class="sidebar-label">Main</div>
+    <a href="/dashboard" class="sidebar-link"><span class="s-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span> Dashboard</a>
+    <a href="/roadmap" class="sidebar-link"><span class="s-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg></span> Roadmap</a>
+    <a href="/activity/activity-dashboard" class="sidebar-link"><span class="s-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span> DSA Activity</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Tools</div>
+    <a href="/builder" class="sidebar-link"><span class="s-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span> Resume Builder</a>
+    <a href="/resume" class="sidebar-link"><span class="s-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span> ATS Analyzer</a>
+    <a href="/api/interview/setup" class="sidebar-link"><span class="s-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg></span> AI Interview</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Account</div>
+    <a href="/profile" class="sidebar-link active"><span class="s-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> Profile</a>
+    <a href="/profile/dsa-profiles" class="sidebar-link"><span class="s-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span> DSA Profiles</a>
+    <a href="/logout" class="sidebar-link"><span class="s-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span> Logout</a>
+  </div>
+</aside>
 
-<form action="/profile" method="POST" onsubmit="prepareData()">
+<main class="main">
+  <div class="content-wrap">
+    <div class="page-header">
+      <h1>Edit Profile</h1>
+      <p>Update your goals, skills and experience to keep your roadmap accurate</p>
+    </div>
 
-<!-- ================= GOALS ================= -->
-<div class="section">
-    <h3>Career Goals</h3>
+    <% if (updated) { %>
+      <div class="success-banner">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Profile updated successfully
+      </div>
+    <% } %>
 
-    <input type="text" id="goalInput" placeholder="Type a goal..." autocomplete="off" style="width:100%; padding:8px;">
-    <div id="goalSuggestions" class="suggestions"></div>
+    <form action="/profile" method="POST" onsubmit="prepareData()">
 
-    <div id="goalsContainer"></div>
-    <input type="hidden" name="goalsJson" id="goalsJson">
-</div>
+      <!-- GOALS -->
+      <div class="card">
+        <div class="card-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Career Goals
+        </div>
+        <div class="autocomplete-wrap">
+          <input type="text" id="goalInput" class="input-field" placeholder="Type a goal and press Enter..." autocomplete="off"/>
+          <div class="suggestions-dropdown" id="goalSuggestions"></div>
+        </div>
+        <div class="tags-wrap" id="goalsContainer"></div>
+        <input type="hidden" name="goalsJson" id="goalsJson"/>
+      </div>
 
-<!-- ================= SKILLS ================= -->
-<div class="section">
-    <h3>Skills</h3>
+      <!-- SKILLS -->
+      <div class="card">
+        <div class="card-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          Technical Skills
+        </div>
+        <div class="autocomplete-wrap">
+          <input type="text" id="skillInput" class="input-field" placeholder="Search or type a skill..." autocomplete="off"/>
+          <div class="suggestions-dropdown" id="skillSuggestions"></div>
+        </div>
+        <input type="hidden" name="skillsJson" id="skillsJson"/>
+        <div id="skillsContainer" style="margin-top:12px;"></div>
+      </div>
 
-    <input type="text" id="skillInput" placeholder="Type a skill..." autocomplete="off" style="width:100%; padding:8px;">
-    <div id="skillSuggestions" class="suggestions"></div>
+      <!-- ACADEMIC -->
+      <div class="card">
+        <div class="card-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+          Academic Details
+        </div>
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label>Current Year</label>
+            <select name="year" class="styled-select">
+              <option value="">Select year</option>
+              <option value="1st" <%= (user.academic && user.academic.year==='1st')||user.year==='1st'?'selected':'' %>>1st Year</option>
+              <option value="2nd" <%= (user.academic && user.academic.year==='2nd')||user.year==='2nd'?'selected':'' %>>2nd Year</option>
+              <option value="3rd" <%= (user.academic && user.academic.year==='3rd')||user.year==='3rd'?'selected':'' %>>3rd Year</option>
+              <option value="4th" <%= (user.academic && user.academic.year==='4th')||user.year==='4th'?'selected':'' %>>4th Year</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Degree</label>
+            <input type="text" name="degree" class="input-field" placeholder="e.g. B.Tech" value="<%= (user.academic && user.academic.degree) || user.degree || '' %>"/>
+          </div>
+          <div class="form-group">
+            <label>Branch / Major</label>
+            <input type="text" name="branch" class="input-field" placeholder="e.g. Computer Science" value="<%= (user.academic && user.academic.branch) || '' %>"/>
+          </div>
+          <div class="form-group">
+            <label>University</label>
+            <input type="text" name="university" class="input-field" placeholder="e.g. IIT Delhi" value="<%= (user.academic && user.academic.university) || '' %>"/>
+          </div>
+        </div>
+      </div>
 
-    <div id="skillsContainer"></div>
-    <input type="hidden" name="skillsJson" id="skillsJson">
-</div>
+      <!-- EXPERIENCE -->
+      <div class="card">
+        <div class="card-title">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+          Experience
+        </div>
+        <div style="margin-bottom:18px;">
+          <div class="form-group" style="margin-bottom:14px;"><label>Projects built</label></div>
+          <div class="exp-grid">
+            <label class="exp-option"><input type="radio" name="projectsCount" value="0" <%= user.experience.projectsCount==='0'?'checked':'' %>/><div class="exp-card">0</div></label>
+            <label class="exp-option"><input type="radio" name="projectsCount" value="1-3" <%= user.experience.projectsCount==='1-3'?'checked':'' %>/><div class="exp-card">1 – 3</div></label>
+            <label class="exp-option"><input type="radio" name="projectsCount" value="3+" <%= user.experience.projectsCount==='3+'?'checked':'' %>/><div class="exp-card">3+</div></label>
+          </div>
+        </div>
+        <div style="margin-bottom:18px;">
+          <div class="form-group" style="margin-bottom:14px;"><label>Internship experience</label></div>
+          <div class="toggle-row">
+            <label class="toggle-opt"><input type="radio" name="internshipExperience" value="false" <%= !user.experience.internshipExperience?'checked':'' %>/><span class="toggle-btn">No</span></label>
+            <label class="toggle-opt"><input type="radio" name="internshipExperience" value="true" <%= user.experience.internshipExperience?'checked':'' %>/><span class="toggle-btn">Yes</span></label>
+          </div>
+        </div>
+        <div style="margin-bottom:18px;">
+          <div class="form-group" style="margin-bottom:14px;"><label>Resume ready?</label></div>
+          <div class="toggle-row">
+            <label class="toggle-opt"><input type="radio" name="resumeReady" value="false" <%= !user.experience.resumeReady?'checked':'' %>/><span class="toggle-btn">Not yet</span></label>
+            <label class="toggle-opt"><input type="radio" name="resumeReady" value="true" <%= user.experience.resumeReady?'checked':'' %>/><span class="toggle-btn">Yes</span></label>
+          </div>
+        </div>
+        <div>
+          <div class="form-group" style="margin-bottom:14px;"><label>Daily study hours</label></div>
+          <div class="exp-grid" style="grid-template-columns:repeat(4,1fr);">
+            <label class="exp-option"><input type="radio" name="dailyStudyHours" value="<1" <%= user.experience.dailyStudyHours==='<1'?'checked':'' %>/><div class="exp-card">Less than 1h</div></label>
+            <label class="exp-option"><input type="radio" name="dailyStudyHours" value="1-3" <%= user.experience.dailyStudyHours==='1-3'?'checked':'' %>/><div class="exp-card">1 – 3h</div></label>
+            <label class="exp-option"><input type="radio" name="dailyStudyHours" value="3-5" <%= user.experience.dailyStudyHours==='3-5'?'checked':'' %>/><div class="exp-card">3 – 5h</div></label>
+            <label class="exp-option"><input type="radio" name="dailyStudyHours" value="5+" <%= user.experience.dailyStudyHours==='5+'?'checked':'' %>/><div class="exp-card">5h+</div></label>
+          </div>
+        </div>
+      </div>
 
-<!-- ================= EXPERIENCE ================= -->
-<div class="section">
-    <h3>Experience</h3>
-
-    <label>Projects Built</label><br>
-    <select name="projectsCount">
-        <option value="0" <%= user.experience.projectsCount==="0"?"selected":"" %>>0</option>
-        <option value="1-3" <%= user.experience.projectsCount==="1-3"?"selected":"" %>>1-3</option>
-        <option value="3+" <%= user.experience.projectsCount==="3+"?"selected":"" %>>3+</option>
-    </select>
-
-    <br><br>
-
-    <label>Internship</label><br>
-    <select name="internshipExperience">
-        <option value="true" <%= user.experience.internshipExperience?"selected":"" %>>Yes</option>
-        <option value="false" <%= !user.experience.internshipExperience?"selected":"" %>>No</option>
-    </select>
-
-    <br><br>
-
-    <label>Resume Ready</label><br>
-    <select name="resumeReady">
-        <option value="true" <%= user.experience.resumeReady?"selected":"" %>>Yes</option>
-        <option value="false" <%= !user.experience.resumeReady?"selected":"" %>>No</option>
-    </select>
-
-    <br><br>
-
-    <label>Daily Study Hours</label><br>
-    <select name="dailyStudyHours">
-        <option value="<1" <%= user.experience.dailyStudyHours==="<1"?"selected":"" %>><1</option>
-        <option value="1-3" <%= user.experience.dailyStudyHours==="1-3"?"selected":"" %>>1-3</option>
-        <option value="3-5" <%= user.experience.dailyStudyHours==="3-5"?"selected":"" %>>3-5</option>
-        <option value="5+" <%= user.experience.dailyStudyHours==="5+"?"selected":"" %>>5+</option>
-    </select>
-</div>
-
-<button type="submit" class="btn">Save Changes</button>
-</form>
+      <button type="submit" class="btn-primary">Save Changes</button>
+    </form>
+  </div>
+</main>
 
 <script>
-const TECH_SKILLS = [
-"C","C++","Java","Python","JavaScript","TypeScript",
-"React","Node.js","MongoDB","MySQL","DSA","OOP",
-"DBMS","Operating Systems","Computer Networks",
-"AWS","Docker","System Design","Tailwind CSS",
-];
+  document.getElementById('hamburgerBtn').addEventListener('click', () => { document.getElementById('sidebar').classList.toggle('open'); document.getElementById('sidebarOverlay').classList.toggle('open'); });
+  document.getElementById('sidebarOverlay').addEventListener('click', () => { document.getElementById('sidebar').classList.remove('open'); document.getElementById('sidebarOverlay').classList.remove('open'); });
 
-const TECH_GOALS = [
-"SDE","Software Engineer","Frontend Developer",
-"Backend Developer","Full Stack Developer",
-"AI Engineer","ML Engineer","DevOps Engineer",
-"Cloud Engineer","Data Scientist"
-];
+  const TECH_SKILLS = ["C","C++","Java","Python","JavaScript","TypeScript","React","Next.js","Vue.js","Node.js","Express","MongoDB","MySQL","PostgreSQL","Redis","DSA","OOP","DBMS","Operating Systems","Computer Networks","Git","Docker","Kubernetes","AWS","GCP","System Design","Tailwind CSS","GraphQL","Spring Boot","Django","Flask","Go","Kotlin"];
+  const TECH_GOALS = ["SDE","Software Engineer","Frontend Developer","Backend Developer","Full Stack Developer","AI Engineer","ML Engineer","DevOps Engineer","Cloud Engineer","Data Scientist","Android Developer","iOS Developer"];
 
-let addedSkills = (<%- JSON.stringify(user.skills || []) %>).map(s => ({
-    name: s.name,
-    source: s.source || "core",
-    level: s.level || "beginner",
-    exposure: s.exposure || "heard",
-    confidence: s.confidence ?? 1
-}));
-let addedGoals = [
-    ...<%- JSON.stringify((user.careerGoals||[]).map(g=>({name:g,source:"core"}))) %>,
-    ...<%- JSON.stringify((user.customGoals||[]).map(g=>({name:g,source:"custom"}))) %>
-];
+  let addedSkills = (<%- JSON.stringify(user.skills || []) %>).map(s => ({ name:s.name, source:s.source||'core', level:s.level||'beginner', exposure:s.exposure||'heard', confidence:s.confidence??1 }));
+  let addedGoals = [...<%- JSON.stringify((user.careerGoals||[]).map(g=>({name:g,source:'core'}))) %>,...<%- JSON.stringify((user.customGoals||[]).map(g=>({name:g,source:'custom'}))) %>];
 
-const skillInput = document.getElementById("skillInput");
-const skillSuggestions = document.getElementById("skillSuggestions");
-const skillsContainer = document.getElementById("skillsContainer");
+  // Goals
+  const goalInput = document.getElementById('goalInput');
+  const goalSugg = document.getElementById('goalSuggestions');
+  const goalsContainer = document.getElementById('goalsContainer');
+  goalInput.addEventListener('input', () => { const q=goalInput.value.toLowerCase(); goalSugg.innerHTML=''; if(!q){goalSugg.style.display='none';return;} const f=TECH_GOALS.filter(g=>g.toLowerCase().includes(q)); if(!f.length){goalSugg.style.display='none';return;} f.forEach(g=>{const d=document.createElement('div');d.className='suggestion-item';d.textContent=g;d.onclick=()=>addGoal(g,'core');goalSugg.appendChild(d);}); goalSugg.style.display='block'; });
+  goalInput.addEventListener('keypress', e=>{if(e.key==='Enter'){e.preventDefault();const v=goalInput.value.trim();if(v)addGoal(v,'custom');}});
+  document.addEventListener('click', e=>{if(!goalInput.contains(e.target))goalSugg.style.display='none';});
+  function addGoal(name,source){if(addedGoals.find(g=>g.name.toLowerCase()===name.toLowerCase())){goalInput.value='';goalSugg.style.display='none';return;}addedGoals.push({name,source});renderGoals();goalInput.value='';goalSugg.style.display='none';}
+  function removeGoal(i){addedGoals.splice(i,1);renderGoals();}
+  function renderGoals(){goalsContainer.innerHTML='';addedGoals.forEach((g,i)=>{const t=document.createElement('span');t.className='tag'+(g.source==='custom'?' custom':'');t.innerHTML=`${g.name}<button class="tag-remove" type="button" onclick="removeGoal(${i})"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>`;goalsContainer.appendChild(t);});}
 
-const goalInput = document.getElementById("goalInput");
-const goalSuggestions = document.getElementById("goalSuggestions");
-const goalsContainer = document.getElementById("goalsContainer");
+  // Skills
+  const skillInput = document.getElementById('skillInput');
+  const skillSugg = document.getElementById('skillSuggestions');
+  const skillsContainer = document.getElementById('skillsContainer');
+  skillInput.addEventListener('input', ()=>{const q=skillInput.value.toLowerCase();skillSugg.innerHTML='';if(!q){skillSugg.style.display='none';return;}const f=TECH_SKILLS.filter(s=>s.toLowerCase().includes(q));if(!f.length){skillSugg.style.display='none';return;}f.forEach(s=>{const d=document.createElement('div');d.className='suggestion-item';d.textContent=s;d.onclick=()=>addSkill(s,'core');skillSugg.appendChild(d);});skillSugg.style.display='block';});
+  skillInput.addEventListener('keypress',e=>{if(e.key==='Enter'){e.preventDefault();const v=skillInput.value.trim();if(v)addSkill(v,'custom');}});
+  document.addEventListener('click',e=>{if(!skillInput.contains(e.target))skillSugg.style.display='none';});
+  function addSkill(name,source){if(addedSkills.find(s=>s.name.toLowerCase()===name.toLowerCase())){skillInput.value='';skillSugg.style.display='none';return;}addedSkills.push({name,source,level:'beginner',exposure:'heard',confidence:1});renderSkills();skillInput.value='';skillSugg.style.display='none';}
+  function removeSkill(i){addedSkills.splice(i,1);renderSkills();}
+  function updateSkill(i,key,val){if(key==='confidence')val=parseInt(val)||1;addedSkills[i][key]=val;}
+  function renderSkills(){skillsContainer.innerHTML='';addedSkills.forEach((s,i)=>{const c=document.createElement('div');c.className='skill-card';c.innerHTML=`<div class="skill-card-name">${s.name}</div><div class="skill-card-selects"><select class="mini-select" onchange="updateSkill(${i},'level',this.value)"><option value="beginner" ${s.level==='beginner'?'selected':''}>Beginner</option><option value="intermediate" ${s.level==='intermediate'?'selected':''}>Intermediate</option><option value="advanced" ${s.level==='advanced'?'selected':''}>Advanced</option></select><select class="mini-select" onchange="updateSkill(${i},'exposure',this.value)"><option value="heard" ${s.exposure==='heard'?'selected':''}>Heard of it</option><option value="learned" ${s.exposure==='learned'?'selected':''}>Learned</option><option value="projects" ${s.exposure==='projects'?'selected':''}>Built projects</option><option value="confident" ${s.exposure==='confident'?'selected':''}>Confident</option></select></div><button type="button" class="skill-remove" onclick="removeSkill(${i})"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>`;skillsContainer.appendChild(c);});}
 
-function renderSkills(){
-    skillsContainer.innerHTML="";
-    addedSkills.forEach((s,index)=>{
-        const card=document.createElement("div");
-        card.className="card";
-        card.innerHTML=`
-            <strong>${s.name}</strong>
-            <br>
-            Level:
-            <select onchange="updateSkill(${index},'level',this.value)">
-                <option value="beginner" ${s.level==="beginner"?"selected":""}>Beginner</option>
-                <option value="intermediate" ${s.level==="intermediate"?"selected":""}>Intermediate</option>
-                <option value="advanced" ${s.level==="advanced"?"selected":""}>Advanced</option>
-            </select>
-            Exposure:
-            <select onchange="updateSkill(${index},'exposure',this.value)">
-                <option value="heard" ${s.exposure==="heard"?"selected":""}>Heard</option>
-                <option value="learned" ${s.exposure==="learned"?"selected":""}>Learned</option>
-                <option value="projects" ${s.exposure==="projects"?"selected":""}>Projects</option>
-                <option value="confident" ${s.exposure==="confident"?"selected":""}>Confident</option>
-            </select>
-            Confidence:
-            <input type="number" min="0" max="5" value="${s.confidence}" onchange="updateSkill(${index},'confidence',this.value)">
-            <button type="button" onclick="removeSkill(${index})">Remove</button>
-        `;
-        skillsContainer.appendChild(card);
-    });
-}
+  function prepareData(){document.getElementById('skillsJson').value=JSON.stringify(addedSkills);document.getElementById('goalsJson').value=JSON.stringify(addedGoals);}
 
-function renderGoals(){
-    goalsContainer.innerHTML="";
-    addedGoals.forEach((g,index)=>{
-        const chip=document.createElement("div");
-        chip.className="card";
-        chip.innerHTML=`
-            ${g.name}
-            <button type="button" onclick="removeGoal(${index})">Remove</button>
-        `;
-        goalsContainer.appendChild(chip);
-    });
-}
-
-function updateSkill(index,key,value){
-    if(key==="confidence"){value=parseInt(value)||1;}
-    addedSkills[index][key]=value;
-}
-
-function removeSkill(index){
-    addedSkills.splice(index,1);
-    renderSkills();
-}
-
-function removeGoal(index){
-    addedGoals.splice(index,1);
-    renderGoals();
-}
-
-function prepareData(){
-    document.getElementById("skillsJson").value=JSON.stringify(addedSkills);
-    document.getElementById("goalsJson").value=JSON.stringify(addedGoals);
-}
-
-skillInput.addEventListener("input",()=>{
-    const query=skillInput.value.toLowerCase();
-    skillSuggestions.innerHTML="";
-    if(!query){skillSuggestions.style.display="none";return;}
-    TECH_SKILLS.filter(s=>s.toLowerCase().includes(query))
-        .forEach(skill=>{
-            const div=document.createElement("div");
-            div.textContent=skill;
-            div.onclick=()=>addSkill(skill,"core");
-            skillSuggestions.appendChild(div);
-        });
-    skillSuggestions.style.display="block";
-});
-
-goalInput.addEventListener("input",()=>{
-    const query=goalInput.value.toLowerCase();
-    goalSuggestions.innerHTML="";
-    if(!query){goalSuggestions.style.display="none";return;}
-    TECH_GOALS.filter(g=>g.toLowerCase().includes(query))
-        .forEach(goal=>{
-            const div=document.createElement("div");
-            div.textContent=goal;
-            div.onclick=()=>addGoal(goal,"core");
-            goalSuggestions.appendChild(div);
-        });
-    goalSuggestions.style.display="block";
-});
-
-goalInput.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") {
-        e.preventDefault();
-
-        const value = goalInput.value.trim();
-        if (!value) return;
-
-        addGoal(value, "custom");
-    }
-});
-
-skillInput.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") {
-        e.preventDefault();
-
-        const value = skillInput.value.trim();
-        if (!value) return;
-
-        addSkill(value, "custom");
-    }
-});
-
-function addSkill(name,source){
-    if(addedSkills.find(s=>s.name.toLowerCase()===name.toLowerCase()))return;
-    addedSkills.push({name,source,level:"beginner",exposure:"heard",confidence:1});
-    renderSkills();
-    skillInput.value="";
-    skillSuggestions.style.display="none";
-}
-
-function addGoal(name,source){
-    if(addedGoals.find(g=>g.name.toLowerCase()===name.toLowerCase()))return;
-    addedGoals.push({name,source});
-    renderGoals();
-    goalInput.value="";
-    goalSuggestions.style.display="none";
-}
-
-renderSkills();
-renderGoals();
+  renderSkills(); renderGoals();
 </script>
-
 </body>
 </html>

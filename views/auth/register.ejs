@@ -1,120 +1,169 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Register - PrepPilot</title>
-    <style>
-        body {
-            margin: 0;
-            font-family: "Segoe UI", Arial, sans-serif;
-            background: #f4f6f8;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register — PrepPilot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --blue: #2563eb; --blue-dark: #1d4ed8; --blue-mid: #3b82f6;
+      --white: #fff; --gray-50: #f8fafc; --gray-200: #e2e8f0;
+      --gray-400: #94a3b8; --gray-600: #475569; --gray-800: #1e293b;
+    }
+    body {
+      font-family: 'Inter', sans-serif; background: var(--gray-50);
+      min-height: 100vh; display: flex; align-items: center; justify-content: center;
+      overflow: hidden; position: relative;
+    }
+    .bg-blob { position: fixed; border-radius: 50%; filter: blur(90px); opacity: 0.13; pointer-events: none; z-index: 0; animation: blobFloat 10s ease-in-out infinite; }
+    .bg-blob-1 { width: 520px; height: 520px; background: var(--blue); top: -160px; right: -160px; animation-delay: 0s; }
+    .bg-blob-2 { width: 400px; height: 400px; background: #60a5fa; bottom: -120px; left: -120px; animation-delay: 5s; }
+    @keyframes blobFloat { 0%,100%{transform:translate(0,0) scale(1);} 50%{transform:translate(-20px,20px) scale(1.04);} }
+    .page-wrap {
+      display: flex; width: 100%; max-width: 1000px; min-height: 600px;
+      border-radius: 24px; overflow: hidden;
+      box-shadow: 0 24px 64px rgba(37,99,235,0.13);
+      position: relative; z-index: 1; margin: 20px;
+    }
+    .left-panel {
+      flex: 1; background: linear-gradient(145deg, #1d4ed8 0%, #2563eb 55%, #3b82f6 100%);
+      padding: 60px 48px; display: flex; flex-direction: column; justify-content: center;
+      color: white; position: relative; overflow: hidden;
+    }
+    .left-panel::before { content:''; position:absolute; width:340px; height:340px; border-radius:50%; background:rgba(255,255,255,0.05); top:-100px; right:-100px; }
+    .left-panel::after { content:''; position:absolute; width:220px; height:220px; border-radius:50%; background:rgba(255,255,255,0.05); bottom:-70px; left:-70px; }
+    .brand { display:flex; align-items:center; gap:12px; margin-bottom:48px; }
+    .brand-icon { width:44px; height:44px; background:rgba(255,255,255,0.18); border-radius:12px; display:flex; align-items:center; justify-content:center; }
+    .brand-name { font-size:22px; font-weight:800; letter-spacing:-0.5px; }
+    .left-headline { font-size:34px; font-weight:800; line-height:1.2; margin-bottom:14px; letter-spacing:-0.5px; }
+    .left-sub { font-size:15px; opacity:0.78; line-height:1.65; margin-bottom:40px; }
+    .steps { display:flex; flex-direction:column; gap:22px; }
+    .step { display:flex; align-items:flex-start; gap:14px; }
+    .step-num { width:32px; height:32px; flex-shrink:0; background:rgba(255,255,255,0.18); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; }
+    .step-text strong { display:block; font-size:14px; font-weight:600; }
+    .step-text span { font-size:12px; opacity:0.72; }
+    .right-panel {
+      width: 440px; background: var(--white);
+      padding: 52px 48px; display: flex; flex-direction: column; justify-content: center;
+      animation: slideIn 0.5s cubic-bezier(0.16,1,0.3,1) both;
+    }
+    @keyframes slideIn { from{opacity:0;transform:translateX(28px);} to{opacity:1;transform:translateX(0);} }
+    .form-header { margin-bottom:32px; }
+    .form-header h2 { font-size:26px; font-weight:800; color:var(--gray-800); letter-spacing:-0.5px; margin-bottom:6px; }
+    .form-header p { font-size:14px; color:var(--gray-400); }
+    .form-group { margin-bottom:18px; }
+    label { display:block; font-size:13px; font-weight:600; color:var(--gray-600); margin-bottom:7px; letter-spacing:0.2px; }
+    input[type="email"], input[type="password"], input[type="text"] {
+      width:100%; padding:12px 16px; border:1.5px solid var(--gray-200); border-radius:10px;
+      font-size:14px; font-family:'Inter',sans-serif; color:var(--gray-800); background:var(--gray-50);
+      transition:border-color 0.2s,box-shadow 0.2s,background 0.2s; outline:none;
+    }
+    input:focus { border-color:var(--blue); background:var(--white); box-shadow:0 0 0 4px rgba(37,99,235,0.08); }
+    .btn-primary {
+      width:100%; padding:13px;
+      background:linear-gradient(135deg,var(--blue),var(--blue-mid));
+      color:white; border:none; border-radius:10px;
+      font-size:15px; font-weight:600; font-family:'Inter',sans-serif;
+      cursor:pointer; margin-top:8px;
+      transition:transform 0.15s,box-shadow 0.15s;
+      box-shadow:0 4px 14px rgba(37,99,235,0.32);
+    }
+    .btn-primary:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(37,99,235,0.42); }
+    .terms { font-size:12px; color:var(--gray-400); text-align:center; margin-top:14px; line-height:1.5; }
 
-        .container {
-            width: 400px;
-            background: #ffffff;
-            padding: 35px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            border: 1px solid #e5e7eb;
-        }
+    /* OAuth buttons */
+    .oauth-group { display:flex; flex-direction:column; gap:10px; margin-top:16px; }
+    .btn-oauth {
+      width:100%; padding:11px 16px;
+      border:1.5px solid var(--gray-200); border-radius:10px;
+      background:var(--white); color:var(--gray-800);
+      font-size:14px; font-weight:600; font-family:'Inter',sans-serif;
+      cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px;
+      text-decoration:none; transition:background 0.15s,border-color 0.15s,box-shadow 0.15s;
+    }
+    .btn-oauth:hover { background:var(--gray-50); border-color:#94a3b8; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
 
-        h2 {
-            margin-bottom: 25px;
-            text-align: center;
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        label {
-            display: block;
-            font-size: 14px;
-            margin-bottom: 6px;
-            color: #374151;
-        }
-
-        input {
-            width: 100%;
-            padding: 8px 10px;
-            border-radius: 4px;
-            border: 1px solid #d1d5db;
-            font-size: 14px;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #2563eb;
-        }
-
-        .btn {
-            width: 100%;
-            padding: 10px;
-            border-radius: 4px;
-            border: none;
-            background: #2563eb;
-            color: white;
-            font-size: 14px;
-            font-weight: 500;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-
-        .btn:hover {
-            background: #1d4ed8;
-        }
-
-        .footer {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 13px;
-            color: #6b7280;
-        }
-
-        .footer a {
-            color: #2563eb;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .footer a:hover {
-            text-decoration: underline;
-        }
-    </style>
+    .divider { display:flex; align-items:center; gap:12px; margin:20px 0; color:var(--gray-400); font-size:12px; }
+    .divider::before,.divider::after { content:''; flex:1; height:1px; background:var(--gray-200); }
+    .footer-link { text-align:center; font-size:13px; color:var(--gray-400); }
+    .footer-link a { color:var(--blue); font-weight:600; text-decoration:none; }
+    .footer-link a:hover { text-decoration:underline; }
+    @media (max-width:768px) {
+      .left-panel { display:none; }
+      .right-panel { width:100%; padding:40px 28px; }
+      .page-wrap { max-width:440px; border-radius:20px; }
+    }
+  </style>
 </head>
 <body>
+<div class="bg-blob bg-blob-1"></div>
+<div class="bg-blob bg-blob-2"></div>
 
-<div class="container">
-    <h2>Create Your Account</h2>
+<div class="page-wrap">
+  <div class="left-panel">
+    <div class="brand">
+      <div class="brand-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <span class="brand-name">PrepPilot</span>
+    </div>
+    <div class="left-headline">Get placement-ready in weeks, not months.</div>
+    <p class="left-sub">Join thousands of students who cracked their dream companies using PrepPilot's AI-driven system.</p>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-text"><strong>Complete your profile</strong><span>Tell us your skills, goals and background</span></div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-text"><strong>Get your AI roadmap</strong><span>A personalized week-by-week plan just for you</span></div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-text"><strong>Track and improve</strong><span>Resume, interviews, DSA — all in one place</span></div></div>
+    </div>
+  </div>
 
+  <div class="right-panel">
+    <div class="form-header">
+      <h2>Create your account</h2>
+      <p>Free forever. No credit card needed.</p>
+    </div>
     <form action="/register" method="POST">
-        <div class="form-group">
-            <label>Full Name</label>
-            <input type="text" name="name" required />
-        </div>
-
-        <div class="form-group">
-            <label>Email Address</label>
-            <input type="email" name="email" required />
-        </div>
-
-        <div class="form-group">
-            <label>Password</label>
-            <input type="password" name="password" required />
-        </div>
-
-        <button type="submit" class="btn">Create Account</button>
+      <div class="form-group">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" placeholder="John Doe" required/>
+      </div>
+      <div class="form-group">
+        <label for="email">Email address</label>
+        <input type="email" id="email" name="email" placeholder="you@example.com" required/>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Min. 8 characters" required/>
+      </div>
+      <button type="submit" class="btn-primary">Create Free Account</button>
+      <p class="terms">By signing up, you agree to our Terms of Service and Privacy Policy.</p>
     </form>
 
-    <div class="footer">
-        Already have an account?  
-        <a href="/login">Login here</a>
-    </div>
-</div>
+    <div class="divider">or sign up with</div>
 
+    <div class="oauth-group">
+      <a href="/auth/google" class="btn-oauth">
+        <svg width="18" height="18" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+          <path fill="none" d="M0 0h48v48H0z"/>
+        </svg>
+        Continue with Google
+      </a>
+      <a href="/auth/github" class="btn-oauth">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+        </svg>
+        Continue with GitHub
+      </a>
+    </div>
+
+    <div class="divider">already a member?</div>
+    <div class="footer-link"><a href="/login">Sign in to your account</a></div>
+  </div>
+</div>
 </body>
 </html>

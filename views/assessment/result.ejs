@@ -1,236 +1,207 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Assessment Result - PrepPilot</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f9;
-            padding: 30px;
-        }
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Assessment Result — PrepPilot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --blue:#2563eb; --blue-mid:#3b82f6; --blue-light:#eff6ff; --blue-pale:#dbeafe;
+      --white:#fff; --gray-50:#f8fafc; --gray-100:#f1f5f9; --gray-200:#e2e8f0;
+      --gray-400:#94a3b8; --gray-500:#64748b; --gray-600:#475569;
+      --gray-700:#334155; --gray-800:#1e293b; --gray-900:#0f172a;
+      --green:#16a34a; --green-light:#dcfce7;
+      --red:#dc2626; --red-light:#fee2e2;
+      --yellow:#d97706; --yellow-light:#fef3c7;
+      --radius:14px; --shadow-sm:0 1px 3px rgba(0,0,0,0.06);
+    }
+    body { font-family:'Inter',sans-serif; background:var(--gray-50); color:var(--gray-800); min-height:100vh; }
+    .topbar { height:60px; background:var(--white); border-bottom:1px solid var(--gray-200); display:flex; align-items:center; padding:0 32px; gap:16px; position:sticky; top:0; z-index:10; }
+    .topbar-brand { display:flex; align-items:center; gap:10px; font-size:17px; font-weight:800; color:var(--gray-900); text-decoration:none; letter-spacing:-0.4px; }
+    .topbar-brand-icon { width:32px; height:32px; background:linear-gradient(135deg,var(--blue),var(--blue-mid)); border-radius:9px; display:flex; align-items:center; justify-content:center; }
+    .topbar-spacer { flex:1; }
+    .topbar-btn { padding:7px 14px; border-radius:8px; font-size:13px; font-weight:600; font-family:'Inter',sans-serif; cursor:pointer; border:1.5px solid var(--gray-200); background:transparent; color:var(--gray-600); text-decoration:none; transition:all 0.15s; }
+    .topbar-btn:hover { background:var(--gray-100); }
+    .page-body { display:flex; justify-content:center; padding:40px 20px 60px; }
+    .content-wrap { width:100%; max-width:760px; }
 
-        .container {
-            max-width: 900px;
-            margin: auto;
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 14px;
-            box-shadow: 0 6px 18px rgba(0,0,0,0.08);
-        }
+    /* SCORE HERO */
+    .score-hero {
+      border-radius:var(--radius); padding:36px; margin-bottom:20px;
+      display:flex; align-items:center; gap:32px; flex-wrap:wrap;
+      animation:fadeUp 0.4s ease both;
+    }
+    .score-hero.mastered { background:linear-gradient(135deg,#14532d,#16a34a); color:white; }
+    .score-hero.revision-needed { background:linear-gradient(135deg,#78350f,#d97706); color:white; }
+    .score-hero.weak { background:linear-gradient(135deg,#7f1d1d,#dc2626); color:white; }
 
-        h1, h2, h3 {
-            margin-bottom: 15px;
-        }
+    .score-ring { position:relative; width:120px; height:120px; flex-shrink:0; }
+    .score-ring svg { transform:rotate(-90deg); }
+    .score-ring-num { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    .score-ring-num .num { font-size:32px; font-weight:800; line-height:1; }
+    .score-ring-num .denom { font-size:13px; opacity:0.7; }
+    .score-info h2 { font-size:22px; font-weight:800; margin-bottom:6px; }
+    .mastery-badge { display:inline-block; padding:4px 14px; border-radius:20px; font-size:13px; font-weight:700; background:rgba(255,255,255,0.2); margin-bottom:10px; }
+    .score-pct { font-size:28px; font-weight:800; opacity:0.9; }
+    .score-pct-label { font-size:13px; opacity:0.7; }
 
-        .summary-box {
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            background: #e8f5e9;
-            border: 1px solid #c8e6c9;
-        }
+    /* CARDS */
+    .card { background:var(--white); border-radius:var(--radius); border:1px solid var(--gray-200); padding:22px; margin-bottom:16px; box-shadow:var(--shadow-sm); animation:fadeUp 0.4s ease both; }
+    .card-title { font-size:14px; font-weight:700; color:var(--gray-800); margin-bottom:14px; display:flex; align-items:center; gap:8px; }
 
-        .mastered {
-            color: #2e7d32;
-            font-weight: bold;
-        }
+    /* FEEDBACK */
+    .feedback-text { font-size:14px; color:var(--gray-600); line-height:1.7; }
+    .mastery-note { margin-top:12px; padding:12px 14px; border-radius:8px; font-size:13px; font-weight:600; line-height:1.5; }
+    .mastery-note.green { background:var(--green-light); color:#14532d; }
+    .mastery-note.yellow { background:var(--yellow-light); color:#78350f; }
+    .mastery-note.red { background:var(--red-light); color:#7f1d1d; }
 
-        .revision {
-            color: #f57c00;
-            font-weight: bold;
-        }
+    /* WEAK CONCEPTS */
+    .concept-row { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--gray-100); }
+    .concept-row:last-child { border-bottom:none; }
+    .concept-name { font-size:14px; font-weight:600; color:var(--gray-700); flex:1; }
+    .concept-bar-wrap { width:120px; height:6px; background:var(--gray-100); border-radius:10px; overflow:hidden; }
+    .concept-bar { height:100%; border-radius:10px; background:linear-gradient(90deg,var(--red),#f87171); }
+    .concept-pct { font-size:12px; font-weight:700; color:var(--red); width:36px; text-align:right; }
 
-        .weak {
-            color: #d32f2f;
-            font-weight: bold;
-        }
+    /* QUESTION REVIEW */
+    .q-card { border-radius:10px; padding:16px; margin-bottom:12px; border:1.5px solid var(--gray-200); }
+    .q-card.correct { border-color:#bbf7d0; background:#f0fdf4; }
+    .q-card.incorrect { border-color:#fecaca; background:#fef2f2; }
+    .q-num { font-size:11px; font-weight:700; color:var(--gray-400); letter-spacing:0.5px; text-transform:uppercase; margin-bottom:6px; }
+    .q-text { font-size:14px; font-weight:600; color:var(--gray-800); margin-bottom:12px; line-height:1.5; }
+    .q-answer-row { display:flex; align-items:flex-start; gap:8px; font-size:13px; margin-bottom:6px; }
+    .q-answer-label { font-weight:700; color:var(--gray-500); flex-shrink:0; }
+    .q-answer-val.correct { color:var(--green); font-weight:600; }
+    .q-answer-val.incorrect { color:var(--red); font-weight:600; }
+    .q-explanation { margin-top:10px; padding:10px 12px; background:var(--gray-50); border-radius:8px; font-size:13px; color:var(--gray-600); line-height:1.5; border-left:3px solid var(--blue); }
 
-        .feedback-box {
-            padding: 18px;
-            border-radius: 10px;
-            background: #e3f2fd;
-            border: 1px solid #bbdefb;
-            margin-bottom: 25px;
-        }
+    /* ACTIONS */
+    .action-row { display:flex; gap:12px; margin-top:24px; flex-wrap:wrap; }
+    .btn { padding:12px 22px; border-radius:10px; font-size:14px; font-weight:600; font-family:'Inter',sans-serif; cursor:pointer; border:none; text-decoration:none; display:inline-flex; align-items:center; gap:6px; transition:all 0.15s; }
+    .btn-primary { background:linear-gradient(135deg,var(--blue),var(--blue-mid)); color:white; box-shadow:0 4px 14px rgba(37,99,235,0.3); }
+    .btn-primary:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(37,99,235,0.4); }
+    .btn-ghost { background:transparent; color:var(--gray-600); border:1.5px solid var(--gray-200); }
+    .btn-ghost:hover { background:var(--gray-100); }
 
-        .gap-box {
-            padding: 18px;
-            border-radius: 10px;
-            background: #fff3e0;
-            border: 1px solid #ffe0b2;
-            margin-bottom: 25px;
-        }
-
-        .question-card {
-            margin-bottom: 20px;
-            padding: 18px;
-            border-radius: 12px;
-            border: 1px solid #e0e0e0;
-            background: #fafafa;
-        }
-
-        .correct {
-            color: #2e7d32;
-            font-weight: 600;
-        }
-
-        .incorrect {
-            color: #d32f2f;
-            font-weight: 600;
-        }
-
-        .explanation {
-            margin-top: 8px;
-            color: #555;
-            font-size: 14px;
-        }
-
-        .btn-group {
-            margin-top: 30px;
-        }
-
-        .btn {
-            padding: 12px 18px;
-            border: none;
-            border-radius: 8px;
-            font-size: 15px;
-            cursor: pointer;
-            margin-right: 10px;
-        }
-
-        .retake-btn {
-            background: #ff9800;
-            color: white;
-        }
-
-        .roadmap-btn {
-            background: #2196f3;
-            color: white;
-        }
-
-        .retake-btn:hover {
-            background: #fb8c00;
-        }
-
-        .roadmap-btn:hover {
-            background: #1e88e5;
-        }
-
-        .subtopic-tag {
-            display: inline-block;
-            padding: 8px 14px;
-            border-radius: 8px;
-            background: #e3f2fd;
-            font-weight: 500;
-            margin-bottom: 15px;
-        }
-    </style>
+    @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+    @media(max-width:600px) { .score-hero{flex-direction:column;gap:20px} .topbar{padding:0 16px} .page-body{padding:24px 12px 40px} }
+  </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>Assessment Result</h1>
-
-    <div class="subtopic-tag">
-        Subtopic: <strong><%= assessment.subtopicTitle %></strong>
-    </div>
-
-    <!-- 🔥 Summary Section -->
-    <div class="summary-box">
-        <h2>Score: <%= score %> / <%= assessment.questions.length %></h2>
-        <h3>Percentage: <%= percentage %>%</h3>
-
-        <p>
-            Mastery Level:
-            <% if (assessment.masteryLevel === "mastered") { %>
-                <span class="mastered">Mastered ✅</span>
-            <% } else if (assessment.masteryLevel === "revision-needed") { %>
-                <span class="revision">Revision Needed ⚠️</span>
-            <% } else { %>
-                <span class="weak">Weak ❌</span>
-            <% } %>
-        </p>
-    </div>
-
-    <!-- 🧠 Smart Feedback -->
-    <div class="feedback-box">
-        <h3>AI Learning Feedback</h3>
-        <p><%= feedback %></p>
-
-        <% if (assessment.masteryLevel === "weak") { %>
-            <p class="weak">
-                ⚠️ Your foundation on this subtopic is weak. You should revise and retake the assessment before marking it as completed.
-            </p>
-        <% } else if (assessment.masteryLevel === "revision-needed") { %>
-            <p class="revision">
-                You have partial understanding. Revise weak concepts and retake for mastery.
-            </p>
-        <% } else { %>
-            <p class="mastered">
-                Excellent work! You can confidently move to the next subtopic.
-            </p>
-        <% } %>
-    </div>
-
-    <!-- 📉 Performance Gap Analysis -->
-    <% if (weakConcepts && weakConcepts.length > 0) { %>
-        <div class="gap-box">
-            <h3>Performance Gap Analysis (Weak Concepts)</h3>
-            <ul>
-                <% weakConcepts.forEach(concept => { %>
-                    <li>
-                        <strong><%= concept.concept %></strong> — Accuracy: <%= concept.accuracy %>%
-                    </li>
-                <% }) %>
-            </ul>
-        </div>
-    <% } %>
-
-    <!-- 📚 Detailed Question Review -->
-    <h2>Detailed Answer Review</h2>
-
-    <% assessment.questions.forEach((q, index) => { %>
-        <div class="question-card">
-            <p><strong>Q<%= index + 1 %>:</strong> <%= q.question %></p>
-
-            <p>
-                <strong>Your Answer:</strong>
-                <% if (q.userAnswer === q.correctAnswer) { %>
-                    <span class="correct">
-                        <%= q.userAnswer || "Not Answered" %> ✅
-                    </span>
-                <% } else { %>
-                    <span class="incorrect">
-                        <%= q.userAnswer || "Not Answered" %> ❌
-                    </span>
-                <% } %>
-            </p>
-
-            <p>
-                <strong>Correct Answer:</strong>
-                <span class="correct"><%= q.correctAnswer %></span>
-            </p>
-
-            <% if (q.explanation && q.explanation.trim() !== "") { %>
-                <div class="explanation">
-                    <strong>Explanation:</strong> <%= q.explanation %>
-                </div>
-            <% } %>
-        </div>
-    <% }) %>
-
-    <!-- 🔁 Action Buttons -->
-    <div class="btn-group">
-        <a href="/assessment/<%= assessment.taskId %>/<%= assessment.subtopicId %>">
-            <button class="btn retake-btn">Retake Assessment</button>
-        </a>
-
-        <a href="/roadmap">
-            <button class="btn roadmap-btn">Back to Roadmap</button>
-        </a>
-    </div>
-
+<div class="topbar">
+  <a href="/dashboard" class="topbar-brand">
+    <div class="topbar-brand-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    PrepPilot
+  </a>
+  <div class="topbar-spacer"></div>
+  <a href="/roadmap" class="topbar-btn">Back to Roadmap</a>
 </div>
 
+<div class="page-body">
+  <div class="content-wrap">
+
+    <%
+      const masteryClass = assessment.masteryLevel === 'mastered' ? 'mastered' : assessment.masteryLevel === 'revision-needed' ? 'revision-needed' : 'weak';
+      const masteryLabel = assessment.masteryLevel === 'mastered' ? 'Mastered' : assessment.masteryLevel === 'revision-needed' ? 'Revision Needed' : 'Needs Work';
+      const circumference = 2 * Math.PI * 46;
+      const dashOffset = circumference - (percentage / 100) * circumference;
+    %>
+
+    <!-- SCORE HERO -->
+    <div class="score-hero <%= masteryClass %>">
+      <div class="score-ring">
+        <svg width="120" height="120" viewBox="0 0 120 120">
+          <circle cx="60" cy="60" r="46" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="10"/>
+          <circle cx="60" cy="60" r="46" fill="none" stroke="white" stroke-width="10"
+            stroke-dasharray="<%= circumference %>"
+            stroke-dashoffset="<%= dashOffset %>"
+            stroke-linecap="round"/>
+        </svg>
+        <div class="score-ring-num">
+          <span class="num"><%= score %></span>
+          <span class="denom">/<%= assessment.questions.length %></span>
+        </div>
+      </div>
+      <div class="score-info">
+        <div class="mastery-badge"><%= masteryLabel %></div>
+        <h2>Assessment Complete</h2>
+        <div class="score-pct"><%= percentage %>%</div>
+        <div class="score-pct-label">Accuracy on <%= assessment.subtopicTitle %></div>
+      </div>
+    </div>
+
+    <!-- AI FEEDBACK -->
+    <div class="card" style="animation-delay:0.05s">
+      <div class="card-title">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        AI Learning Feedback
+      </div>
+      <p class="feedback-text"><%= feedback %></p>
+      <% if (assessment.masteryLevel === 'mastered') { %>
+        <div class="mastery-note green">Excellent work — you can confidently move to the next subtopic.</div>
+      <% } else if (assessment.masteryLevel === 'revision-needed') { %>
+        <div class="mastery-note yellow">You have partial understanding. Revise the weak concepts and retake for full mastery.</div>
+      <% } else { %>
+        <div class="mastery-note red">Your foundation on this subtopic needs strengthening. Revise thoroughly before moving on.</div>
+      <% } %>
+    </div>
+
+    <!-- WEAK CONCEPTS -->
+    <% if (weakConcepts && weakConcepts.length > 0) { %>
+    <div class="card" style="animation-delay:0.1s">
+      <div class="card-title">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Performance Gap Analysis
+      </div>
+      <% weakConcepts.forEach(concept => { %>
+        <div class="concept-row">
+          <span class="concept-name"><%= concept.concept %></span>
+          <div class="concept-bar-wrap"><div class="concept-bar" style="width:<%= concept.accuracy %>%"></div></div>
+          <span class="concept-pct"><%= concept.accuracy %>%</span>
+        </div>
+      <% }) %>
+    </div>
+    <% } %>
+
+    <!-- QUESTION REVIEW -->
+    <div class="card" style="animation-delay:0.15s">
+      <div class="card-title">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Detailed Answer Review
+      </div>
+      <% assessment.questions.forEach((q, index) => { %>
+        <% const isCorrect = q.userAnswer === q.correctAnswer; %>
+        <div class="q-card <%= isCorrect ? 'correct' : 'incorrect' %>">
+          <div class="q-num">Question <%= index + 1 %></div>
+          <div class="q-text"><%= q.question %></div>
+          <div class="q-answer-row">
+            <span class="q-answer-label">Your answer:</span>
+            <span class="q-answer-val <%= isCorrect ? 'correct' : 'incorrect' %>"><%= q.userAnswer || 'Not answered' %></span>
+          </div>
+          <% if (!isCorrect) { %>
+          <div class="q-answer-row">
+            <span class="q-answer-label">Correct answer:</span>
+            <span class="q-answer-val correct"><%= q.correctAnswer %></span>
+          </div>
+          <% } %>
+          <% if (q.explanation && q.explanation.trim()) { %>
+            <div class="q-explanation"><%= q.explanation %></div>
+          <% } %>
+        </div>
+      <% }) %>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="action-row">
+      <a href="/assessment/<%= assessment.taskId %>/<%= assessment.subtopicId %>" class="btn btn-ghost">Retake Assessment</a>
+      <a href="/roadmap" class="btn btn-primary">Back to Roadmap</a>
+    </div>
+
+  </div>
+</div>
 </body>
 </html>

@@ -1,491 +1,517 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Onboarding - PrepPilot</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 900px;
-            margin: auto;
-            padding: 30px;
-        }
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Setup Your Profile — PrepPilot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --blue:#2563eb; --blue-dark:#1d4ed8; --blue-mid:#3b82f6;
+      --blue-light:#eff6ff; --blue-pale:#dbeafe;
+      --white:#fff; --gray-50:#f8fafc; --gray-100:#f1f5f9;
+      --gray-200:#e2e8f0; --gray-300:#cbd5e1; --gray-400:#94a3b8;
+      --gray-500:#64748b; --gray-600:#475569; --gray-700:#334155;
+      --gray-800:#1e293b; --gray-900:#0f172a;
+      --green:#16a34a; --radius:14px;
+      --shadow:0 4px 24px rgba(37,99,235,0.10);
+    }
+    body { font-family:'Inter',sans-serif; background:var(--gray-50); color:var(--gray-800); min-height:100vh; display:flex; flex-direction:column; }
 
-        .step {
-            display: none;
-        }
+    /* TOP BAR */
+    .topbar { height:60px; background:var(--white); border-bottom:1px solid var(--gray-200); display:flex; align-items:center; padding:0 32px; gap:12px; position:sticky; top:0; z-index:10; }
+    .topbar-brand { display:flex; align-items:center; gap:10px; font-size:17px; font-weight:800; color:var(--gray-900); letter-spacing:-0.4px; }
+    .topbar-brand-icon { width:32px; height:32px; background:linear-gradient(135deg,var(--blue),var(--blue-mid)); border-radius:9px; display:flex; align-items:center; justify-content:center; }
+    .topbar-spacer { flex:1; }
+    .topbar-step { font-size:13px; color:var(--gray-400); font-weight:500; }
 
-        .step.active {
-            display: block;
-        }
+    /* PROGRESS BAR */
+    .progress-bar-wrap { height:3px; background:var(--gray-200); }
+    .progress-bar-fill { height:3px; background:linear-gradient(90deg,var(--blue),var(--blue-mid)); transition:width 0.4s ease; }
 
-        .btn {
-            padding: 10px 18px;
-            border: none;
-            border-radius: 6px;
-            background: #4caf50;
-            color: white;
-            cursor: pointer;
-            margin-top: 15px;
-        }
+    /* LAYOUT */
+    .page-body { flex:1; display:flex; justify-content:center; align-items:flex-start; padding:40px 20px 60px; }
+    .form-wrap { width:100%; max-width:640px; }
 
-        .btn.secondary {
-            background: #777;
-        }
+    /* STEP HEADER */
+    .step-header { margin-bottom:32px; animation:fadeUp 0.35s ease both; }
+    .step-badge { display:inline-flex; align-items:center; gap:6px; background:var(--blue-light); color:var(--blue); font-size:12px; font-weight:700; padding:4px 12px; border-radius:20px; margin-bottom:12px; letter-spacing:0.3px; }
+    .step-header h1 { font-size:26px; font-weight:800; color:var(--gray-900); letter-spacing:-0.5px; margin-bottom:6px; }
+    .step-header p { font-size:14px; color:var(--gray-500); line-height:1.6; }
 
-        .skill-card {
-            border: 1px solid #ddd;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-        }
-    </style>
+    /* CARD */
+    .card { background:var(--white); border-radius:var(--radius); border:1px solid var(--gray-200); padding:24px; margin-bottom:16px; box-shadow:0 1px 4px rgba(0,0,0,0.05); animation:fadeUp 0.35s ease both; }
+    .card-label { font-size:13px; font-weight:700; color:var(--gray-700); margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+
+    /* INPUTS */
+    .input-field {
+      width:100%; padding:11px 14px; border:1.5px solid var(--gray-200); border-radius:10px;
+      font-size:14px; font-family:'Inter',sans-serif; color:var(--gray-800); background:var(--gray-50);
+      outline:none; transition:border-color 0.2s,box-shadow 0.2s,background 0.2s;
+    }
+    .input-field:focus { border-color:var(--blue); background:var(--white); box-shadow:0 0 0 4px rgba(37,99,235,0.08); }
+
+    /* AUTOCOMPLETE */
+    .autocomplete-wrap { position:relative; }
+    .suggestions-dropdown {
+      position:absolute; top:calc(100% + 4px); left:0; right:0;
+      background:var(--white); border:1.5px solid var(--gray-200); border-radius:10px;
+      box-shadow:0 8px 24px rgba(0,0,0,0.1); z-index:50; display:none;
+      max-height:180px; overflow-y:auto;
+    }
+    .suggestion-item { padding:10px 14px; font-size:14px; cursor:pointer; color:var(--gray-700); transition:background 0.1s; }
+    .suggestion-item:hover { background:var(--blue-light); color:var(--blue); }
+
+    /* TAGS */
+    .tags-wrap { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; min-height:20px; }
+    .tag {
+      display:inline-flex; align-items:center; gap:6px;
+      background:var(--blue-light); color:var(--blue-dark);
+      padding:5px 12px; border-radius:20px; font-size:13px; font-weight:600;
+      animation:tagIn 0.2s ease both;
+    }
+    .tag.custom { background:#fef3c7; color:#92400e; }
+    .tag-remove { background:none; border:none; cursor:pointer; color:inherit; opacity:0.6; padding:0; line-height:1; font-size:14px; display:flex; align-items:center; }
+    .tag-remove:hover { opacity:1; }
+    @keyframes tagIn { from{opacity:0;transform:scale(0.85)} to{opacity:1;transform:scale(1)} }
+
+    /* COMPANY TYPE GRID */
+    .company-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+    .company-option { position:relative; }
+    .company-option input[type="radio"] { position:absolute; opacity:0; width:0; height:0; }
+    .company-card {
+      display:flex; align-items:center; gap:12px; padding:14px 16px;
+      border:1.5px solid var(--gray-200); border-radius:10px; cursor:pointer;
+      transition:all 0.15s; background:var(--white);
+    }
+    .company-card:hover { border-color:var(--blue); background:var(--blue-light); }
+    .company-option input:checked + .company-card { border-color:var(--blue); background:var(--blue-light); }
+    .company-card-icon { width:36px; height:36px; border-radius:8px; background:var(--gray-100); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    .company-option input:checked + .company-card .company-card-icon { background:var(--blue-pale); }
+    .company-card-label { font-size:14px; font-weight:600; color:var(--gray-700); }
+    .company-card-sub { font-size:11px; color:var(--gray-400); margin-top:1px; }
+
+    /* SKILL CARDS */
+    .skill-card {
+      display:flex; align-items:center; gap:12px; padding:12px 14px;
+      border:1.5px solid var(--gray-200); border-radius:10px; margin-bottom:8px;
+      background:var(--white); animation:fadeUp 0.2s ease both;
+    }
+    .skill-card-name { font-size:14px; font-weight:600; color:var(--gray-800); flex:1; }
+    .skill-card-selects { display:flex; gap:8px; flex-wrap:wrap; }
+    .mini-select {
+      padding:5px 10px; border:1.5px solid var(--gray-200); border-radius:8px;
+      font-size:12px; font-family:'Inter',sans-serif; color:var(--gray-700);
+      background:var(--gray-50); outline:none; cursor:pointer;
+      transition:border-color 0.15s;
+    }
+    .mini-select:focus { border-color:var(--blue); }
+    .skill-remove { background:none; border:none; cursor:pointer; color:var(--gray-400); padding:4px; border-radius:6px; display:flex; align-items:center; transition:color 0.15s,background 0.15s; }
+    .skill-remove:hover { color:var(--red,#dc2626); background:#fee2e2; }
+
+    /* SELECT */
+    .styled-select {
+      width:100%; padding:11px 14px; border:1.5px solid var(--gray-200); border-radius:10px;
+      font-size:14px; font-family:'Inter',sans-serif; color:var(--gray-800); background:var(--gray-50);
+      outline:none; cursor:pointer; transition:border-color 0.2s;
+      appearance:none;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+      background-repeat:no-repeat; background-position:right 14px center;
+    }
+    .styled-select:focus { border-color:var(--blue); }
+
+    /* EXPERIENCE OPTIONS */
+    .exp-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+    .exp-option { position:relative; }
+    .exp-option input[type="radio"] { position:absolute; opacity:0; width:0; height:0; }
+    .exp-card { padding:10px 14px; border:1.5px solid var(--gray-200); border-radius:10px; cursor:pointer; text-align:center; font-size:13px; font-weight:600; color:var(--gray-600); transition:all 0.15s; }
+    .exp-card:hover { border-color:var(--blue); color:var(--blue); background:var(--blue-light); }
+    .exp-option input:checked + .exp-card { border-color:var(--blue); background:var(--blue-light); color:var(--blue); }
+
+    /* TOGGLE */
+    .toggle-row { display:flex; gap:8px; }
+    .toggle-opt { position:relative; flex:1; }
+    .toggle-opt input[type="radio"] { position:absolute; opacity:0; width:0; height:0; }
+    .toggle-btn { display:block; padding:10px; border:1.5px solid var(--gray-200); border-radius:10px; cursor:pointer; text-align:center; font-size:13px; font-weight:600; color:var(--gray-600); transition:all 0.15s; }
+    .toggle-btn:hover { border-color:var(--blue); color:var(--blue); background:var(--blue-light); }
+    .toggle-opt input:checked + .toggle-btn { border-color:var(--blue); background:var(--blue-light); color:var(--blue); }
+
+    /* FORM GRID */
+    .form-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+    .form-group { display:flex; flex-direction:column; gap:6px; }
+    .form-group label { font-size:13px; font-weight:600; color:var(--gray-600); }
+
+    /* NAV BUTTONS */
+    .step-nav { display:flex; gap:12px; margin-top:28px; }
+    .btn-back { padding:12px 24px; border-radius:10px; border:1.5px solid var(--gray-200); background:var(--white); color:var(--gray-600); font-size:14px; font-weight:600; font-family:'Inter',sans-serif; cursor:pointer; transition:all 0.15s; }
+    .btn-back:hover { background:var(--gray-100); border-color:var(--gray-300); }
+    .btn-next { flex:1; padding:13px; border-radius:10px; border:none; background:linear-gradient(135deg,var(--blue),var(--blue-mid)); color:white; font-size:15px; font-weight:700; font-family:'Inter',sans-serif; cursor:pointer; transition:all 0.15s; box-shadow:0 4px 14px rgba(37,99,235,0.3); }
+    .btn-next:hover { transform:translateY(-1px); box-shadow:0 6px 20px rgba(37,99,235,0.4); }
+
+    /* STEP DOTS */
+    .step-dots { display:flex; gap:8px; justify-content:center; margin-bottom:32px; }
+    .step-dot { width:8px; height:8px; border-radius:50%; background:var(--gray-200); transition:all 0.3s; }
+    .step-dot.active { background:var(--blue); width:24px; border-radius:4px; }
+    .step-dot.done { background:var(--blue); opacity:0.4; }
+
+    /* STEP PANELS */
+    .step-panel { display:none; }
+    .step-panel.active { display:block; animation:fadeUp 0.35s ease both; }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+
+    @media(max-width:600px) {
+      .company-grid { grid-template-columns:1fr; }
+      .form-grid-2 { grid-template-columns:1fr; }
+      .exp-grid { grid-template-columns:repeat(3,1fr); }
+    }
+  </style>
 </head>
 <body>
 
-<h1>Complete Your Profile</h1>
-<p>Step <span id="stepNumber">1</span> of 3</p>
-
-<form action="/onboarding" method="POST">
-
-    <!-- STEP 1: Career Targeting -->
-    <div class="step active" id="step-1">
-    <h2>Career Goals (What role are you targeting?)</h2>
-
-    <!-- Goal Input -->
-    <input 
-        type="text" 
-        id="goalInput" 
-        placeholder="Type a goal (e.g. SDE, Frontend Developer, AI Engineer)" 
-        autocomplete="off"
-        style="width:100%; padding:10px; margin-bottom:10px;"
-    />
-
-    <!-- Suggestions Dropdown -->
-    <div id="goalSuggestions" 
-         style="border:1px solid #ccc; border-radius:6px; display:none; max-height:150px; overflow-y:auto;">
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-brand-icon">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
-
-    <!-- Added Goals Container -->
-    <h3>Selected Goals</h3>
-    <div id="goalsContainer"></div>
-
-    <!-- Hidden JSON field -->
-    <input type="hidden" name="goalsJson" id="goalsJson" />
-
-    <br>
-    <label>Target Company Type</label><br>
-    <select name="targetCompanyType">
-        <option value="product">Product-Based</option>
-        <option value="service">Service-Based</option>
-        <option value="startup">Startup</option>
-        <option value="faang">FAANG-Level</option>
-    </select>
-
-    <br>
-    <button type="button" class="btn" onclick="nextStep()">Next</button>
+    PrepPilot
+  </div>
+  <div class="topbar-spacer"></div>
+  <span class="topbar-step" id="stepLabel">Step 1 of 4</span>
+</div>
+<div class="progress-bar-wrap">
+  <div class="progress-bar-fill" id="progressFill" style="width:25%"></div>
 </div>
 
+<div class="page-body">
+  <div class="form-wrap">
 
-    <!-- STEP 2: Academic Context -->
-    <div class="step" id="step-2">
-        <h2>Academic Details</h2>
-
-        <label>Year</label><br>
-        <select name="year" required>
-            <option value="">Select Year</option>
-            <option value="1st">1st Year</option>
-            <option value="2nd">2nd Year</option>
-            <option value="3rd">3rd Year</option>
-            <option value="4th">4th Year</option>
-        </select>
-
-        <br><br>
-        <label>Degree</label><br>
-        <input type="text" name="degree" placeholder="B.Tech" required>
-
-        <br><br>
-        <label>Branch</label><br>
-        <input type="text" name="branch" placeholder="Computer Science">
-
-        <br><br>
-        <label>University</label><br>
-        <input type="text" name="university" placeholder="Medicaps">
-
-        <br>
-        <button type="button" class="btn secondary" onclick="prevStep()">Back</button>
-        <button type="button" class="btn" onclick="nextStep()">Next</button>
+    <!-- STEP DOTS -->
+    <div class="step-dots">
+      <div class="step-dot active" id="dot-1"></div>
+      <div class="step-dot" id="dot-2"></div>
+      <div class="step-dot" id="dot-3"></div>
+      <div class="step-dot" id="dot-4"></div>
     </div>
 
-    <!-- STEP 3: Skill Profiling (CRITICAL) -->
-    <div class="step" id="step-3">
-    <h2>Skill Profiling (Add Your Technical Skills)</h2>
+    <form action="/onboarding" method="POST" id="onboardingForm" onsubmit="prepareSubmit()">
 
-    <!-- Skill Input -->
-    <input 
-        type="text" 
-        id="skillInput" 
-        placeholder="Type a skill (e.g. JavaScript, DSA, React)" 
-        autocomplete="off"
-        style="width:100%; padding:10px; margin-bottom:10px;"
-    />
+      <!-- ── STEP 1: Career Goals ── -->
+      <div class="step-panel active" id="step-1">
+        <div class="step-header">
+          <div class="step-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Step 1 — Career Goals
+          </div>
+          <h1>What role are you targeting?</h1>
+          <p>Tell us your career goals so we can personalize your roadmap and preparation plan.</p>
+        </div>
 
-    <!-- Suggestions Dropdown -->
-    <div id="suggestions" 
-         style="border:1px solid #ccc; border-radius:6px; display:none; max-height:150px; overflow-y:auto;">
-    </div>
+        <div class="card">
+          <div class="card-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            Career Goals
+          </div>
+          <div class="autocomplete-wrap">
+            <input type="text" id="goalInput" class="input-field" placeholder="e.g. SDE, Frontend Developer, AI Engineer" autocomplete="off"/>
+            <div class="suggestions-dropdown" id="goalSuggestions"></div>
+          </div>
+          <div class="tags-wrap" id="goalsContainer"></div>
+          <input type="hidden" name="goalsJson" id="goalsJson"/>
+        </div>
 
-    <!-- Added Skills Container -->
-    <h3>Added Skills</h3>
-    <div id="skillsContainer"></div>
+        <div class="card">
+          <div class="card-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+            Target Company Type
+          </div>
+          <div class="company-grid">
+            <label class="company-option">
+              <input type="radio" name="targetCompanyType" value="product" checked/>
+              <div class="company-card">
+                <div class="company-card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+                <div><div class="company-card-label">Product-Based</div><div class="company-card-sub">Google, Microsoft, etc.</div></div>
+              </div>
+            </label>
+            <label class="company-option">
+              <input type="radio" name="targetCompanyType" value="service"/>
+              <div class="company-card">
+                <div class="company-card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+                <div><div class="company-card-label">Service-Based</div><div class="company-card-sub">TCS, Infosys, etc.</div></div>
+              </div>
+            </label>
+            <label class="company-option">
+              <input type="radio" name="targetCompanyType" value="startup"/>
+              <div class="company-card">
+                <div class="company-card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+                <div><div class="company-card-label">Startup</div><div class="company-card-sub">Fast-paced, high growth</div></div>
+              </div>
+            </label>
+            <label class="company-option">
+              <input type="radio" name="targetCompanyType" value="faang"/>
+              <div class="company-card">
+                <div class="company-card-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div>
+                <div><div class="company-card-label">FAANG-Level</div><div class="company-card-sub">Top-tier tech companies</div></div>
+              </div>
+            </label>
+          </div>
+        </div>
 
-    <!-- Hidden JSON field for backend -->
-    <input type="hidden" name="skillsJson" id="skillsJson" />
+        <div class="step-nav">
+          <button type="button" class="btn-next" onclick="goNext(1)">Continue</button>
+        </div>
+      </div>
 
-    <button type="button" class="btn secondary" onclick="prevStep()">Back</button>
-    <button type="button" class="btn" onclick="nextStep()">Next</button>
+      <!-- ── STEP 2: Academic ── -->
+      <div class="step-panel" id="step-2">
+        <div class="step-header">
+          <div class="step-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+            Step 2 — Academic Details
+          </div>
+          <h1>Tell us about your education</h1>
+          <p>This helps us tailor your roadmap to your current academic stage.</p>
+        </div>
+
+        <div class="card">
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label>Current Year</label>
+              <select name="year" class="styled-select" required>
+                <option value="">Select year</option>
+                <option value="1st">1st Year</option>
+                <option value="2nd">2nd Year</option>
+                <option value="3rd">3rd Year</option>
+                <option value="4th">4th Year</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Degree</label>
+              <input type="text" name="degree" class="input-field" placeholder="e.g. B.Tech"/>
+            </div>
+            <div class="form-group">
+              <label>Branch / Major</label>
+              <input type="text" name="branch" class="input-field" placeholder="e.g. Computer Science"/>
+            </div>
+            <div class="form-group">
+              <label>University / College</label>
+              <input type="text" name="university" class="input-field" placeholder="e.g. IIT Delhi"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="step-nav">
+          <button type="button" class="btn-back" onclick="goBack(2)">Back</button>
+          <button type="button" class="btn-next" onclick="goNext(2)">Continue</button>
+        </div>
+      </div>
+
+      <!-- ── STEP 3: Skills ── -->
+      <div class="step-panel" id="step-3">
+        <div class="step-header">
+          <div class="step-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            Step 3 — Skill Profiling
+          </div>
+          <h1>What are your technical skills?</h1>
+          <p>Add your skills and rate your proficiency. This is the core of your AI roadmap.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-label">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Search and add skills
+          </div>
+          <div class="autocomplete-wrap">
+            <input type="text" id="skillInput" class="input-field" placeholder="e.g. JavaScript, DSA, React" autocomplete="off"/>
+            <div class="suggestions-dropdown" id="skillSuggestions"></div>
+          </div>
+          <input type="hidden" name="skillsJson" id="skillsJson"/>
+        </div>
+
+        <div id="skillsContainer"></div>
+
+        <div class="step-nav">
+          <button type="button" class="btn-back" onclick="goBack(3)">Back</button>
+          <button type="button" class="btn-next" onclick="goNext(3)">Continue</button>
+        </div>
+      </div>
+
+      <!-- ── STEP 4: Experience ── -->
+      <div class="step-panel" id="step-4">
+        <div class="step-header">
+          <div class="step-badge">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            Step 4 — Experience
+          </div>
+          <h1>Your preparation level</h1>
+          <p>Help us understand where you are so we can set the right pace for your roadmap.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-label" style="margin-bottom:14px;">Projects built so far</div>
+          <div class="exp-grid">
+            <label class="exp-option"><input type="radio" name="projectsCount" value="0" checked/><div class="exp-card">0</div></label>
+            <label class="exp-option"><input type="radio" name="projectsCount" value="1-3"/><div class="exp-card">1 – 3</div></label>
+            <label class="exp-option"><input type="radio" name="projectsCount" value="3+"/><div class="exp-card">3+</div></label>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-label" style="margin-bottom:14px;">Internship experience</div>
+          <div class="toggle-row">
+            <label class="toggle-opt"><input type="radio" name="internshipExperience" value="false" checked/><span class="toggle-btn">No</span></label>
+            <label class="toggle-opt"><input type="radio" name="internshipExperience" value="true"/><span class="toggle-btn">Yes</span></label>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-label" style="margin-bottom:14px;">Resume ready?</div>
+          <div class="toggle-row">
+            <label class="toggle-opt"><input type="radio" name="resumeReady" value="false" checked/><span class="toggle-btn">Not yet</span></label>
+            <label class="toggle-opt"><input type="radio" name="resumeReady" value="true"/><span class="toggle-btn">Yes, ready</span></label>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-label" style="margin-bottom:14px;">Daily study hours available</div>
+          <div class="exp-grid" style="grid-template-columns:repeat(4,1fr);">
+            <label class="exp-option"><input type="radio" name="dailyStudyHours" value="<1"/><div class="exp-card">Less than 1h</div></label>
+            <label class="exp-option"><input type="radio" name="dailyStudyHours" value="1-3" checked/><div class="exp-card">1 – 3h</div></label>
+            <label class="exp-option"><input type="radio" name="dailyStudyHours" value="3-5"/><div class="exp-card">3 – 5h</div></label>
+            <label class="exp-option"><input type="radio" name="dailyStudyHours" value="5+"/><div class="exp-card">5h+</div></label>
+          </div>
+        </div>
+
+        <div class="step-nav">
+          <button type="button" class="btn-back" onclick="goBack(4)">Back</button>
+          <button type="submit" class="btn-next">Complete Setup</button>
+        </div>
+      </div>
+
+    </form>
+  </div>
 </div>
-
-<!-- STEP 4: Experience Intelligence -->
-<div class="step" id="step-4">
-    <h2>Experience & Preparation Level</h2>
-
-    <label><strong>How many projects have you built?</strong></label><br>
-    <select name="projectsCount" required>
-        <option value="0">0 (Beginner)</option>
-        <option value="1-3">1-3 Projects</option>
-        <option value="3+">3+ Projects</option>
-    </select>
-
-    <br><br>
-
-    <label><strong>Do you have any internship experience?</strong></label><br>
-    <select name="internshipExperience" required>
-        <option value="false">No</option>
-        <option value="true">Yes</option>
-    </select>
-
-    <br><br>
-
-    <label><strong>Is your resume ready?</strong></label><br>
-    <select name="resumeReady" required>
-        <option value="false">No</option>
-        <option value="true">Yes</option>
-    </select>
-
-    <br><br>
-
-    <label><strong>How many hours can you study daily?</strong></label><br>
-    <select name="dailyStudyHours" required>
-        <option value="<1">Less than 1 hour</option>
-        <option value="1-3">1-3 hours</option>
-        <option value="3-5">3-5 hours</option>
-        <option value="5+">5+ hours</option>
-    </select>
-
-    <br><br>
-    <button type="button" class="btn secondary" onclick="prevStep()">Back</button>
-    <button type="submit" class="btn">Finish & Complete Profile</button>
-</div>
-
-
-</form>
 
 <script>
 let currentStep = 1;
 const totalSteps = 4;
+const progressMap = { 1:25, 2:50, 3:75, 4:100 };
 
-function showStep(step) {
-    document.querySelectorAll(".step").forEach(s => s.classList.remove("active"));
-    document.getElementById("step-" + step).classList.add("active");
-    document.getElementById("stepNumber").innerText = step;
+function updateUI(step) {
+  document.querySelectorAll('.step-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('step-' + step).classList.add('active');
+  document.getElementById('stepLabel').textContent = `Step ${step} of ${totalSteps}`;
+  document.getElementById('progressFill').style.width = progressMap[step] + '%';
+  for (let i = 1; i <= totalSteps; i++) {
+    const dot = document.getElementById('dot-' + i);
+    dot.className = 'step-dot' + (i === step ? ' active' : i < step ? ' done' : '');
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function nextStep() {
-    if (currentStep < totalSteps) {
-        currentStep++;
-        showStep(currentStep);
-    }
-}
+function goNext(from) { if (from < totalSteps) { currentStep = from + 1; updateUI(currentStep); } }
+function goBack(from) { if (from > 1) { currentStep = from - 1; updateUI(currentStep); } }
 
-function prevStep() {
-    if (currentStep > 1) {
-        currentStep--;
-        showStep(currentStep);
-    }
-}
-
-// 🔥 CRITICAL: Only enable skill fields if checkbox is selected
-document.querySelectorAll(".skill-checkbox").forEach((checkbox) => {
-    checkbox.addEventListener("change", function () {
-        const card = this.closest(".skill-card");
-        const inputs = card.querySelectorAll("input[name='skillName'], select, input[type='number']");
-
-        inputs.forEach(input => {
-            input.disabled = !this.checked;
-        });
-    });
-});
-</script>
-<script>
-const TECH_SKILLS = [
-    "C", "C++", "Java", "Python", "JavaScript", "TypeScript",
-    "React", "Next.js", "Node.js", "Express",
-    "MongoDB", "MySQL", "PostgreSQL",
-    "DSA", "OOP", "DBMS", "Operating Systems", "Computer Networks",
-    "Git", "Docker", "AWS", "System Design", "Tailwind CSS"
-];
-
-let addedSkills = [];
-
-const input = document.getElementById("skillInput");
-const suggestionsBox = document.getElementById("suggestions");
-const container = document.getElementById("skillsContainer");
-const hiddenInput = document.getElementById("skillsJson");
-
-// 🔍 Show suggestions while typing
-input.addEventListener("input", () => {
-    const query = input.value.toLowerCase();
-    suggestionsBox.innerHTML = "";
-
-    if (!query) {
-        suggestionsBox.style.display = "none";
-        return;
-    }
-
-    const filtered = TECH_SKILLS.filter(skill =>
-        skill.toLowerCase().includes(query)
-    );
-
-    if (filtered.length === 0) {
-        suggestionsBox.style.display = "none";
-        return;
-    }
-
-    filtered.forEach(skill => {
-        const div = document.createElement("div");
-        div.textContent = skill;
-        div.style.padding = "8px";
-        div.style.cursor = "pointer";
-        div.onclick = () => addSkill(skill, "core");
-        suggestionsBox.appendChild(div);
-    });
-
-    suggestionsBox.style.display = "block";
-});
-
-// ➕ Add skill on Enter (custom skill support)
-input.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") {
-        e.preventDefault();
-        const value = input.value.trim();
-        if (value) {
-            addSkill(value, "custom");
-        }
-    }
-});
-
-function addSkill(skillName, source) {
-    // Prevent duplicates
-    if (addedSkills.find(s => s.name.toLowerCase() === skillName.toLowerCase())) {
-        input.value = "";
-        suggestionsBox.style.display = "none";
-        return;
-    }
-
-    const skillObj = {
-        name: skillName,
-        source: source,
-        level: "beginner",
-        exposure: "heard",
-        confidence: 1
-    };
-
-    addedSkills.push(skillObj);
-    renderSkills();
-
-    input.value = "";
-    suggestionsBox.style.display = "none";
-    updateHiddenInput();
-}
-
-function renderSkills() {
-    container.innerHTML = "";
-
-    addedSkills.forEach((skill, index) => {
-        const card = document.createElement("div");
-        card.style.border = "1px solid #ddd";
-        card.style.padding = "12px";
-        card.style.marginBottom = "10px";
-        card.style.borderRadius = "8px";
-
-        card.innerHTML = `
-            <strong>${skill.name}</strong> (${skill.source})
-            <br/><br/>
-
-            Level:
-            <select onchange="updateSkill(${index}, 'level', this.value)">
-                <option value="beginner">Beginner</option>
-                <option value="intermediate">Intermediate</option>
-                <option value="advanced">Advanced</option>
-            </select>
-
-            <br/><br/>
-
-            Exposure:
-            <select onchange="updateSkill(${index}, 'exposure', this.value)">
-                <option value="heard">Heard</option>
-                <option value="learned">Learned</option>
-                <option value="projects">Built Projects</option>
-                <option value="confident">Confident</option>
-            </select>
-
-            <br/><br/>
-
-            Confidence (0-5):
-            <input type="number" min="0" max="5" value="1"
-                   onchange="updateSkill(${index}, 'confidence', this.value)" />
-
-            <br/><br/>
-            <button type="button" onclick="removeSkill(${index})">Remove</button>
-        `;
-
-        container.appendChild(card);
-    });
-}
-
-function updateSkill(index, key, value) {
-    if (key === "confidence") {
-        value = parseInt(value) || 1;
-    }
-    addedSkills[index][key] = value;
-    updateHiddenInput();
-}
-
-function removeSkill(index) {
-    addedSkills.splice(index, 1);
-    renderSkills();
-    updateHiddenInput();
-}
-
-function updateHiddenInput() {
-    hiddenInput.value = JSON.stringify(addedSkills);
-}
-</script>
-<script>
-const TECH_GOALS = [
-    "SDE",
-    "Software Engineer",
-    "Frontend Developer",
-    "Backend Developer",
-    "Full Stack Developer",
-    "AI Engineer",
-    "ML Engineer",
-    "DevOps Engineer",
-    "Cloud Engineer",
-    "Data Scientist"
-];
-
+// ── GOALS AUTOCOMPLETE ──
+const TECH_GOALS = ["SDE","Software Engineer","Frontend Developer","Backend Developer","Full Stack Developer","AI Engineer","ML Engineer","DevOps Engineer","Cloud Engineer","Data Scientist","Android Developer","iOS Developer","Embedded Systems Engineer"];
 let addedGoals = [];
 
-const goalInput = document.getElementById("goalInput");
-const goalSuggestions = document.getElementById("goalSuggestions");
-const goalsContainer = document.getElementById("goalsContainer");
-const goalsHiddenInput = document.getElementById("goalsJson");
+const goalInput = document.getElementById('goalInput');
+const goalSugg = document.getElementById('goalSuggestions');
+const goalsContainer = document.getElementById('goalsContainer');
 
-// Show suggestions
-goalInput.addEventListener("input", () => {
-    const query = goalInput.value.toLowerCase();
-    goalSuggestions.innerHTML = "";
-
-    if (!query) {
-        goalSuggestions.style.display = "none";
-        return;
-    }
-
-    const filtered = TECH_GOALS.filter(goal =>
-        goal.toLowerCase().includes(query)
-    );
-
-    if (filtered.length === 0) {
-        goalSuggestions.style.display = "none";
-        return;
-    }
-
-    filtered.forEach(goal => {
-        const div = document.createElement("div");
-        div.textContent = goal;
-        div.style.padding = "8px";
-        div.style.cursor = "pointer";
-        div.onclick = () => addGoal(goal, "core");
-        goalSuggestions.appendChild(div);
-    });
-
-    goalSuggestions.style.display = "block";
+goalInput.addEventListener('input', () => {
+  const q = goalInput.value.toLowerCase();
+  goalSugg.innerHTML = '';
+  if (!q) { goalSugg.style.display = 'none'; return; }
+  const filtered = TECH_GOALS.filter(g => g.toLowerCase().includes(q));
+  if (!filtered.length) { goalSugg.style.display = 'none'; return; }
+  filtered.forEach(g => {
+    const d = document.createElement('div'); d.className = 'suggestion-item'; d.textContent = g;
+    d.onclick = () => addGoal(g, 'core'); goalSugg.appendChild(d);
+  });
+  goalSugg.style.display = 'block';
 });
+goalInput.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); const v = goalInput.value.trim(); if (v) addGoal(v, 'custom'); } });
+document.addEventListener('click', e => { if (!goalInput.contains(e.target)) goalSugg.style.display = 'none'; });
 
-// Add custom goal on Enter
-goalInput.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") {
-        e.preventDefault();
-        const value = goalInput.value.trim();
-        if (value) {
-            addGoal(value, "custom");
-        }
-    }
-});
-
-function addGoal(goalName, source) {
-    // Prevent duplicates
-    if (addedGoals.find(g => g.name.toLowerCase() === goalName.toLowerCase())) {
-        goalInput.value = "";
-        goalSuggestions.style.display = "none";
-        return;
-    }
-
-    const goalObj = {
-        name: goalName,
-        source: source
-    };
-
-    addedGoals.push(goalObj);
-    renderGoals();
-    updateGoalsHidden();
-
-    goalInput.value = "";
-    goalSuggestions.style.display = "none";
+function addGoal(name, source) {
+  if (addedGoals.find(g => g.name.toLowerCase() === name.toLowerCase())) { goalInput.value = ''; goalSugg.style.display = 'none'; return; }
+  addedGoals.push({ name, source });
+  renderGoals(); goalInput.value = ''; goalSugg.style.display = 'none'; updateGoalsHidden();
 }
-
+function removeGoal(i) { addedGoals.splice(i, 1); renderGoals(); updateGoalsHidden(); }
 function renderGoals() {
-    goalsContainer.innerHTML = "";
-
-    addedGoals.forEach((goal, index) => {
-        const chip = document.createElement("div");
-        chip.style.display = "inline-block";
-        chip.style.padding = "6px 10px";
-        chip.style.margin = "5px";
-        chip.style.border = "1px solid #ccc";
-        chip.style.borderRadius = "20px";
-        chip.style.background = "#f0f0f0";
-
-        chip.innerHTML = `
-            ${goal.name} (${goal.source})
-            <button type="button" onclick="removeGoal(${index})" style="margin-left:8px;">x</button>
-        `;
-
-        goalsContainer.appendChild(chip);
-    });
+  goalsContainer.innerHTML = '';
+  addedGoals.forEach((g, i) => {
+    const t = document.createElement('span');
+    t.className = 'tag' + (g.source === 'custom' ? ' custom' : '');
+    t.innerHTML = `${g.name}<button class="tag-remove" type="button" onclick="removeGoal(${i})"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>`;
+    goalsContainer.appendChild(t);
+  });
 }
+function updateGoalsHidden() { document.getElementById('goalsJson').value = JSON.stringify(addedGoals); }
 
-function removeGoal(index) {
-    addedGoals.splice(index, 1);
-    renderGoals();
-    updateGoalsHidden();
-}
+// ── SKILLS AUTOCOMPLETE ──
+const TECH_SKILLS = ["C","C++","Java","Python","JavaScript","TypeScript","React","Next.js","Vue.js","Angular","Node.js","Express","MongoDB","MySQL","PostgreSQL","Redis","DSA","OOP","DBMS","Operating Systems","Computer Networks","Git","Docker","Kubernetes","AWS","GCP","Azure","System Design","Tailwind CSS","GraphQL","REST APIs","Spring Boot","Django","Flask","Rust","Go","Kotlin","Swift"];
+let addedSkills = [];
 
-function updateGoalsHidden() {
-    goalsHiddenInput.value = JSON.stringify(addedGoals);
+const skillInput = document.getElementById('skillInput');
+const skillSugg = document.getElementById('skillSuggestions');
+const skillsContainer = document.getElementById('skillsContainer');
+
+skillInput.addEventListener('input', () => {
+  const q = skillInput.value.toLowerCase();
+  skillSugg.innerHTML = '';
+  if (!q) { skillSugg.style.display = 'none'; return; }
+  const filtered = TECH_SKILLS.filter(s => s.toLowerCase().includes(q));
+  if (!filtered.length) { skillSugg.style.display = 'none'; return; }
+  filtered.forEach(s => {
+    const d = document.createElement('div'); d.className = 'suggestion-item'; d.textContent = s;
+    d.onclick = () => addSkill(s, 'core'); skillSugg.appendChild(d);
+  });
+  skillSugg.style.display = 'block';
+});
+skillInput.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); const v = skillInput.value.trim(); if (v) addSkill(v, 'custom'); } });
+document.addEventListener('click', e => { if (!skillInput.contains(e.target)) skillSugg.style.display = 'none'; });
+
+function addSkill(name, source) {
+  if (addedSkills.find(s => s.name.toLowerCase() === name.toLowerCase())) { skillInput.value = ''; skillSugg.style.display = 'none'; return; }
+  addedSkills.push({ name, source, level: 'beginner', exposure: 'heard', confidence: 1 });
+  renderSkills(); skillInput.value = ''; skillSugg.style.display = 'none'; updateSkillsHidden();
 }
+function removeSkill(i) { addedSkills.splice(i, 1); renderSkills(); updateSkillsHidden(); }
+function updateSkill(i, key, val) { if (key === 'confidence') val = parseInt(val) || 1; addedSkills[i][key] = val; updateSkillsHidden(); }
+function renderSkills() {
+  skillsContainer.innerHTML = '';
+  addedSkills.forEach((s, i) => {
+    const card = document.createElement('div'); card.className = 'skill-card';
+    card.innerHTML = `
+      <div class="skill-card-name">${s.name}</div>
+      <div class="skill-card-selects">
+        <select class="mini-select" onchange="updateSkill(${i},'level',this.value)">
+          <option value="beginner" ${s.level==='beginner'?'selected':''}>Beginner</option>
+          <option value="intermediate" ${s.level==='intermediate'?'selected':''}>Intermediate</option>
+          <option value="advanced" ${s.level==='advanced'?'selected':''}>Advanced</option>
+        </select>
+        <select class="mini-select" onchange="updateSkill(${i},'exposure',this.value)">
+          <option value="heard" ${s.exposure==='heard'?'selected':''}>Heard of it</option>
+          <option value="learned" ${s.exposure==='learned'?'selected':''}>Learned</option>
+          <option value="projects" ${s.exposure==='projects'?'selected':''}>Built projects</option>
+          <option value="confident" ${s.exposure==='confident'?'selected':''}>Confident</option>
+        </select>
+      </div>
+      <button type="button" class="skill-remove" onclick="removeSkill(${i})">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>`;
+    skillsContainer.appendChild(card);
+  });
+}
+function updateSkillsHidden() { document.getElementById('skillsJson').value = JSON.stringify(addedSkills); }
+
+function prepareSubmit() { updateGoalsHidden(); updateSkillsHidden(); }
 </script>
-
 </body>
 </html>

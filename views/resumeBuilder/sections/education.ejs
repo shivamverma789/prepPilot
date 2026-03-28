@@ -1,92 +1,67 @@
+<style>
+.sec-input{width:100%;padding:8px 10px;border:1.5px solid #e2e8f0;border-radius:7px;font-size:12px;font-family:'Inter',sans-serif;color:#1e293b;background:#f8fafc;outline:none;transition:border-color 0.2s}
+.sec-input:focus{border-color:#2563eb;background:#fff}
+.sec-label{font-size:12px;font-weight:600;color:#475569;margin-bottom:5px;display:block}
+.add-card{background:#f8fafc;border:1.5px dashed #e2e8f0;border-radius:10px;padding:14px;margin-bottom:16px}
+.add-card-title{font-size:13px;font-weight:700;color:#334155;margin-bottom:10px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px}
+.sec-btn{padding:9px 14px;background:linear-gradient(135deg,#2563eb,#3b82f6);color:white;border:none;border-radius:7px;font-size:12px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:all 0.15s}
+.sec-btn:hover{transform:translateY(-1px)}
+.entry-card{background:#fff;border:1.5px solid #e2e8f0;border-radius:10px;padding:14px;margin-bottom:12px}
+.entry-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.entry-title{font-size:13px;font-weight:700;color:#1e293b}
+.entry-sub{font-size:11px;color:#64748b}
+.btn-del{padding:5px 8px;background:transparent;border:1.5px solid #fecaca;border-radius:6px;font-size:11px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;color:#dc2626}
+.btn-del:hover{background:#fee2e2}
+.btn-save{padding:6px 12px;background:#f1f5f9;border:1.5px solid #e2e8f0;border-radius:6px;font-size:11px;font-weight:600;font-family:'Inter',sans-serif;cursor:pointer;color:#475569}
+.btn-save:hover{border-color:#2563eb;color:#2563eb}
+</style>
 
-<h2>Education</h2>
+<% const eduSection = resume.sections.find(s => s.title === 'Education') %>
 
-<form method="POST" action="/builder/${resumeId}/education">
-
-<input name="degree" placeholder="Degree (B.Tech Computer Science)" required>
-
-<input name="institution" placeholder="Institution">
-
-<input name="location" placeholder="Location">
-
-<input name="startDate" placeholder="Start Year">
-
-<input name="endDate" placeholder="End Year">
-
-<button class="btn btn-primary">Add Education</button>
-
-</form>
-
-<hr>
-
-<% const eduSection = resume.sections.find(s => s.title === "Education") %>
+<div class="add-card">
+  <div class="add-card-title">Add Education</div>
+  <form method="POST" action="/builder/<%= resume._id %>/education">
+    <div class="grid-2">
+      <div><label class="sec-label">Degree</label><input name="degree" class="sec-input" placeholder="B.Tech Computer Science" required/></div>
+      <div><label class="sec-label">Institution</label><input name="institution" class="sec-input" placeholder="IIT Delhi"/></div>
+    </div>
+    <div class="grid-3">
+      <div><label class="sec-label">Location</label><input name="location" class="sec-input" placeholder="New Delhi"/></div>
+      <div><label class="sec-label">Start Year</label><input name="startDate" class="sec-input" placeholder="2021"/></div>
+      <div><label class="sec-label">End Year</label><input name="endDate" class="sec-input" placeholder="2025"/></div>
+    </div>
+    <button type="submit" class="sec-btn">Add Education</button>
+  </form>
+</div>
 
 <% eduSection.data.forEach(entry => { %>
-
-<div class="edu-card">
-
-<form method="POST"
-action="/builder/${resumeId}/education/<%= entry._id %>/update">
-
-<div class="edu-row">
-
-<input
-name="degree"
-value="<%= entry.title %>"
-placeholder="Degree"
-class="edu-input">
-
-</div>
-
-<div class="edu-row">
-
-<input
-name="institution"
-value="<%= entry.subtitle %>"
-placeholder="Institution"
-class="edu-input">
-
-</div>
-
-<div class="edu-row">
-
-<input
-name="location"
-value="<%= entry.location %>"
-placeholder="Location"
-class="edu-input">
-
-</div>
-
-<div class="edu-row edu-bottom">
-
-<input
-name="startDate"
-value="<%= entry.startDate %>"
-placeholder="Start Year"
-class="edu-date">
-
-<input
-name="endDate"
-value="<%= entry.endDate %>"
-placeholder="End Year"
-class="edu-date">
-
-<button class="btn btn-secondary">Save</button>
-
-</form>
-
-<form method="POST"
-action="/builder/${resumeId}/education/<%= entry._id %>/delete">
-
-<button class="btn-delete">×</button>
-
-</form>
-
-</div>
-
-</div>
-
-<hr>
-
+  <div class="entry-card">
+    <div class="entry-header">
+      <div>
+        <div class="entry-title"><%= entry.title %></div>
+        <div class="entry-sub"><%= entry.subtitle %> · <%= entry.startDate %><% if(entry.endDate){ %> – <%= entry.endDate %><% } %></div>
+      </div>
+      <form method="POST" action="/builder/<%= resume._id %>/education/<%= entry._id %>/delete">
+        <button type="submit" class="btn-del">Delete</button>
+      </form>
+    </div>
+    <form method="POST" action="/builder/<%= resume._id %>/education/<%= entry._id %>/update">
+      <div class="grid-2">
+        <input name="degree" value="<%= entry.title %>" class="sec-input" placeholder="Degree"/>
+        <input name="institution" value="<%= entry.subtitle %>" class="sec-input" placeholder="Institution"/>
+      </div>
+      <div class="grid-3" style="margin-top:6px">
+        <input name="location" value="<%= entry.location %>" class="sec-input" placeholder="Location"/>
+        <input name="startDate" value="<%= entry.startDate %>" class="sec-input" placeholder="Start Year"/>
+        <input name="endDate" value="<%= entry.endDate %>" class="sec-input" placeholder="End Year"/>
+      </div>
+      <button type="submit" class="btn-save" style="margin-top:6px">Save Changes</button>
+    </form>
+  </div>
 <% }) %>
+
+<% if (eduSection.data.length === 0) { %>
+  <div style="text-align:center;padding:24px;color:#94a3b8;font-size:13px;background:#f8fafc;border-radius:10px;border:1.5px dashed #e2e8f0;">No education added yet.</div>
+<% } %>

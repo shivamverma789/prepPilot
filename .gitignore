@@ -1,7 +1,10 @@
 .env
 node_modules
+uploads/*
+!uploads/notempty.txt
 context.txt
 context2.txt
 context3.txt
 context4.txt
 documeentation
+PRODUCTION_CHECKLIST.txt

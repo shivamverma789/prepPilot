@@ -1067,7 +1067,15 @@ exports.printResume = async (req, res) => {
 
     resume.sections.sort((a, b) => a.order - b.order);
 
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-gpu"
+      ]
+    });
 
     const page = await browser.newPage();
 
@@ -1132,17 +1140,22 @@ const aiResult = await enhanceResume(resume)
 
 /* 🔥 SAVE AI RESULT */
 
-resume.aiCache = {
-optimizedResume: aiResult.optimizedResume,
-atsScoreBefore: aiResult.atsScoreBefore,
-atsScoreAfter: aiResult.atsScoreAfter,
-missingSkills: aiResult.missingSkills,
-improvementNotes: aiResult.improvementNotes,
-lastGenerated: new Date()
-}
-
-await resume.save()
-
+ await Resume.findOneAndUpdate(
+      {
+        _id: req.params.id,
+        userId: req.user._id
+      },
+      {
+        aiCache: {
+          optimizedResume: aiResult.optimizedResume,
+          atsScoreBefore: aiResult.atsScoreBefore,
+          atsScoreAfter: aiResult.atsScoreAfter,
+          missingSkills: aiResult.missingSkills,
+          improvementNotes: aiResult.improvementNotes,
+          lastGenerated: new Date()
+        }
+      }
+);
 res.json(aiResult)
 
 } catch(err) {
@@ -1156,66 +1169,59 @@ res.status(500).send("AI enhancement failed")
 
 exports.enhanceResumeWithJD = async (req,res)=>{
 
-try{
+    try{
 
-const resume = await Resume.findOne({
-_id: req.params.id,
-userId: req.user._id
-})
+    const resume = await Resume.findOne({
+    _id: req.params.id,
+    userId: req.user._id
+    })
 
-if(!resume) return res.status(404).send("Not found")
+    if(!resume) return res.status(404).send("Not found")
 
-const jd = req.body.jd
-const result = await enhanceResumeWithJD(resume, jd)
+    const jd = req.body.jd
+    const result = await enhanceResumeWithJD(resume, jd)
 
-// optional: store in DB
-resume.aiCache = result
-resume.status = "optimized"
-await resume.save()
+    // optional: store in DB
+    resume.aiCache = result
+    resume.status = "optimized"
+    await resume.save()
 
-res.json(result)
+    res.json(result)
 
-}catch(err){
-res.status(500).json({ error: err.message })
+    }catch(err){
+    res.status(500).json({ error: err.message })
+    }
+
 }
 
-}
-//resume extractor and parser
+
 const { extractText } = require("../services/parser/textExtractor")
 const { normalizeResume } = require("../utils/normalizeResume")
-const fs = require("fs");
 
 exports.importResume = async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).send("No file uploaded");
+        }
 
-try{
+        // req.file.buffer is available because multer memoryStorage is used in the route
+        const text = await extractText(req.file.buffer, req.file.mimetype);
 
-if(!req.file){
-return res.send("No file uploaded")
-}
+        const parsed = await parseResumeFromText(text);
+        const normalized = normalizeResume(parsed);
 
-const text = await extractText(req.file.path, req.file.mimetype)
+        const newResume = await Resume.create({
+            userId: req.user._id,
+            title: normalized.basics.fullName || "Imported Resume",
+            basics: normalized.basics,
+            sections: normalized.sections,
+            status: "draft"
+        });
 
-fs.unlinkSync(req.file.path)
+        res.redirect(`/builder/${newResume._id}/editor`);
 
-const parsed = await parseResumeFromText(text)
-
-const normalized = normalizeResume(parsed)
-
-// ✅ SAVE TO DB
-const newResume = await Resume.create({
-  userId: req.user._id,
-  title: normalized.basics.fullName || "Imported Resume",
-  basics: normalized.basics,
-  sections: normalized.sections,
-  status: "draft"
-})
-
-// ✅ REDIRECT TO EDITOR
-res.redirect(`/builder/${newResume._id}/editor`)
-
-}catch(err){
-console.error(err)
-res.send("Import failed")
-}
-
-}
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Import failed");
+    }
+};

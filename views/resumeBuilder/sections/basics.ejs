@@ -1,30 +1,42 @@
+<style>
+.sec-form{display:flex;flex-direction:column;gap:14px}
+.sec-group{display:flex;flex-direction:column;gap:5px}
+.sec-label{font-size:12px;font-weight:600;color:#475569;letter-spacing:0.2px}
+.sec-input{width:100%;padding:9px 12px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:13px;font-family:'Inter',sans-serif;color:#1e293b;background:#f8fafc;outline:none;transition:border-color 0.2s,box-shadow 0.2s}
+.sec-input:focus{border-color:#2563eb;background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,0.08)}
+.sec-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sec-btn{width:100%;padding:10px;background:linear-gradient(135deg,#2563eb,#3b82f6);color:white;border:none;border-radius:8px;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:all 0.15s;box-shadow:0 2px 8px rgba(37,99,235,0.25)}
+.sec-btn:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(37,99,235,0.35)}
+</style>
 
-<h2>Basics</h2>
-
-<form method="POST" action="/builder/${resumeId}/basics">
-
-<label>Full Name</label>
-<input name="fullName" value="<%= resume.basics.fullName || '' %>" required>
-
-<label>Email</label>
-<input name="email" value="<%= resume.basics.email || '' %>">
-
-<label>Phone</label>
-<input name="phone" value="<%= resume.basics.phone || '' %>">
-
-<label>Location</label>
-<input name="location" value="<%= resume.basics.location || '' %>">
-
-<label>LinkedIn</label>
-<input name="linkedin"
-value="<%= (resume.basics.links.find(l => l.label === 'LinkedIn') || {}).url || '' %>">
-
-<label>GitHub</label>
-<input name="github"
-value="<%= (resume.basics.links.find(l => l.label === 'GitHub') || {}).url || '' %>">
-
-<br><br>
-
-<button type="submit">Save</button>
-
+<form method="POST" action="/builder/<%= resume._id %>/basics" class="sec-form">
+  <div class="sec-group">
+    <label class="sec-label">Full Name</label>
+    <input name="fullName" class="sec-input" value="<%= resume.basics.fullName || '' %>" placeholder="John Doe" required/>
+  </div>
+  <div class="sec-grid-2">
+    <div class="sec-group">
+      <label class="sec-label">Email</label>
+      <input name="email" class="sec-input" value="<%= resume.basics.email || '' %>" placeholder="john@example.com"/>
+    </div>
+    <div class="sec-group">
+      <label class="sec-label">Phone</label>
+      <input name="phone" class="sec-input" value="<%= resume.basics.phone || '' %>" placeholder="+91 9876543210"/>
+    </div>
+  </div>
+  <div class="sec-group">
+    <label class="sec-label">Location</label>
+    <input name="location" class="sec-input" value="<%= resume.basics.location || '' %>" placeholder="Bangalore, India"/>
+  </div>
+  <div class="sec-grid-2">
+    <div class="sec-group">
+      <label class="sec-label">LinkedIn URL</label>
+      <input name="linkedin" class="sec-input" value="<%= (resume.basics.links.find(l => l.label === 'LinkedIn') || {}).url || '' %>" placeholder="linkedin.com/in/..."/>
+    </div>
+    <div class="sec-group">
+      <label class="sec-label">GitHub URL</label>
+      <input name="github" class="sec-input" value="<%= (resume.basics.links.find(l => l.label === 'GitHub') || {}).url || '' %>" placeholder="github.com/..."/>
+    </div>
+  </div>
+  <button type="submit" class="sec-btn">Save Basics</button>
 </form>

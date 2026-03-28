@@ -44,12 +44,9 @@ router.get("/:id/print", controller.printResume);
 router.post("/:id/ai-enhance", controller.enhanceResumeAI)
 router.post("/:id/ai-enhance-jd", controller.enhanceResumeWithJD)
 
-// Import resume from file
-const multer = require("multer")
-
-const upload = multer({
-  dest: "uploads/"
-})
+// Import resume from file — use memoryStorage so no disk writes (safe on Render)
+const multer = require("multer");
+const upload = multer({ storage: multer.memoryStorage() });
 
 router.post(
   "/import",

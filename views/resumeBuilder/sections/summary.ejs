@@ -1,22 +1,19 @@
+<style>
+.sec-group{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.sec-label{font-size:12px;font-weight:600;color:#475569;letter-spacing:0.2px}
+.sec-textarea{width:100%;padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:13px;font-family:'Inter',sans-serif;color:#1e293b;background:#f8fafc;outline:none;resize:vertical;min-height:140px;transition:border-color 0.2s,box-shadow 0.2s;line-height:1.6}
+.sec-textarea:focus{border-color:#2563eb;background:#fff;box-shadow:0 0 0 3px rgba(37,99,235,0.08)}
+.sec-hint{font-size:11px;color:#94a3b8;margin-top:4px}
+.sec-btn{width:100%;padding:10px;background:linear-gradient(135deg,#2563eb,#3b82f6);color:white;border:none;border-radius:8px;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;transition:all 0.15s;box-shadow:0 2px 8px rgba(37,99,235,0.25)}
+.sec-btn:hover{transform:translateY(-1px)}
+</style>
 
-<h2>Professional Summary</h2>
-
-<form method="POST" action="/builder/${resumeId}/summary">
-
-<textarea name="summary" rows="8"
-style="width:100%; padding:10px; border:1px solid #ccc; border-radius:5px;">
-
-<%
-const summarySection = resume.sections.find(
-  s => s.title === "Summary"
-)
-%>
-<%= summarySection?.data || "" %>
-
-</textarea>
-
-<br><br>
-
-<button type="submit">Save Summary</button>
-
+<% const summarySection = resume.sections.find(s => s.title === 'Professional Summary' || s.title === 'Summary') %>
+<form method="POST" action="/builder/<%= resume._id %>/summary">
+  <div class="sec-group">
+    <label class="sec-label">Professional Summary</label>
+    <textarea name="summary" class="sec-textarea" placeholder="Write a concise 2-3 sentence summary highlighting your key skills, experience, and career goals..."><%= summarySection?.data || '' %></textarea>
+    <div class="sec-hint">Keep it under 3 sentences. Focus on your strongest skills and target role.</div>
+  </div>
+  <button type="submit" class="sec-btn">Save Summary</button>
 </form>

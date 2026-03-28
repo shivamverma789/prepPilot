@@ -1,316 +1,583 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>My Roadmap - PrepPilot</title>
-    <style>
-        body {
-            font-family: "Segoe UI", Arial, sans-serif;
-            background: #f4f6f8;
-            margin: 0;
-            padding: 30px;
-            color: #2c3e50;
-        }
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Roadmap — PrepPilot</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-        h1 {
-            margin-bottom: 25px;
-        }
+    :root {
+      --blue: #2563eb; --blue-dark: #1d4ed8; --blue-mid: #3b82f6;
+      --blue-light: #eff6ff; --blue-pale: #dbeafe;
+      --white: #ffffff; --gray-50: #f8fafc; --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0; --gray-300: #cbd5e1; --gray-400: #94a3b8;
+      --gray-500: #64748b; --gray-600: #475569; --gray-700: #334155;
+      --gray-800: #1e293b; --gray-900: #0f172a;
+      --green: #16a34a; --green-light: #dcfce7;
+      --sidebar-w: 260px; --navbar-h: 64px;
+      --radius: 14px;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow: 0 4px 16px rgba(0,0,0,0.07);
+    }
 
-        .phase-box {
-            background: #ffffff;
-            border: 1px solid #e0e6ed;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 25px;
-        }
+    body { font-family: 'Inter', sans-serif; background: var(--gray-50); color: var(--gray-800); min-height: 100vh; }
 
-        .phase-title {
-            font-size: 20px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #eaecef;
-            padding-bottom: 8px;
-        }
+    /* NAVBAR */
+    .navbar {
+      position: fixed; top: 0; left: 0; right: 0; height: var(--navbar-h);
+      background: var(--white); border-bottom: 1px solid var(--gray-200);
+      display: flex; align-items: center; padding: 0 24px; z-index: 100; gap: 16px;
+    }
+    .nav-brand {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 18px; font-weight: 800; color: var(--gray-900);
+      text-decoration: none; letter-spacing: -0.5px;
+    }
+    .nav-brand-icon {
+      width: 36px; height: 36px;
+      background: linear-gradient(135deg, var(--blue), var(--blue-mid));
+      border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px;
+    }
+    .nav-spacer { flex: 1; }
+    .nav-btn {
+      padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: 600;
+      font-family: 'Inter', sans-serif; cursor: pointer; border: none;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+      transition: all 0.15s;
+    }
+    .nav-btn-ghost { background: transparent; color: var(--gray-600); border: 1.5px solid var(--gray-200); }
+    .nav-btn-ghost:hover { background: var(--gray-100); }
+    .nav-btn-primary {
+      background: linear-gradient(135deg, var(--blue), var(--blue-mid));
+      color: white; box-shadow: 0 2px 8px rgba(37,99,235,0.3);
+    }
+    .nav-btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(37,99,235,0.4); }
+    .hamburger { display: none; background: none; border: none; cursor: pointer; padding: 6px; border-radius: 8px; color: var(--gray-600); }
 
-        .skill-card {
-            border: 1px solid #eaecef;
-            border-radius: 6px;
-            padding: 15px;
-            margin-bottom: 15px;
-            background: #fafbfc;
-        }
+    /* SIDEBAR */
+    .sidebar {
+      position: fixed; top: var(--navbar-h); left: 0;
+      width: var(--sidebar-w); height: calc(100vh - var(--navbar-h));
+      background: var(--white); border-right: 1px solid var(--gray-200);
+      padding: 24px 16px; overflow-y: auto; z-index: 90;
+      transition: transform 0.3s cubic-bezier(0.16,1,0.3,1);
+    }
+    .sidebar-section { margin-bottom: 28px; }
+    .sidebar-label {
+      font-size: 10px; font-weight: 700; color: var(--gray-400);
+      letter-spacing: 1px; text-transform: uppercase; padding: 0 12px; margin-bottom: 8px;
+    }
+    .sidebar-link {
+      display: flex; align-items: center; gap: 12px; padding: 10px 12px;
+      border-radius: 10px; font-size: 14px; font-weight: 500; color: var(--gray-600);
+      text-decoration: none; transition: all 0.15s; margin-bottom: 2px;
+    }
+    .sidebar-link:hover { background: var(--gray-100); color: var(--gray-800); }
+    .sidebar-link.active { background: var(--blue-light); color: var(--blue); font-weight: 600; }
+    .sidebar-link .s-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; flex-shrink: 0; background: var(--gray-100);
+    }
+    .sidebar-link.active .s-icon { background: var(--blue-pale); }
+    .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 89; }
 
-        .skill-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
+    /* MAIN */
+    .main { margin-left: var(--sidebar-w); margin-top: var(--navbar-h); padding: 32px; }
 
-        .meta {
-            font-size: 13px;
-            color: #6b7280;
-            margin-bottom: 10px;
-        }
+    /* PAGE HEADER */
+    .page-header {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      margin-bottom: 28px; gap: 16px; flex-wrap: wrap;
+      animation: fadeUp 0.4s ease both;
+    }
+    .page-header h1 { font-size: 26px; font-weight: 800; color: var(--gray-900); letter-spacing: -0.5px; }
+    .page-header p { font-size: 14px; color: var(--gray-500); margin-top: 4px; }
 
-        .progress-bar {
-            width: 100%;
-            height: 8px;
-            background: #e5e7eb;
-            border-radius: 5px;
-            margin-bottom: 15px;
-            overflow: hidden;
-        }
+    /* EMPTY STATE */
+    .empty-wrap {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; padding: 80px 20px; text-align: center;
+      animation: fadeUp 0.4s ease both;
+    }
+    .empty-icon { font-size: 64px; margin-bottom: 20px; }
+    .empty-wrap h2 { font-size: 22px; font-weight: 700; color: var(--gray-800); margin-bottom: 8px; }
+    .empty-wrap p { font-size: 14px; color: var(--gray-500); margin-bottom: 28px; max-width: 360px; line-height: 1.6; }
 
-        .progress-fill {
-            height: 8px;
-            background: #2563eb;
-        }
+    /* PHASE SECTION */
+    .phase-section {
+      margin-bottom: 32px;
+      animation: fadeUp 0.4s ease both;
+    }
+    .phase-header {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 16px;
+    }
+    .phase-badge {
+      background: linear-gradient(135deg, var(--blue), var(--blue-mid));
+      color: white; font-size: 11px; font-weight: 700;
+      padding: 4px 12px; border-radius: 20px; letter-spacing: 0.5px;
+      text-transform: uppercase; white-space: nowrap;
+    }
+    .phase-title-text {
+      font-size: 18px; font-weight: 700; color: var(--gray-800);
+    }
+    .phase-line { flex: 1; height: 1px; background: var(--gray-200); }
 
-        .subtopic-list {
-            list-style: none;
-            padding-left: 0;
-            margin: 0;
-        }
+    /* SKILL CARD */
+    .skill-card {
+      background: var(--white);
+      border: 1px solid var(--gray-200);
+      border-radius: var(--radius);
+      margin-bottom: 14px;
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+      transition: box-shadow 0.2s;
+    }
+    .skill-card:hover { box-shadow: var(--shadow); }
 
-        .subtopic-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 8px 10px;
-            border-bottom: 1px solid #f0f2f5;
-        }
+    .skill-card-header {
+      padding: 18px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+      cursor: pointer; gap: 12px;
+      user-select: none;
+    }
+    .skill-card-left { display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0; }
+    .skill-card-title { font-size: 15px; font-weight: 700; color: var(--gray-800); }
+    .skill-meta { font-size: 12px; color: var(--gray-400); margin-top: 2px; }
 
-        .subtopic-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+    .progress-wrap { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .progress-bar {
+      width: 100px; height: 6px;
+      background: var(--gray-200); border-radius: 10px; overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%; border-radius: 10px;
+      background: linear-gradient(90deg, var(--blue), var(--blue-mid));
+      transition: width 0.5s ease;
+    }
+    .progress-pct { font-size: 12px; font-weight: 600; color: var(--blue); min-width: 32px; text-align: right; }
 
-        .subtopic-title {
-            font-size: 14px;
-            font-weight: 500;
-        }
+    .status-badge {
+      font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px;
+    }
+    .status-badge.pending { background: var(--gray-100); color: var(--gray-500); }
+    .status-badge.in-progress { background: var(--blue-light); color: var(--blue); }
+    .status-badge.completed { background: var(--green-light); color: var(--green); }
 
-        .actions {
-            display: flex;
-            gap: 8px;
-        }
+    .chevron {
+      color: var(--gray-400); transition: transform 0.25s;
+      flex-shrink: 0;
+    }
+    .skill-card.open .chevron { transform: rotate(180deg); }
 
-        .btn {
-            font-size: 12px;
-            padding: 4px 10px;
-            border-radius: 4px;
-            border: 1px solid #d1d5db;
-            background: #ffffff;
-            cursor: pointer;
-            text-decoration: none;
-            color: #374151;
-        }
+    /* SKILL BODY */
+    .skill-card-body {
+      display: none; border-top: 1px solid var(--gray-100);
+    }
+    .skill-card.open .skill-card-body { display: block; }
 
-        .btn:hover {
-            background: #f3f4f6;
-        }
+    /* SUBTOPICS */
+    .subtopic-list { padding: 8px 0; }
+    .subtopic-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 20px; gap: 12px;
+      border-bottom: 1px solid var(--gray-100);
+      transition: background 0.15s;
+    }
+    .subtopic-item:last-child { border-bottom: none; }
+    .subtopic-item:hover { background: var(--gray-50); }
 
-        .btn-test {
-            border-color: #2563eb;
-            color: #2563eb;
-        }
+    .subtopic-left { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
 
-        .mini-project {
-            margin-top: 15px;
-            padding: 12px;
-            border: 1px dashed #d1d5db;
-            border-radius: 6px;
-            background: #ffffff;
-        }
+    .custom-checkbox {
+      width: 18px; height: 18px; flex-shrink: 0;
+      border: 2px solid var(--gray-300); border-radius: 5px;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s; background: var(--white);
+      position: relative;
+    }
+    .custom-checkbox.checked {
+      background: var(--blue); border-color: var(--blue);
+    }
+    /* checkmark drawn purely in CSS — no innerHTML needed */
+    .custom-checkbox.checked::after {
+      content: '';
+      position: absolute;
+      width: 5px; height: 9px;
+      border: 2px solid white;
+      border-top: none; border-left: none;
+      transform: rotate(45deg) translate(-1px, -1px);
+    }
 
-        .mini-project h4 {
-            margin: 0 0 5px 0;
-            font-size: 15px;
-        }
+    .subtopic-title {
+      font-size: 14px; font-weight: 500; color: var(--gray-700);
+      transition: color 0.15s;
+    }
+    .subtopic-title.done { color: var(--gray-400); text-decoration: line-through; }
 
-        .project-btn {
-            margin-top: 8px;
-            padding: 6px 12px;
-            font-size: 13px;
-            border-radius: 4px;
-            border: none;
-            cursor: pointer;
-        }
+    .subtopic-actions { display: flex; gap: 6px; flex-shrink: 0; }
+    .resource-btn {
+      padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600;
+      text-decoration: none; border: 1.5px solid var(--gray-200);
+      color: var(--gray-600); background: var(--white);
+      transition: all 0.15s; white-space: nowrap;
+    }
+    .resource-btn:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-light); }
+    .resource-btn.yt { border-color: #fecaca; color: #dc2626; }
+    .resource-btn.yt:hover { background: #fef2f2; }
+    .test-btn {
+      padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600;
+      text-decoration: none; background: var(--blue-light); color: var(--blue);
+      border: 1.5px solid var(--blue-pale); transition: all 0.15s;
+    }
+    .test-btn:hover { background: var(--blue); color: white; }
 
-        .start-btn {
-            background: #2563eb;
-            color: white;
-        }
+    /* MINI PROJECT */
+    .mini-project {
+      margin: 0 20px 20px;
+      padding: 16px 18px;
+      border: 1.5px dashed var(--gray-300);
+      border-radius: 10px;
+      background: var(--gray-50);
+    }
+    .mini-project-header {
+      display: flex; align-items: center; gap: 8px; margin-bottom: 6px;
+    }
+    .mini-project-label {
+      font-size: 11px; font-weight: 700; color: var(--blue);
+      text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .mini-project-title { font-size: 14px; font-weight: 700; color: var(--gray-800); margin-bottom: 4px; }
+    .mini-project-desc { font-size: 13px; color: var(--gray-500); line-height: 1.5; margin-bottom: 12px; }
 
-        .complete-btn {
-            background: #16a34a;
-            color: white;
-        }
+    .project-btn {
+      padding: 7px 16px; border-radius: 8px; font-size: 13px; font-weight: 600;
+      border: none; cursor: pointer; font-family: 'Inter', sans-serif;
+      transition: all 0.15s;
+    }
+    .project-btn.start { background: var(--blue); color: white; }
+    .project-btn.start:hover { background: var(--blue-dark); }
+    .project-btn.complete { background: var(--green); color: white; }
+    .project-btn.complete:hover { background: #15803d; }
+    .project-done { font-size: 13px; font-weight: 600; color: var(--green); display: flex; align-items: center; gap: 6px; }
 
-        a.back {
-            display: inline-block;
-            margin-top: 20px;
-            text-decoration: none;
-            color: #2563eb;
-            font-weight: 500;
-        }
-    </style>
+    /* ANIMATIONS */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      .hamburger { display: flex; }
+      .sidebar { transform: translateX(-100%); }
+      .sidebar.open { transform: translateX(0); box-shadow: 4px 0 24px rgba(0,0,0,0.12); }
+      .sidebar-overlay.open { display: block; }
+      .main { margin-left: 0; padding: 20px 16px; }
+      .progress-wrap { display: none; }
+      .subtopic-actions { flex-wrap: wrap; }
+    }
+  </style>
 </head>
 <body>
 
-<h1>Your Personalized Learning Roadmap</h1>
+<!-- NAVBAR -->
+<nav class="navbar">
+  <button class="hamburger" id="hamburgerBtn">
+    <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <line x1="3" y1="6" x2="19" y2="6"/><line x1="3" y1="11" x2="19" y2="11"/><line x1="3" y1="16" x2="19" y2="16"/>
+    </svg>
+  </button>
+  <a href="/dashboard" class="nav-brand">
+    <div class="nav-brand-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    PrepPilot
+  </a>
+  <div class="nav-spacer"></div>
+  <a href="/dashboard" class="nav-btn nav-btn-ghost">← Dashboard</a>
+  <form action="/generate-roadmap?force=true" method="POST" id="resetForm">
+    <button type="button" class="nav-btn nav-btn-ghost" onclick="confirmReset()">Regenerate</button>
+  </form>
+</nav>
 
-<%
-let currentPhase = "";
-%>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-<% if (tasks.length === 0) { %>
-    <p>No roadmap generated yet.</p>
-<% } else { %>
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-section">
+    <div class="sidebar-label">Main</div>
+    <a href="/dashboard" class="sidebar-link"><span class="s-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg></span> Dashboard</a>
+    <a href="/roadmap" class="sidebar-link active"><span class="s-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg></span> Roadmap</a>
+    <a href="/activity/activity-dashboard" class="sidebar-link"><span class="s-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg></span> DSA Activity</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Tools</div>
+    <a href="/builder" class="sidebar-link"><span class="s-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></span> Resume Builder</a>
+    <a href="/resume" class="sidebar-link"><span class="s-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span> ATS Analyzer</a>
+    <a href="/api/interview/setup" class="sidebar-link"><span class="s-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg></span> AI Interview</a>
+  </div>
+  <div class="sidebar-section">
+    <div class="sidebar-label">Account</div>
+    <a href="/profile" class="sidebar-link"><span class="s-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> Profile</a>
+    <a href="/logout" class="sidebar-link"><span class="s-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span> Logout</a>
+  </div>
+</aside>
 
-    <% tasks.forEach(task => { %>
+<main class="main">
 
-        <% if (task.phase !== currentPhase) { 
-            if (currentPhase !== "") { %>
-                </div>
-            <% }
-            currentPhase = task.phase; %>
+  <div class="page-header">
+    <div>
+      <h1>Your Learning Roadmap</h1>
+      <p>Follow each phase step-by-step to maximize your placement chances</p>
+    </div>
+  </div>
 
-            <div class="phase-box">
-                <div class="phase-title"><%= task.phase %></div>
-        <% } %>
+  <% if (!tasks || tasks.length === 0) { %>
+    <div class="empty-wrap">
+      <div class="empty-icon">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l19-9-9 19-2-8-8-2z"/></svg>
+      </div>
+      <h2>No roadmap yet</h2>
+      <p>Generate your personalized AI roadmap based on your skills and career goals.</p>
+      <form action="/generate-roadmap" method="POST" id="genForm">
+        <button type="button" class="nav-btn nav-btn-primary" style="padding:12px 28px;font-size:15px;" onclick="generateRoadmap()">
+          Generate My Roadmap
+        </button>
+      </form>
+    </div>
+  <% } else { %>
 
-        <div class="skill-card">
-            <div class="skill-title"><%= task.title %></div>
+    <%
+      let currentPhase = null;
+      let phaseIndex = 0;
+    %>
 
-            <div class="meta">
-                Status: <%= task.phaseStatus %> | Progress: <%= task.progressPercentage %>%
+    <% tasks.forEach((task, i) => { %>
+
+      <% if (task.phase !== currentPhase) {
+        if (currentPhase !== null) { %>
+          </div><!-- end phase-section -->
+        <% }
+        currentPhase = task.phase;
+        phaseIndex++;
+      %>
+        <div class="phase-section" style="animation-delay: <%= phaseIndex * 0.05 %>s">
+          <div class="phase-header">
+            <span class="phase-badge">Phase <%= phaseIndex %></span>
+            <span class="phase-title-text"><%= task.phase %></span>
+            <div class="phase-line"></div>
+          </div>
+      <% } %>
+
+      <!-- SKILL CARD -->
+      <div class="skill-card" id="skill-<%= task._id %>">
+        <div class="skill-card-header" onclick="toggleCard('<%= task._id %>')">
+          <div class="skill-card-left">
+            <div>
+              <div class="skill-card-title"><%= task.title %></div>
+              <div class="skill-meta"><%= task.subtopics.length %> subtopics</div>
             </div>
-
+          </div>
+          <div class="progress-wrap">
             <div class="progress-bar">
-                <div class="progress-fill" style="width: <%= task.progressPercentage %>%"></div>
+              <div class="progress-fill" style="width:<%= task.progressPercentage %>%"></div>
             </div>
-
-            <ul class="subtopic-list">
-                <% task.subtopics.forEach(sub => { %>
-                    <li class="subtopic-item">
-                        
-                        <!-- LEFT: Checkbox + Title -->
-                        <div class="subtopic-left">
-                            <input 
-                                type="checkbox"
-                                <%= sub.isCompleted ? 'checked' : '' %>
-                                onchange="toggleSubtopic('<%= task._id %>', '<%= sub._id %>', this)"
-                            />
-                            <span class="subtopic-title"><%= sub.title %></span>
-                        </div>
-
-                        <!-- RIGHT: Docs | YT | Test (Same Line as requested) -->
-                        <div class="actions">
-                            <% if (sub.resources && sub.resources.length > 0) { %>
-                                <% sub.resources.forEach(r => { %>
-                                    <a href="<%= r.url %>" target="_blank" class="btn">
-                                        <%= r.type === 'youtube' ? 'YT' : 'Docs' %>
-                                    </a>
-                                <% }) %>
-                            <% } %>
-
-                            <a href="/assessment/<%= task._id %>/<%= sub._id %>" class="btn btn-test">
-                                Test
-                            </a>
-                        </div>
-
-                    </li>
-                <% }) %>
-            </ul>
-
-            <% if (task.miniProject && task.miniProject.title) { %>
-                <div class="mini-project">
-                    <h4>Mini Project: <%= task.miniProject.title %></h4>
-                    <p style="font-size: 14px; color: #555;"><%= task.miniProject.description %></p>
-
-                    <% if (!task.miniProject.isStarted) { %>
-                        <button 
-                            class="project-btn start-btn"
-                            onclick="startProject('<%= task._id %>')"
-                        >
-                            Start Project
-                        </button>
-                    <% } %>
-
-                    <% if (task.miniProject.isStarted && !task.miniProject.isCompleted) { %>
-                        <button 
-                            class="project-btn complete-btn"
-                            onclick="completeProject('<%= task._id %>')"
-                        >
-                            Mark as Completed
-                        </button>
-                    <% } %>
-
-                    <% if (task.miniProject.isCompleted) { %>
-                        <p style="color: #16a34a; font-weight: 600;">Project Completed ✓</p>
-                    <% } %>
-                </div>
-            <% } %>
-
+            <span class="progress-pct"><%= task.progressPercentage %>%</span>
+          </div>
+          <span class="status-badge <%= task.phaseStatus === 'completed' ? 'completed' : task.phaseStatus === 'in-progress' ? 'in-progress' : 'pending' %>">
+            <%= task.phaseStatus %>
+          </span>
+          <svg class="chevron" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
         </div>
 
+        <div class="skill-card-body">
+          <div class="subtopic-list">
+            <% task.subtopics.forEach(sub => { %>
+              <div class="subtopic-item" id="sub-<%= sub._id %>">
+                <div class="subtopic-left">
+                  <div class="custom-checkbox <%= sub.isCompleted ? 'checked' : '' %>"
+                       onclick="toggleSubtopic('<%= task._id %>', '<%= sub._id %>', this)">
+                  </div>
+                  <span class="subtopic-title <%= sub.isCompleted ? 'done' : '' %>"><%= sub.title %></span>
+                </div>
+                <div class="subtopic-actions">
+                  <% if (sub.resources && sub.resources.length > 0) { %>
+                    <% sub.resources.forEach(r => { %>
+                      <a href="<%= r.url %>" target="_blank" class="resource-btn <%= r.type === 'youtube' ? 'yt' : '' %>">
+                        <%= r.type === 'youtube' ? 'YouTube' : 'Docs' %>
+                      </a>
+                    <% }) %>
+                  <% } %>
+                  <a href="/assessment/<%= task._id %>/<%= sub._id %>" class="test-btn">Test</a>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+
+          <% if (task.miniProject && task.miniProject.title) { %>
+            <div class="mini-project">
+              <div class="mini-project-header">
+                <span class="mini-project-label">Mini Project</span>
+              </div>
+              <div class="mini-project-title"><%= task.miniProject.title %></div>
+              <div class="mini-project-desc"><%= task.miniProject.description %></div>
+
+              <% if (task.miniProject.isCompleted) { %>
+                <div class="project-done">Project Completed</div>
+              <% } else if (task.miniProject.isStarted) { %>
+                <button class="project-btn complete" onclick="completeProject('<%= task._id %>')">Mark as Completed</button>
+              <% } else { %>
+                <button class="project-btn start" onclick="startProject('<%= task._id %>')">Start Project</button>
+              <% } %>
+            </div>
+          <% } %>
+        </div>
+      </div>
+
     <% }) %>
+    </div><!-- end last phase-section -->
 
-    </div>
-<% } %>
+  <% } %>
 
-<a href="/dashboard" class="back">← Back to Dashboard</a>
+</main>
+
+<!-- LOADER -->
+<div id="loaderOverlay" style="position:fixed;inset:0;background:rgba(248,250,252,0.92);display:none;justify-content:center;align-items:center;z-index:9999;backdrop-filter:blur(4px);">
+  <div style="text-align:center;">
+    <div style="width:48px;height:48px;border:4px solid #e2e8f0;border-top-color:#2563eb;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 20px;"></div>
+    <div style="font-size:16px;font-weight:600;color:#1e293b;">Generating your roadmap...</div>
+    <div style="font-size:13px;color:#94a3b8;margin-top:4px;">This may take up to a minute</div>
+  </div>
+</div>
+<style>@keyframes spin { to { transform: rotate(360deg); } }</style>
 
 <script>
-async function toggleSubtopic(taskId, subtopicId, checkbox) {
+  // Sidebar
+  document.getElementById('hamburgerBtn').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sidebarOverlay').classList.toggle('open');
+  });
+  document.getElementById('sidebarOverlay').addEventListener('click', () => {
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebarOverlay').classList.remove('open');
+  });
+
+  // Accordion
+  function toggleCard(id) {
+    const card = document.getElementById('skill-' + id);
+    card.classList.toggle('open');
+  }
+
+  // ── TOGGLE SUBTOPIC ──────────────────────────────────────────
+  async function toggleSubtopic(taskId, subtopicId, el) {
+    // Optimistic UI — toggle immediately
+    const wasChecked = el.classList.contains('checked');
+    el.classList.toggle('checked');
+    const titleEl = el.closest('.subtopic-left').querySelector('.subtopic-title');
+    titleEl.classList.toggle('done', !wasChecked);
+
     try {
-        const res = await fetch(`/progress/toggle-subtopic/${taskId}/${subtopicId}?_method=PATCH`, {
-            method: "POST"
-        });
+      const res = await fetch(`/progress/toggle-subtopic/${taskId}/${subtopicId}?_method=PATCH`, { method: 'POST' });
+      if (!res.ok) throw new Error();
+      const data = await res.json();
 
-        if (!res.ok) throw new Error("Update failed");
+      // Update progress bar and % in the card header
+      const card = document.getElementById('skill-' + taskId);
+      const fill = card.querySelector('.progress-fill');
+      const pct  = card.querySelector('.progress-pct');
+      const badge = card.querySelector('.status-badge');
 
-        const scrollY = window.scrollY;
-        location.reload();
-        window.scrollTo(0, scrollY);
-
-    } catch (err) {
-        checkbox.checked = !checkbox.checked;
-        alert("Failed to update progress");
+      if (fill)  fill.style.width = data.progress + '%';
+      if (pct)   pct.textContent  = data.progress + '%';
+      if (badge) {
+        badge.className = 'status-badge ' + (
+          data.status === 'completed'   ? 'completed'   :
+          data.status === 'in-progress' ? 'in-progress' : 'pending'
+        );
+        badge.textContent = data.status;
+      }
+    } catch {
+      // Revert on failure
+      el.classList.toggle('checked');
+      titleEl.classList.toggle('done', wasChecked);
     }
-}
+  }
+
+  // ── START PROJECT ─────────────────────────────────────────────
+  async function startProject(taskId) {
+    const btn = event.target;
+    btn.disabled = true;
+    btn.textContent = 'Starting...';
+    try {
+      const res = await fetch(`/progress/start-project/${taskId}?_method=PATCH`, { method: 'POST' });
+      if (!res.ok) throw new Error();
+      // Swap button to "Mark as Completed" in-place
+      btn.className = 'project-btn complete';
+      btn.textContent = 'Mark as Completed';
+      btn.disabled = false;
+      btn.setAttribute('onclick', `completeProject('${taskId}')`);
+    } catch {
+      btn.disabled = false;
+      btn.textContent = 'Start Project';
+      alert('Failed to start project');
+    }
+  }
+
+  // ── COMPLETE PROJECT ──────────────────────────────────────────
+  async function completeProject(taskId) {
+    const btn = event.target;
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+    try {
+      const res = await fetch(`/progress/complete-project/${taskId}?_method=PATCH`, { method: 'POST' });
+      if (!res.ok) throw new Error();
+      const data = await res.json();
+
+      // Replace button with "completed" text in-place
+      const miniProject = btn.closest('.mini-project');
+      btn.replaceWith(Object.assign(document.createElement('div'), {
+        className: 'project-done',
+        textContent: 'Project Completed'
+      }));
+
+      // Update progress bar if returned
+      if (data.progress !== undefined) {
+        const card = document.getElementById('skill-' + taskId);
+        const fill  = card.querySelector('.progress-fill');
+        const pct   = card.querySelector('.progress-pct');
+        const badge = card.querySelector('.status-badge');
+        if (fill)  fill.style.width = data.progress + '%';
+        if (pct)   pct.textContent  = data.progress + '%';
+        if (badge) {
+          badge.className = 'status-badge ' + (
+            data.status === 'completed'   ? 'completed'   :
+            data.status === 'in-progress' ? 'in-progress' : 'pending'
+          );
+          badge.textContent = data.status;
+        }
+      }
+    } catch {
+      btn.disabled = false;
+      btn.textContent = 'Mark as Completed';
+      alert('Failed to complete project');
+    }
+  }
+
+  function confirmReset() {
+    if (confirm('This will DELETE your current roadmap and all progress. Continue?')) {
+      document.getElementById('loaderOverlay').style.display = 'flex';
+      document.getElementById('resetForm').submit();
+    }
+  }
+
+  function generateRoadmap() {
+    document.getElementById('loaderOverlay').style.display = 'flex';
+    document.getElementById('genForm').submit();
+  }
 </script>
-<script>
-async function startProject(taskId) {
-    try {
-        const res = await fetch(`/progress/start-project/${taskId}?_method=PATCH`, {
-            method: "POST"
-        });
 
-        if (!res.ok) throw new Error();
-
-        location.reload(); // temporary — later we can make smarter UI update
-
-    } catch (err) {
-        alert("Failed to start project");
-    }
-}
-
-async function completeProject(taskId) {
-    try {
-        const res = await fetch(`/progress/complete-project/${taskId}?_method=PATCH`, {
-            method: "POST"
-        });
-
-        if (!res.ok) throw new Error();
-
-        location.reload();
-
-    } catch (err) {
-        alert("Failed to complete project");
-    }
-}
-</script>
 </body>
 </html>

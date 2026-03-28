@@ -40,28 +40,24 @@ exports.toggleSubtopic = async (req, res) => {
         const { taskId, subtopicId } = req.params;
 
         const task = await Task.findById(taskId);
-        if (!task) return res.redirect("/roadmap");
+        if (!task) return res.status(404).json({ success: false });
 
         const subtopic = task.subtopics.id(subtopicId);
-        if (!subtopic) return res.redirect("/roadmap");
+        if (!subtopic) return res.status(404).json({ success: false });
 
-        // Toggle checkbox
         subtopic.isCompleted = !subtopic.isCompleted;
 
-        // Recalculate progress
         const { progress, status } = calculateProgressAndStatus(task);
         task.progressPercentage = progress;
         task.phaseStatus = status;
 
         await task.save();
-
-        // 🔥 Update overall roadmap progress
         await updateOverallRoadmapProgress(task.roadmapId);
 
-        res.redirect("/roadmap");
+        res.json({ success: true, progress, status, isCompleted: subtopic.isCompleted });
     } catch (err) {
         console.error("Toggle Subtopic Error:", err);
-        res.redirect("/roadmap");
+        res.status(500).json({ success: false });
     }
 };
 
@@ -71,15 +67,15 @@ exports.startProject = async (req, res) => {
         const { taskId } = req.params;
 
         const task = await Task.findById(taskId);
-        if (!task) return res.redirect("/roadmap");
+        if (!task) return res.status(404).json({ success: false });
 
         task.miniProject.isStarted = true;
         await task.save();
 
-        res.redirect("/roadmap");
+        res.json({ success: true });
     } catch (err) {
         console.error("Start Project Error:", err);
-        res.redirect("/roadmap");
+        res.status(500).json({ success: false });
     }
 };
 
@@ -104,7 +100,7 @@ exports.completeProject = async (req, res) => {
         // Update roadmap overall progress
         await updateOverallRoadmapProgress(task.roadmapId);
 
-        res.json({ success: true });
+        res.json({ success: true, progress, status });
     } catch (err) {
         console.error("Complete Project Error:", err);
         res.status(500).json({ success: false })

@@ -19,7 +19,7 @@ exports.analyzeResume = async (req, res) => {
         }
 
         if (!req.file) {
-            return res.send("Please upload a PDF file.");
+            return res.status(400).render("error", { message: "Please upload a PDF file." });
         }
 
         const parser = new PDFParse({ data: req.file.buffer });
@@ -53,6 +53,6 @@ exports.analyzeResume = async (req, res) => {
 
     } catch (err) {
         console.error("Resume Error:", err);
-        res.send("Error analyzing resume.");
+        res.status(500).render("error", { message: process.env.NODE_ENV !== "production" ? err.message : null });
     }
 };

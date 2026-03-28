@@ -1,36 +1,30 @@
-const fs = require("fs")
-const { PDFParse } = require("pdf-parse")
-const mammoth = require("mammoth")
+const mammoth = require("mammoth");
+const { PDFParse } = require("pdf-parse");
 
-exports.extractText = async (filePath, mimetype) => {
-
-  try{
-
-    // PDF
-    if(mimetype === "application/pdf"){
-
-      const buffer = fs.readFileSync(filePath)
-
-      const parser = new PDFParse({ data: buffer })
-
-      const result = await parser.getText()
-
-      return result.text
+/**
+ * Extract text from a Buffer (no disk I/O — safe for ephemeral filesystems).
+ * @param {Buffer} buffer
+ * @param {string} mimetype
+ */
+exports.extractText = async (buffer, mimetype) => {
+  try {
+    if (mimetype === "application/pdf") {
+      const parser = new PDFParse({ data: buffer });
+      const result = await parser.getText();
+      return result.text;
     }
 
-    // DOCX
-    if(mimetype === "application/vnd.openxmlformats-officedocument.wordprocessingml.document"){
-
-      const result = await mammoth.extractRawText({ path: filePath })
-
-      return result.value
+    if (
+      mimetype === "application/vnd.openxmlformats-officedocument.wordprocessingml.document" ||
+      mimetype === "application/msword"
+    ) {
+      const result = await mammoth.extractRawText({ buffer });
+      return result.value;
     }
 
-    throw new Error("Unsupported file type")
-
-  }catch(err){
-    console.error("TEXT EXTRACTION ERROR:", err)
-    throw err
+    throw new Error(`Unsupported file type: ${mimetype}`);
+  } catch (err) {
+    console.error("TEXT EXTRACTION ERROR:", err);
+    throw err;
   }
-
-}
+};

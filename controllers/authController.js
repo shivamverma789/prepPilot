@@ -12,7 +12,7 @@ exports.postRegister = async (req, res) => {
 
         const existingUser = await User.findOne({ email });
         if (existingUser) {
-            return res.send("User already exists");
+            return res.redirect("/register?error=exists");
         }
         const username = name.toLowerCase().replace(/\s+/g, "") + Math.floor(Math.random() * 1000);
 
@@ -29,8 +29,8 @@ exports.postRegister = async (req, res) => {
         res.redirect("/login");
 
     } catch (err) {
-        console.log(err);
-        res.send("Error registering user");
+        console.error("Register Error:", err);
+        res.status(500).render("error", { message: process.env.NODE_ENV !== "production" ? err.message : null });
     }
 };
 
@@ -67,6 +67,6 @@ exports.postLogin = (req, res, next) => {
 
 exports.logout = (req, res) => {
     req.logout(() => {
-        res.redirect("/login");
+        res.redirect("/");
     });
 };

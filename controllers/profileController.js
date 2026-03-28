@@ -1,4 +1,5 @@
 const User = require("../models/userModel");
+const UserPlatform = require("../models/userPlatformModel");
 
 // 🔹 GET /profile
 exports.getProfile = async (req, res) => {
@@ -145,7 +146,7 @@ exports.updateProfile = async (req, res) => {
 
     } catch (err) {
         console.error("Profile Update Error:", err);
-        res.send("Error updating profile");
+        res.status(500).render("error", { message: process.env.NODE_ENV !== "production" ? err.message : null });
     }
 };
 
@@ -153,10 +154,14 @@ exports.getDSAProfiles = async (req, res) => {
   if (!req.isAuthenticated()) {
     return res.redirect("/login");
   }
+  const userPlatforms = await UserPlatform.findOne({
+              userId: req.user._id
+});
+  res.render("activity/profile", {
+            userPlatforms,
+            
+    });
 
-  res.render("dashboard/dsaProfiles", {
-    user: req.user
-  });
 }
 
 exports.updateDSAProfiles = async (req, res) => {
@@ -188,6 +193,6 @@ exports.updateDSAProfiles = async (req, res) => {
     res.redirect("/profile"); // or wherever your profile page is
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error saving profiles");
+    res.status(500).render("error", { message: process.env.NODE_ENV !== "production" ? err.message : null });
   }
 };

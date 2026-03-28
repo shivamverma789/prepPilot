@@ -178,6 +178,6 @@ user.experience = {
 
     } catch (err) {
         console.error("Onboarding Error:", err);
-        res.send("Error saving onboarding data");
+        res.status(500).render("error", { message: process.env.NODE_ENV !== "production" ? err.message : null });
     }
 };
