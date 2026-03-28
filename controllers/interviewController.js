@@ -13,9 +13,9 @@ exports.getInterviewData = (req, res) => {
 
 exports.setInterviewData = (req, res) => {
     try {
-        if (!req.isAuthenticated()) {
-            return res.status(401).json({ error: "Not authenticated" });
-        }
+        // if (!req.isAuthenticated()) {
+        //     return res.status(401).json({ error: "Not authenticated" });
+        // }
 
         const { role, level, company, type, duration, focus } = req.body;
 

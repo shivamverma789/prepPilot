@@ -19,7 +19,10 @@ mongoose.connect(process.env.MONGO_URI)
 app.set("view engine", "ejs");
 
 app.use(cors({
-  origin: process.env.LIVEKIT_APP_URL || "http://localhost:4000",
+  origin: [
+    "http://localhost:4000",
+    "https://ai-interviewer-i9uk.vercel.app"
+  ],
   credentials: true
 }));
 
@@ -37,7 +40,11 @@ app.use(session({
     saveUninitialized: false,
     store: MongoStore.create({
         mongoUrl: process.env.MONGO_URI
-    })
+    }),
+    cookie: {
+        secure: true,       // MUST for HTTPS (Vercel + your domain)
+        sameSite: "none",   // MUST for cross-origin
+    }
 }));
 
 

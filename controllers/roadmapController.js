@@ -10,6 +10,7 @@ exports.generateRoadmap = async (req, res) => {
         }
 
         const userId = req.user._id;
+        console.log("Force:", req.query.force);
         const force = req.query.force === "true";
 
         let roadmap = await Roadmap.findOne({ userId });
