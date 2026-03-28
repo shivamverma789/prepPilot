@@ -14,6 +14,7 @@ exports.getSubtopicAssessment = async (req, res) => {
         const { taskId, subtopicId } = req.params;
 
         // 1️⃣ Fetch task & subtopic
+         const task = await Task.findById(taskId);
         if (!task) return res.status(404).render("error", { message: "Task not found" });
 
         const subtopic = task.subtopics.id(subtopicId);

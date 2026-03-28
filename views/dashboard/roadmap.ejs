@@ -279,6 +279,7 @@
       .main { margin-left: 0; padding: 20px 16px; }
       .progress-wrap { display: none; }
       .subtopic-actions { flex-wrap: wrap; }
+      .nav-btn-ghost { display: none; }
     }
   </style>
 </head>
@@ -321,6 +322,14 @@
     <div class="sidebar-label">Account</div>
     <a href="/profile" class="sidebar-link"><span class="s-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span> Profile</a>
     <a href="/logout" class="sidebar-link"><span class="s-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span> Logout</a>
+    <!-- Mobile only: Regenerate roadmap -->
+    <form action="/generate-roadmap?force=true" method="POST" style="margin-top:8px">
+      <button type="submit" onclick="return confirm('This will DELETE your current roadmap and all progress. Continue?')"
+        class="sidebar-link" style="width:100%;background:none;border:none;cursor:pointer;font-family:inherit;color:#dc2626;font-weight:600;">
+        <span class="s-icon" style="background:#fee2e2"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></span>
+        Regenerate Roadmap
+      </button>
+    </form>
   </div>
 </aside>
 

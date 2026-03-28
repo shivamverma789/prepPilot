@@ -59,14 +59,12 @@ exports.postOnboarding = async (req, res) => {
             skillLevel,
             skillConfidence
         } = req.body;
-
         // 1️⃣ Career Goals (FINAL - From Autocomplete JSON)
 let parsedGoals = [];
 
 if (goalsJson && goalsJson !== "") {
     try {
         parsedGoals = JSON.parse(goalsJson);
-        // console.log("Parsed Goals:", parsedGoals); // Debug
     } catch (err) {
         // console.error("Goals JSON Parse Error:", err);
         parsedGoals = [];

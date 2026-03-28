@@ -208,7 +208,7 @@ weeks.forEach(week => {
 
     } catch (err) {
         console.error(err);
-        res.send("Error loading dashboard");
+        res.status(500).render("error", { message: process.env.NODE_ENV !== "production" ? err.message : null });
     }
 };
 
@@ -221,16 +221,12 @@ exports.getProfilePage = async (req, res) => {
         const userPlatforms = await UserPlatform.findOne({
             userId: req.user._id
         });
-        
 
-        res.render("activity/profile", {
-            userPlatforms,
-            
-        });
+        res.render("activity/profile", { userPlatforms });
 
     } catch (err) {
         console.error(err);
-        res.send("Error loading profile");
+        res.status(500).render("error", { message: process.env.NODE_ENV !== "production" ? err.message : null });
     }
 };
 
@@ -293,7 +289,7 @@ exports.saveProfile = async (req, res) => {
 
     } catch (err) {
         console.error("Save Profile Error:", err);
-        res.send("Error saving profile");
+        res.status(500).render("error", { message: process.env.NODE_ENV !== "production" ? err.message : null });
     }
 };
 
@@ -308,14 +304,13 @@ exports.syncLeetCode = async (req, res) => {
         const userPlatform = await UserPlatform.findOne({ userId });
 
         if (!userPlatform || !userPlatform.leetcodeUsername) {
-            return res.send("LeetCode username not set");
+            return res.redirect("/activity/activity-profile");
         }
 
-        // 🔥 Fetch data
         const data = await getLeetCodeData(userPlatform.leetcodeUsername);
 
         if (!data) {
-            return res.send("Failed to fetch data");
+            return res.status(502).render("error", { message: "Failed to fetch LeetCode data. Try again later." });
         }
 
         // 🔥 Save activity
@@ -334,7 +329,7 @@ exports.syncLeetCode = async (req, res) => {
 
     } catch (err) {
         console.error(err);
-        res.send("Error syncing LeetCode");
+        res.status(500).render("error", { message: process.env.NODE_ENV !== "production" ? err.message : null });
     }
 };
 
@@ -349,13 +344,13 @@ exports.syncGithub = async (req, res) => {
         const userPlatform = await UserPlatform.findOne({ userId });
 
         if (!userPlatform || !userPlatform.githubUsername) {
-            return res.send("GitHub username not set");
+            return res.redirect("/activity/activity-profile");
         }
 
         const data = await getGithubData(userPlatform.githubUsername);
 
         if (!data) {
-            return res.send("Failed to fetch GitHub data");
+            return res.status(502).render("error", { message: "Failed to fetch GitHub data. Try again later." });
         }
 
         await saveActivities(userId, data);
@@ -364,7 +359,7 @@ exports.syncGithub = async (req, res) => {
 
     } catch (err) {
         console.error(err);
-        res.send("Error syncing GitHub");
+        res.status(500).render("error", { message: process.env.NODE_ENV !== "production" ? err.message : null });
     }
 };
 
@@ -378,13 +373,13 @@ exports.syncCodeforces = async (req, res) => {
         const userPlatform = await UserPlatform.findOne({ userId });
 
         if (!userPlatform || !userPlatform.codeforcesHandle) {
-            return res.send("Codeforces handle not set");
+            return res.redirect("/activity/activity-profile");
         }
 
         const data = await getCodeforcesData(userPlatform.codeforcesHandle);
         const profile = await getCodeforcesProfile(userPlatform.codeforcesHandle);
         if (!data) {
-            return res.send("Failed to fetch Codeforces data");
+            return res.status(502).render("error", { message: "Failed to fetch Codeforces data. Try again later." });
         }
 
         await saveActivities(userId, data);
@@ -403,7 +398,7 @@ exports.syncCodeforces = async (req, res) => {
 
     } catch (err) {
         console.error(err);
-        res.send("Error syncing Codeforces");
+        res.status(500).render("error", { message: process.env.NODE_ENV !== "production" ? err.message : null });
     }
 };
 
@@ -414,13 +409,13 @@ exports.syncHackerRank = async (req, res) => {
         const userPlatform = await UserPlatform.findOne({ userId });
 
         if (!userPlatform?.hackerrankUsername) {
-            return res.send("HackerRank username not set");
+            return res.redirect("/activity/activity-profile");
         }
 
         const data = await getHackerRankData(userPlatform.hackerrankUsername);
 
         if (!data) {
-            return res.send("Failed to fetch HackerRank data");
+            return res.status(502).render("error", { message: "Failed to fetch HackerRank data. Try again later." });
         }
 
         await UserPlatform.findOneAndUpdate(

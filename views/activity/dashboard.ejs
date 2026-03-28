@@ -283,14 +283,31 @@
   // Heatmap tooltip
   const tooltip = document.getElementById('tooltip');
   document.querySelectorAll('.heatmap-day').forEach(box => {
-    box.addEventListener('mouseenter', e => {
+    box.addEventListener('mouseenter', () => {
       if (!box.dataset.date) return;
       tooltip.textContent = box.dataset.date + ' — ' + box.dataset.count + ' activities';
       tooltip.style.display = 'block';
     });
     box.addEventListener('mousemove', e => {
-      tooltip.style.left = (e.clientX + 12) + 'px';
-      tooltip.style.top = (e.clientY - 32) + 'px';
+      const tw = tooltip.offsetWidth;
+      const th = tooltip.offsetHeight;
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      const gap = 12;
+
+      let left = e.clientX + gap;
+      let top  = e.clientY - th - gap;
+
+      // Flip left if tooltip would overflow right edge
+      if (left + tw > vw - 8) left = e.clientX - tw - gap;
+      // Flip below cursor if tooltip would overflow top
+      if (top < 8) top = e.clientY + gap;
+      // Hard clamp to viewport bounds
+      left = Math.max(8, Math.min(left, vw - tw - 8));
+      top  = Math.max(8, Math.min(top,  vh - th - 8));
+
+      tooltip.style.left = left + 'px';
+      tooltip.style.top  = top  + 'px';
     });
     box.addEventListener('mouseleave', () => { tooltip.style.display = 'none'; });
   });

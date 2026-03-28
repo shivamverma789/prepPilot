@@ -142,7 +142,10 @@
           Career Goals
         </div>
         <div class="autocomplete-wrap">
-          <input type="text" id="goalInput" class="input-field" placeholder="Type a goal and press Enter..." autocomplete="off"/>
+          <div style="display:flex;gap:8px;">
+            <input type="text" id="goalInput" class="input-field" placeholder="Type a goal and tap Add..." autocomplete="off" style="flex:1"/>
+            <button type="button" onclick="addGoalFromInput()" style="padding:11px 16px;background:linear-gradient(135deg,#2563eb,#3b82f6);color:white;border:none;border-radius:10px;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;white-space:nowrap;flex-shrink:0;">Add</button>
+          </div>
           <div class="suggestions-dropdown" id="goalSuggestions"></div>
         </div>
         <div class="tags-wrap" id="goalsContainer"></div>
@@ -156,7 +159,10 @@
           Technical Skills
         </div>
         <div class="autocomplete-wrap">
-          <input type="text" id="skillInput" class="input-field" placeholder="Search or type a skill..." autocomplete="off"/>
+          <div style="display:flex;gap:8px;">
+            <input type="text" id="skillInput" class="input-field" placeholder="Search or type a skill..." autocomplete="off" style="flex:1"/>
+            <button type="button" onclick="addSkillFromInput()" style="padding:11px 16px;background:linear-gradient(135deg,#2563eb,#3b82f6);color:white;border:none;border-radius:10px;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;white-space:nowrap;flex-shrink:0;">Add</button>
+          </div>
           <div class="suggestions-dropdown" id="skillSuggestions"></div>
         </div>
         <input type="hidden" name="skillsJson" id="skillsJson"/>

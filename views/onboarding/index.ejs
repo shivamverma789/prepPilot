@@ -195,7 +195,7 @@
       <div class="step-dot" id="dot-4"></div>
     </div>
 
-    <form action="/onboarding" method="POST" id="onboardingForm" onsubmit="prepareSubmit()">
+    <form action="/onboarding" method="POST" id="onboardingForm">
 
       <!-- ── STEP 1: Career Goals ── -->
       <div class="step-panel active" id="step-1">
@@ -214,11 +214,13 @@
             Career Goals
           </div>
           <div class="autocomplete-wrap">
-            <input type="text" id="goalInput" class="input-field" placeholder="e.g. SDE, Frontend Developer, AI Engineer" autocomplete="off"/>
+            <div style="display:flex;gap:8px;">
+              <input type="text" id="goalInput" class="input-field" placeholder="e.g. SDE, Frontend Developer, AI Engineer" autocomplete="off" style="flex:1"/>
+              <button type="button" onclick="addGoalFromInput()" style="padding:11px 16px;background:linear-gradient(135deg,#2563eb,#3b82f6);color:white;border:none;border-radius:10px;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;white-space:nowrap;flex-shrink:0;">Add</button>
+            </div>
             <div class="suggestions-dropdown" id="goalSuggestions"></div>
           </div>
           <div class="tags-wrap" id="goalsContainer"></div>
-          <input type="hidden" name="goalsJson" id="goalsJson"/>
         </div>
 
         <div class="card">
@@ -324,10 +326,12 @@
             Search and add skills
           </div>
           <div class="autocomplete-wrap">
-            <input type="text" id="skillInput" class="input-field" placeholder="e.g. JavaScript, DSA, React" autocomplete="off"/>
+            <div style="display:flex;gap:8px;">
+              <input type="text" id="skillInput" class="input-field" placeholder="e.g. JavaScript, DSA, React" autocomplete="off" style="flex:1"/>
+              <button type="button" onclick="addSkillFromInput()" style="padding:11px 16px;background:linear-gradient(135deg,#2563eb,#3b82f6);color:white;border:none;border-radius:10px;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;white-space:nowrap;flex-shrink:0;">Add</button>
+            </div>
             <div class="suggestions-dropdown" id="skillSuggestions"></div>
           </div>
-          <input type="hidden" name="skillsJson" id="skillsJson"/>
         </div>
 
         <div id="skillsContainer"></div>
@@ -390,6 +394,10 @@
         </div>
       </div>
 
+      <!-- Hidden inputs outside all step panels so they always submit -->
+      <input type="hidden" name="goalsJson" id="goalsJson"/>
+      <input type="hidden" name="skillsJson" id="skillsJson"/>
+
     </form>
   </div>
 </div>
@@ -434,8 +442,14 @@ goalInput.addEventListener('input', () => {
   });
   goalSugg.style.display = 'block';
 });
-goalInput.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); const v = goalInput.value.trim(); if (v) addGoal(v, 'custom'); } });
+// keyup works on mobile keyboards; keypress often doesn't
+goalInput.addEventListener('keyup', e => { if (e.key === 'Enter') { e.preventDefault(); addGoalFromInput(); } });
 document.addEventListener('click', e => { if (!goalInput.contains(e.target)) goalSugg.style.display = 'none'; });
+
+function addGoalFromInput() {
+  const v = goalInput.value.trim();
+  if (v) addGoal(v, 'custom');
+}
 
 function addGoal(name, source) {
   if (addedGoals.find(g => g.name.toLowerCase() === name.toLowerCase())) { goalInput.value = ''; goalSugg.style.display = 'none'; return; }
@@ -474,8 +488,13 @@ skillInput.addEventListener('input', () => {
   });
   skillSugg.style.display = 'block';
 });
-skillInput.addEventListener('keypress', e => { if (e.key === 'Enter') { e.preventDefault(); const v = skillInput.value.trim(); if (v) addSkill(v, 'custom'); } });
+skillInput.addEventListener('keyup', e => { if (e.key === 'Enter') { e.preventDefault(); addSkillFromInput(); } });
 document.addEventListener('click', e => { if (!skillInput.contains(e.target)) skillSugg.style.display = 'none'; });
+
+function addSkillFromInput() {
+  const v = skillInput.value.trim();
+  if (v) addSkill(v, 'custom');
+}
 
 function addSkill(name, source) {
   if (addedSkills.find(s => s.name.toLowerCase() === name.toLowerCase())) { skillInput.value = ''; skillSugg.style.display = 'none'; return; }
@@ -511,7 +530,18 @@ function renderSkills() {
 }
 function updateSkillsHidden() { document.getElementById('skillsJson').value = JSON.stringify(addedSkills); }
 
-function prepareSubmit() { updateGoalsHidden(); updateSkillsHidden(); }
+function prepareSubmit() {
+  updateGoalsHidden();
+  updateSkillsHidden();
+}
+
+// Use event listener so hidden fields are guaranteed to be set before submit
+document.getElementById('onboardingForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  updateGoalsHidden();
+  updateSkillsHidden();
+  this.submit();
+});
 </script>
 </body>
 </html>

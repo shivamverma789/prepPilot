@@ -28,6 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride("_method"));
 app.use(express.static("public"));
+app.set("trust proxy", 1);
 
 // Session Config
 app.use(session({

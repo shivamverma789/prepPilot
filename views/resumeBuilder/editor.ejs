@@ -292,7 +292,9 @@
     }
 
     @media(max-width:480px){
-      .topbar-title,.topbar-btn-ghost,.mode-badge{display:none}
+      .topbar-title,.mode-badge{display:none}
+      /* ghost buttons hidden from topbar on mobile — shown in tab bar instead */
+      .topbar-btn-ghost{display:none}
     }
   </style>
 </head>
@@ -461,6 +463,14 @@
   <button class="mobile-tab" id="tab-preview" onclick="mobileTab('preview')">
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
     Preview
+  </button>
+  <button class="mobile-tab" id="tab-original" onclick="showOriginal(); mobileTab('preview')">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+    Original
+  </button>
+  <button class="mobile-tab" id="tab-ai" onclick="showAI(); mobileTab('preview')">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+    AI
   </button>
   <a href="/builder/<%= resume._id %>/print" style="flex:1;text-decoration:none">
     <button class="mobile-tab" style="width:100%">
