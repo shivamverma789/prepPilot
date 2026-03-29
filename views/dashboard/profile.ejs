@@ -260,8 +260,9 @@
   const goalSugg = document.getElementById('goalSuggestions');
   const goalsContainer = document.getElementById('goalsContainer');
   goalInput.addEventListener('input', () => { const q=goalInput.value.toLowerCase(); goalSugg.innerHTML=''; if(!q){goalSugg.style.display='none';return;} const f=TECH_GOALS.filter(g=>g.toLowerCase().includes(q)); if(!f.length){goalSugg.style.display='none';return;} f.forEach(g=>{const d=document.createElement('div');d.className='suggestion-item';d.textContent=g;d.onclick=()=>addGoal(g,'core');goalSugg.appendChild(d);}); goalSugg.style.display='block'; });
-  goalInput.addEventListener('keypress', e=>{if(e.key==='Enter'){e.preventDefault();const v=goalInput.value.trim();if(v)addGoal(v,'custom');}});
+  goalInput.addEventListener('keyup', e=>{if(e.key==='Enter'){e.preventDefault();addGoalFromInput();}});
   document.addEventListener('click', e=>{if(!goalInput.contains(e.target))goalSugg.style.display='none';});
+  function addGoalFromInput(){const v=goalInput.value.trim();if(v)addGoal(v,'custom');}
   function addGoal(name,source){if(addedGoals.find(g=>g.name.toLowerCase()===name.toLowerCase())){goalInput.value='';goalSugg.style.display='none';return;}addedGoals.push({name,source});renderGoals();goalInput.value='';goalSugg.style.display='none';}
   function removeGoal(i){addedGoals.splice(i,1);renderGoals();}
   function renderGoals(){goalsContainer.innerHTML='';addedGoals.forEach((g,i)=>{const t=document.createElement('span');t.className='tag'+(g.source==='custom'?' custom':'');t.innerHTML=`${g.name}<button class="tag-remove" type="button" onclick="removeGoal(${i})"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>`;goalsContainer.appendChild(t);});}
@@ -271,8 +272,9 @@
   const skillSugg = document.getElementById('skillSuggestions');
   const skillsContainer = document.getElementById('skillsContainer');
   skillInput.addEventListener('input', ()=>{const q=skillInput.value.toLowerCase();skillSugg.innerHTML='';if(!q){skillSugg.style.display='none';return;}const f=TECH_SKILLS.filter(s=>s.toLowerCase().includes(q));if(!f.length){skillSugg.style.display='none';return;}f.forEach(s=>{const d=document.createElement('div');d.className='suggestion-item';d.textContent=s;d.onclick=()=>addSkill(s,'core');skillSugg.appendChild(d);});skillSugg.style.display='block';});
-  skillInput.addEventListener('keypress',e=>{if(e.key==='Enter'){e.preventDefault();const v=skillInput.value.trim();if(v)addSkill(v,'custom');}});
+  skillInput.addEventListener('keyup',e=>{if(e.key==='Enter'){e.preventDefault();addSkillFromInput();}});
   document.addEventListener('click',e=>{if(!skillInput.contains(e.target))skillSugg.style.display='none';});
+  function addSkillFromInput(){const v=skillInput.value.trim();if(v)addSkill(v,'custom');}
   function addSkill(name,source){if(addedSkills.find(s=>s.name.toLowerCase()===name.toLowerCase())){skillInput.value='';skillSugg.style.display='none';return;}addedSkills.push({name,source,level:'beginner',exposure:'heard',confidence:1});renderSkills();skillInput.value='';skillSugg.style.display='none';}
   function removeSkill(i){addedSkills.splice(i,1);renderSkills();}
   function updateSkill(i,key,val){if(key==='confidence')val=parseInt(val)||1;addedSkills[i][key]=val;}

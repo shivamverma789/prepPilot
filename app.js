@@ -34,6 +34,7 @@ app.use(express.static("public"));
 app.set("trust proxy", 1);
 
 // Session Config
+const isProduction = process.env.NODE_ENV === "production";
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,
@@ -42,8 +43,9 @@ app.use(session({
         mongoUrl: process.env.MONGO_URI
     }),
     cookie: {
-        secure: true,       // MUST for HTTPS (Vercel + your domain)
-        sameSite: "none",   // MUST for cross-origin
+        secure: isProduction,        // true on HTTPS (prod), false on localhost
+        sameSite: isProduction ? "none" : "lax",  // "none" needed for cross-origin in prod
+        maxAge: 14 * 24 * 60 * 60 * 1000  // 14 days
     }
 }));
 

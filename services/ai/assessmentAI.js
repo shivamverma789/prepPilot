@@ -14,7 +14,7 @@ CONTEXT:
 
 QUIZ RULES:
 1. Exactly 5 MCQ questions
-2. Start basic (Q1-2), then intermediate (Q3-4), then depth (Q5)
+2. Start basic (Q1-2), then intermediate (Q3-4), then advanced (Q5)
 3. Each question must have 4 options
 4. Only ONE correct answer
 5. Include short explanation
@@ -36,6 +36,14 @@ OUTPUT STRICT JSON:
 Each question MUST include:
 - concept (the exact concept being tested)
 - difficulty (basic/intermediate/advanced)
+
+VALIDATION RULES:
+- difficulty must be EXACTLY one of:
+  "basic", "intermediate", "advanced"
+
+- Any other value is strictly forbidden.
+
+- If unsure, default to "basic"
 
 CRITICAL:
 - Each question MUST include a "concept" field
