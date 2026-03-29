@@ -1042,10 +1042,12 @@ res.status(500).send("Error deleting education")
 
 }
 
+const { chromium } = require("playwright");
+
 exports.printResume = async (req, res) => {
+  let browser;
 
   try {
-
     if (!req.isAuthenticated()) {
       return res.redirect("/login");
     }
@@ -1055,25 +1057,27 @@ exports.printResume = async (req, res) => {
       userId: req.user._id
     });
 
-    let finalResume = resume
-
-    if (req.query.mode === "ai" && resume.aiCache && resume.aiCache.optimizedResume) {
-    finalResume = resume.aiCache.optimizedResume
-    }
-
     if (!resume) {
       return res.send("Resume not found");
     }
 
-    resume.sections.sort((a, b) => a.order - b.order);
+    let finalResume = resume;
 
-    const browser = await puppeteer.launch({
-      headless: true,
+    if (req.query.mode === "ai" && resume.aiCache?.optimizedResume) {
+      finalResume = resume.aiCache.optimizedResume;
+    }
+
+    // ✅ Sort safely
+    if (finalResume.sections) {
+      finalResume.sections.sort((a, b) => a.order - b.order);
+    }
+
+    // 🔥 Launch Playwright browser
+    browser = await chromium.launch({
       args: [
         "--no-sandbox",
         "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage",
-        "--disable-gpu"
+        "--disable-dev-shm-usage"
       ]
     });
 
@@ -1081,21 +1085,22 @@ exports.printResume = async (req, res) => {
 
     const html = await ejs.renderFile(
       path.join(__dirname, "../views/resumeBuilder/print.ejs"),
-      { resume : finalResume }
+      { resume: finalResume }
     );
 
     await page.setContent(html, {
-      waitUntil: "networkidle0"
+      waitUntil: "networkidle",
+      timeout: 30000
     });
 
     const pdfBuffer = await page.pdf({
       format: "A4",
       printBackground: true,
       margin: {
-        top: "40px",
-        bottom: "40px",
-        left: "40px",
-        right: "40px"
+        top: "20px",
+        bottom: "20px",
+        left: "20px",
+        right: "20px"
       }
     });
 
@@ -1109,12 +1114,12 @@ exports.printResume = async (req, res) => {
     res.send(pdfBuffer);
 
   } catch (err) {
+    console.error("Playwright PDF Error:", err);
 
-    console.error(err);
-    res.send("Error generating PDF");
+    if (browser) await browser.close();
 
+    res.status(500).send("Error generating PDF");
   }
-
 };
 
 exports.enhanceResumeAI = async (req, res) => {

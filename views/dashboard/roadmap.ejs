@@ -631,7 +631,7 @@
     } catch {
       btn.disabled = false;
       btn.textContent = 'Mark as Completed';
-      ppToast('Failed to complete project. Please try again.', 'error');
+      alert('Failed to complete project');
     }
   }
 
@@ -672,11 +672,10 @@
   }
 
   function confirmReset() {
-    ppConfirm(
-      'This will permanently delete your current roadmap and all progress. This cannot be undone.',
-      () => { showLoader(); document.getElementById('resetForm').submit(); },
-      { title: 'Delete roadmap?', confirmText: 'Yes, delete it', danger: true }
-    );
+    if (confirm('This will DELETE your current roadmap and all progress. Continue?')) {
+      showLoader();
+      document.getElementById('resetForm').submit();
+    }
   }
 
   function generateRoadmap() {
