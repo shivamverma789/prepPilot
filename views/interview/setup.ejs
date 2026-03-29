@@ -348,7 +348,8 @@
     await fetch('<%= serverUrl %>/api/interview/set-interview-data', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ role, ...selected })
+      body: JSON.stringify({ role, ...selected }),
+      credentials: 'include'
     });
 
     window.open('<%= liveKitUrl %>', '_blank');
