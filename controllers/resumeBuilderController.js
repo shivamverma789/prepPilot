@@ -1042,7 +1042,6 @@ res.status(500).send("Error deleting education")
 
 }
 
-// const puppeteer = require("puppeteer");
 
 exports.printResume = async (req, res) => {
   let browser;
@@ -1091,7 +1090,7 @@ exports.printResume = async (req, res) => {
     );
 
     await page.setContent(html, {
-      waitUntil: "networkidle0",
+      waitUntil: "domcontentloaded",
       timeout: 30000 // ✅ prevent hanging
     });
 
