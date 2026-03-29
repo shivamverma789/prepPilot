@@ -1073,13 +1073,11 @@ exports.printResume = async (req, res) => {
     }
 
     // 🔥 Launch Playwright browser
-    browser = await chromium.launch({
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage"
-      ]
-    });
+    const browser = await chromium.launch({
+  headless: true,
+  executablePath: undefined, // 🔥 IMPORTANT
+  args: ["--no-sandbox", "--disable-dev-shm-usage"]
+});
 
     const page = await browser.newPage();
 
