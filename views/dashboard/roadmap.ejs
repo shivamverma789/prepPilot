@@ -453,15 +453,75 @@
 
 </main>
 
-<!-- LOADER -->
-<div id="loaderOverlay" style="position:fixed;inset:0;background:rgba(248,250,252,0.92);display:none;justify-content:center;align-items:center;z-index:9999;backdrop-filter:blur(4px);">
-  <div style="text-align:center;">
-    <div style="width:48px;height:48px;border:4px solid #e2e8f0;border-top-color:#2563eb;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 20px;"></div>
-    <div style="font-size:16px;font-weight:600;color:#1e293b;">Generating your roadmap...</div>
-    <div style="font-size:13px;color:#94a3b8;margin-top:4px;">This may take up to a minute</div>
+<!-- ROADMAP GENERATION LOADER -->
+<div id="loaderOverlay">
+  <div class="loader-scene">
+    <div class="loader-card">
+      <div class="loader-icon-wrap">
+        <div class="loader-ring loader-ring-1"></div>
+        <div class="loader-ring loader-ring-2"></div>
+        <div class="loader-ring loader-ring-3"></div>
+        <div class="loader-core">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2563eb" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+      </div>
+      <div class="loader-title">Building your roadmap</div>
+      <div class="loader-sub">Our AI is analyzing your profile and crafting a personalized learning path</div>
+      <div class="loader-steps">
+        <div class="loader-step" id="ls1"><div class="ls-dot"></div><span>Analyzing your skills and goals</span></div>
+        <div class="loader-step" id="ls2"><div class="ls-dot"></div><span>Mapping learning phases</span></div>
+        <div class="loader-step" id="ls3"><div class="ls-dot"></div><span>Generating subtopics and resources</span></div>
+        <div class="loader-step" id="ls4"><div class="ls-dot"></div><span>Finalizing your roadmap</span></div>
+      </div>
+      <div class="loader-progress-track">
+        <div class="loader-progress-fill" id="loaderProgress"></div>
+      </div>
+      <div class="loader-progress-label" id="loaderProgressLabel">0%</div>
+    </div>
   </div>
 </div>
-<style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+
+<style>
+#loaderOverlay {
+  position: fixed; inset: 0;
+  background: rgba(15,23,42,0.7);
+  display: none; justify-content: center; align-items: center;
+  z-index: 9999; backdrop-filter: blur(8px);
+}
+.loader-scene { animation: sceneIn 0.4s cubic-bezier(0.16,1,0.3,1) both; }
+@keyframes sceneIn { from{opacity:0;transform:scale(0.92)} to{opacity:1;transform:scale(1)} }
+.loader-card {
+  background: white; border-radius: 24px;
+  padding: 48px 44px; width: 440px; max-width: calc(100vw - 40px);
+  text-align: center; box-shadow: 0 32px 80px rgba(0,0,0,0.3);
+}
+.loader-icon-wrap {
+  position: relative; width: 100px; height: 100px;
+  margin: 0 auto 28px; display: flex; align-items: center; justify-content: center;
+}
+.loader-ring { position: absolute; border-radius: 50%; border: 2px solid transparent; }
+.loader-ring-1 { width:100px;height:100px;border-top-color:#2563eb;border-right-color:#2563eb;animation:spin 1.2s linear infinite; }
+.loader-ring-2 { width:76px;height:76px;border-bottom-color:#3b82f6;border-left-color:#3b82f6;animation:spin 1.8s linear infinite reverse; }
+.loader-ring-3 { width:54px;height:54px;border-top-color:#93c5fd;border-right-color:#93c5fd;animation:spin 2.4s linear infinite; }
+.loader-core { width:40px;height:40px;background:#eff6ff;border-radius:50%;display:flex;align-items:center;justify-content:center;animation:pulse 2s ease-in-out infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+.loader-title { font-size:20px;font-weight:800;color:#1e293b;margin-bottom:8px;letter-spacing:-0.3px; }
+.loader-sub { font-size:13px;color:#64748b;line-height:1.6;margin-bottom:28px; }
+.loader-steps { text-align:left;margin-bottom:24px;display:flex;flex-direction:column;gap:10px; }
+.loader-step { display:flex;align-items:center;gap:12px;font-size:13px;color:#94a3b8;font-weight:500;transition:color 0.4s; }
+.loader-step.active { color:#1e293b; }
+.loader-step.done { color:#16a34a; }
+.ls-dot { width:8px;height:8px;border-radius:50%;background:#e2e8f0;flex-shrink:0;transition:background 0.4s; }
+.loader-step.active .ls-dot { background:#2563eb;animation:dotPulse 1s ease-in-out infinite; }
+.loader-step.done .ls-dot { background:#16a34a;animation:none; }
+@keyframes dotPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.5)} }
+.loader-progress-track { height:6px;background:#e2e8f0;border-radius:10px;overflow:hidden;margin-bottom:8px; }
+.loader-progress-fill { height:100%;width:0%;border-radius:10px;background:linear-gradient(90deg,#2563eb,#3b82f6);transition:width 0.6s ease; }
+.loader-progress-label { font-size:12px;color:#94a3b8;font-weight:600; }
+</style>
 
 <script>
   // Sidebar
@@ -531,7 +591,7 @@
     } catch {
       btn.disabled = false;
       btn.textContent = 'Start Project';
-      alert('Failed to start project');
+      ppToast('Failed to start project. Please try again.', 'error');
     }
   }
 
@@ -571,19 +631,56 @@
     } catch {
       btn.disabled = false;
       btn.textContent = 'Mark as Completed';
-      alert('Failed to complete project');
+      ppToast('Failed to complete project. Please try again.', 'error');
     }
+  }
+
+  function showLoader() {
+    document.getElementById('loaderOverlay').style.display = 'flex';
+    animateLoader();
+  }
+
+  function animateLoader() {
+    const steps = [
+      { id: 'ls1', delay: 0,     progress: 20 },
+      { id: 'ls2', delay: 8000,  progress: 45 },
+      { id: 'ls3', delay: 20000, progress: 70 },
+      { id: 'ls4', delay: 40000, progress: 90 },
+    ];
+    const fill  = document.getElementById('loaderProgress');
+    const label = document.getElementById('loaderProgressLabel');
+    // reset
+    steps.forEach(s => {
+      const el = document.getElementById(s.id);
+      el.classList.remove('active', 'done');
+    });
+    fill.style.width = '0%';
+    label.textContent = '0%';
+
+    steps.forEach((s, i) => {
+      setTimeout(() => {
+        if (i > 0) {
+          const prev = document.getElementById(steps[i-1].id);
+          prev.classList.remove('active'); prev.classList.add('done');
+        }
+        const el = document.getElementById(s.id);
+        el.classList.add('active');
+        fill.style.width  = s.progress + '%';
+        label.textContent = s.progress + '%';
+      }, s.delay);
+    });
   }
 
   function confirmReset() {
-    if (confirm('This will DELETE your current roadmap and all progress. Continue?')) {
-      document.getElementById('loaderOverlay').style.display = 'flex';
-      document.getElementById('resetForm').submit();
-    }
+    ppConfirm(
+      'This will permanently delete your current roadmap and all progress. This cannot be undone.',
+      () => { showLoader(); document.getElementById('resetForm').submit(); },
+      { title: 'Delete roadmap?', confirmText: 'Yes, delete it', danger: true }
+    );
   }
 
   function generateRoadmap() {
-    document.getElementById('loaderOverlay').style.display = 'flex';
+    showLoader();
     document.getElementById('genForm').submit();
   }
 </script>

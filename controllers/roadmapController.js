@@ -10,22 +10,40 @@ exports.generateRoadmap = async (req, res) => {
         }
 
         const userId = req.user._id;
-        console.log("Force:", req.query.force);
         const force = req.query.force === "true";
 
         let roadmap = await Roadmap.findOne({ userId });
 
-        // 🚨 GUARD: If roadmap exists and not forced → DO NOT regenerate
-        if (roadmap && !force) {
+        // ✅ Check if roadmap has actual tasks
+        let existingTasksCount = 0;
+        if (roadmap) {
+            existingTasksCount = await Task.countDocuments({ roadmapId: roadmap._id });
+        }
+
+        // 🚫 Skip regeneration if roadmap exists AND has tasks AND not forced
+        if (roadmap && existingTasksCount > 0 && !force) {
             return res.redirect("/roadmap");
         }
 
-        // 🔥 If force = true → delete old data safely
-        if (roadmap && force) {
-            await Task.deleteMany({ roadmapId: roadmap._id });
+        // 🔥 STEP 1: Generate AI roadmap FIRST (DO NOT DELETE BEFORE THIS)
+        const aiPhases = await roadmapAI.generatePersonalizedRoadmap(req.user);
+
+        if (!aiPhases || aiPhases.length === 0) {
+            console.log("❌ AI failed, keeping existing roadmap intact");
+
+            return res.status(500).render("error", {
+                message: "Failed to generate roadmap. "
+            });
         }
 
-        // If no roadmap → create
+        // 🔥 STEP 2: Now safe to delete old data
+        if (roadmap && force) {
+            await Task.deleteMany({ roadmapId: roadmap._id });
+            await Roadmap.deleteOne({ _id: roadmap._id });
+            roadmap = null;
+        }
+
+        // 🔥 STEP 3: Create fresh roadmap
         if (!roadmap) {
             roadmap = await Roadmap.create({
                 userId,
@@ -33,21 +51,14 @@ exports.generateRoadmap = async (req, res) => {
             });
         }
 
-        // 🔥 Generate AI roadmap
-        const aiPhases = await roadmapAI.generatePersonalizedRoadmap(req.user);
-
-        if (!aiPhases || aiPhases.length === 0) {
-            console.log("AI failed, keeping old roadmap intact");
-            return res.redirect("/roadmap");
-        }
-
+        // 🔥 STEP 4: Transform AI → DB format
         let orderCounter = 1;
         const tasksToInsert = [];
 
         aiPhases.forEach((phaseObj) => {
             const phaseName = phaseObj.phase || "General Phase";
 
-            if (!phaseObj.skills || !Array.isArray(phaseObj.skills)) return;
+            if (!Array.isArray(phaseObj.skills)) return;
 
             phaseObj.skills.forEach((skill) => {
 
@@ -89,7 +100,7 @@ exports.generateRoadmap = async (req, res) => {
                 tasksToInsert.push({
                     roadmapId: roadmap._id,
                     phase: phaseName,
-                    title: skill.title,
+                    title: skill.title || "Untitled Skill",
                     subtopics: formattedSubtopics,
                     miniProject: miniProjectObject,
                     order: orderCounter++,
@@ -99,21 +110,35 @@ exports.generateRoadmap = async (req, res) => {
             });
         });
 
+        // 🚨 Safety check
+        if (tasksToInsert.length === 0) {
+            console.log("❌ No tasks generated from AI");
+
+            return res.status(500).render("error", {
+                message: "AI generated invalid roadmap. Try again."
+            });
+        }
+
+        // 🔥 STEP 5: Insert tasks
         await Task.insertMany(tasksToInsert);
 
+        // 🔥 STEP 6: Update roadmap meta
         roadmap.totalPhases = aiPhases.length;
         roadmap.status = "not-started";
         roadmap.overallProgress = 0;
         await roadmap.save();
 
-        res.redirect("/roadmap");
+        // ✅ DONE
+        return res.redirect("/roadmap");
 
     } catch (err) {
         console.error("Generate Roadmap Error:", err);
-        res.status(500).render("error", { message: process.env.NODE_ENV !== "production" ? err.message : null });
+
+        return res.status(500).render("error", {
+            message: process.env.NODE_ENV !== "production" ? err.message : "Something went wrong"
+        });
     }
 };
-
 
 exports.getRoadmap = async (req, res) => {
     try {
