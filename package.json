@@ -32,7 +32,6 @@
     "passport-local": "^1.0.0",
     "pdf-parse": "^2.4.5",
     "pdfkit": "^0.17.2",
-    "playwright": "^1.58.2",
     "puppeteer": "^24.37.5",
     "resend": "^6.9.4",
     "sib-api-v3-sdk": "^8.5.0"

@@ -1042,7 +1042,7 @@ res.status(500).send("Error deleting education")
 
 }
 
-const { chromium } = require("playwright");
+// const puppeteer = require("puppeteer");
 
 exports.printResume = async (req, res) => {
   let browser;
@@ -1057,6 +1057,7 @@ exports.printResume = async (req, res) => {
       userId: req.user._id
     });
 
+    // ✅ FIX 1: check early
     if (!resume) {
       return res.send("Resume not found");
     }
@@ -1067,17 +1068,20 @@ exports.printResume = async (req, res) => {
       finalResume = resume.aiCache.optimizedResume;
     }
 
-    // ✅ Sort safely
+    // ✅ FIX 2: sort correct object
     if (finalResume.sections) {
       finalResume.sections.sort((a, b) => a.order - b.order);
     }
 
-    // 🔥 Launch Playwright browser
-    const browser = await chromium.launch({
-  headless: true,
-  executablePath: undefined, // 🔥 IMPORTANT
-  args: ["--no-sandbox", "--disable-dev-shm-usage"]
-});
+    browser = await puppeteer.launch({
+      headless: "new", // ✅ better
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-gpu"
+      ]
+    });
 
     const page = await browser.newPage();
 
@@ -1087,18 +1091,18 @@ exports.printResume = async (req, res) => {
     );
 
     await page.setContent(html, {
-      waitUntil: "networkidle",
-      timeout: 30000
+      waitUntil: "networkidle0",
+      timeout: 30000 // ✅ prevent hanging
     });
 
     const pdfBuffer = await page.pdf({
       format: "A4",
       printBackground: true,
       margin: {
-        top: "20px",
-        bottom: "20px",
-        left: "20px",
-        right: "20px"
+        top: "40px",
+        bottom: "40px",
+        left: "40px",
+        right: "40px"
       }
     });
 
@@ -1112,8 +1116,9 @@ exports.printResume = async (req, res) => {
     res.send(pdfBuffer);
 
   } catch (err) {
-    console.error("Playwright PDF Error:", err);
+    console.error("PDF Error:", err);
 
+    // ✅ FIX 3: always close browser
     if (browser) await browser.close();
 
     res.status(500).send("Error generating PDF");
