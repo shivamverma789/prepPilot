@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Allow: /login
+Allow: /register
+Disallow: /dashboard
+Disallow: /builder
+Disallow: /profile
+Disallow: /onboarding
+Disallow: /activity
+Disallow: /resume
+Disallow: /progress
+Disallow: /api/
+
+Sitemap: https://preppilot.in/sitemap.xml
