@@ -1,5 +1,5 @@
 const Resume = require("../models/resumeModel");
-const puppeteer = require("puppeteer");
+const puppeteerCore = require("puppeteer-core");
 const ejs = require("ejs");
 const path = require("path");
 const { enhanceResume,enhanceResumeWithJD  } = require("../services/ai/resumeEnhancer")
@@ -1070,22 +1070,26 @@ exports.printResume = async (req, res) => {
       finalResume.sections.sort((a, b) => a.order - b.order);
     }
 
-    const launchOptions = {
-      headless: "new",
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage",
-        "--disable-gpu"
-      ]
-    };
+    let launchOptions;
 
-    // Only override executablePath if explicitly set in env
-    if (process.env.PUPPETEER_EXECUTABLE_PATH) {
-      launchOptions.executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
+    if (process.env.NODE_ENV === "production") {
+      const chromium = require("@sparticuz/chromium");
+      launchOptions = {
+        headless: chromium.headless,
+        args: chromium.args,
+        executablePath: await chromium.executablePath(),
+        defaultViewport: chromium.defaultViewport
+      };
+    } else {
+      const puppeteer = require("puppeteer");
+      launchOptions = {
+        headless: "new",
+        executablePath: puppeteer.executablePath(),
+        args: ["--no-sandbox", "--disable-setuid-sandbox"]
+      };
     }
 
-    browser = await puppeteer.launch(launchOptions);
+    browser = await puppeteerCore.launch(launchOptions);
 
     const page = await browser.newPage();
 

@@ -13,6 +13,7 @@
   "type": "commonjs",
   "dependencies": {
     "@google/genai": "^1.41.0",
+    "@sparticuz/chromium": "^143.0.4",
     "axios": "^1.13.6",
     "bcrypt": "^6.0.0",
     "connect-mongo": "^6.0.0",
@@ -33,6 +34,7 @@
     "pdf-parse": "^2.4.5",
     "pdfkit": "^0.17.2",
     "puppeteer": "^24.40.0",
+    "puppeteer-core": "^24.40.0",
     "resend": "^6.9.4",
     "sib-api-v3-sdk": "^8.5.0"
   }
