@@ -47,7 +47,7 @@
     .page-header h1 { font-size:26px; font-weight:800; color:var(--gray-900); letter-spacing:-0.5px; }
     .page-header p { font-size:14px; color:var(--gray-500); margin-top:4px; }
     .success-banner { background:var(--green-light); border:1px solid #bbf7d0; border-radius:10px; padding:12px 16px; font-size:14px; font-weight:600; color:var(--green); margin-bottom:20px; display:flex; align-items:center; gap:8px; animation:fadeUp 0.3s ease both; }
-    .card { background:var(--white); border-radius:var(--radius); border:1px solid var(--gray-200); padding:24px; margin-bottom:16px; box-shadow:var(--shadow-sm); animation:fadeUp 0.4s ease both; }
+    .card { background:var(--white); border-radius:var(--radius); border:1px solid var(--gray-200); padding:24px; margin-bottom:16px; box-shadow:var(--shadow-sm); animation:fadeUp 0.4s ease both; overflow:visible; }
     .card-title { font-size:15px; font-weight:700; color:var(--gray-800); margin-bottom:18px; display:flex; align-items:center; gap:8px; }
     .form-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
     .form-group { display:flex; flex-direction:column; gap:6px; }
@@ -151,7 +151,7 @@
             <input type="text" id="goalInput" class="input-field" placeholder="Type a goal and tap Add..." autocomplete="off" style="flex:1"/>
             <button type="button" onclick="addGoalFromInput()" style="padding:11px 16px;background:linear-gradient(135deg,#2563eb,#3b82f6);color:white;border:none;border-radius:10px;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;white-space:nowrap;flex-shrink:0;">Add</button>
           </div>
-          <div class="suggestions-dropdown" id="goalSuggestions"></div>
+          <div id="goalSuggestions" style="display:none"></div>
         </div>
         <div class="tags-wrap" id="goalsContainer"></div>
         <input type="hidden" name="goalsJson" id="goalsJson"/>
@@ -168,7 +168,7 @@
             <input type="text" id="skillInput" class="input-field" placeholder="Search or type a skill..." autocomplete="off" style="flex:1"/>
             <button type="button" onclick="addSkillFromInput()" style="padding:11px 16px;background:linear-gradient(135deg,#2563eb,#3b82f6);color:white;border:none;border-radius:10px;font-size:13px;font-weight:700;font-family:'Inter',sans-serif;cursor:pointer;white-space:nowrap;flex-shrink:0;">Add</button>
           </div>
-          <div class="suggestions-dropdown" id="skillSuggestions"></div>
+          <div id="skillSuggestions" style="display:none"></div>
         </div>
         <input type="hidden" name="skillsJson" id="skillsJson"/>
         <div id="skillsContainer" style="margin-top:12px;"></div>
@@ -262,11 +262,24 @@
 
   // Goals
   const goalInput = document.getElementById('goalInput');
-  const goalSugg = document.getElementById('goalSuggestions');
   const goalsContainer = document.getElementById('goalsContainer');
-  goalInput.addEventListener('input', () => { const q=goalInput.value.toLowerCase(); goalSugg.innerHTML=''; if(!q){goalSugg.style.display='none';return;} const f=TECH_GOALS.filter(g=>g.toLowerCase().includes(q)); if(!f.length){goalSugg.style.display='none';return;} f.forEach(g=>{const d=document.createElement('div');d.className='suggestion-item';d.textContent=g;d.onclick=()=>addGoal(g,'core');goalSugg.appendChild(d);}); goalSugg.style.display='block'; });
-  goalInput.addEventListener('keyup', e=>{if(e.key==='Enter'){e.preventDefault();addGoalFromInput();}});
-  document.addEventListener('click', e=>{if(!goalInput.contains(e.target))goalSugg.style.display='none';});
+
+  const goalSugg = document.createElement('div');
+  goalSugg.className = 'suggestions-dropdown';
+  goalSugg.style.cssText = 'position:fixed;display:none;z-index:99999;';
+  document.body.appendChild(goalSugg);
+
+  function positionDropdown(dropdown, input) {
+    const rect = input.getBoundingClientRect();
+    dropdown.style.top = (rect.bottom + 4) + 'px';
+    dropdown.style.left = rect.left + 'px';
+    dropdown.style.width = rect.width + 'px';
+  }
+
+  goalInput.addEventListener('input', () => { const q=goalInput.value.toLowerCase(); goalSugg.innerHTML=''; if(!q){goalSugg.style.display='none';return;} const f=TECH_GOALS.filter(g=>g.toLowerCase().includes(q)); if(!f.length){goalSugg.style.display='none';return;} f.forEach(g=>{const d=document.createElement('div');d.className='suggestion-item';d.textContent=g;d.onmousedown=(e)=>{e.preventDefault();addGoal(g,'core');};goalSugg.appendChild(d);}); positionDropdown(goalSugg,goalInput); goalSugg.style.display='block'; });
+  goalInput.addEventListener('keydown', e=>{if(e.key==='Enter'){e.preventDefault();addGoalFromInput();}});
+  document.addEventListener('click', e=>{if(!goalInput.contains(e.target)&&!goalSugg.contains(e.target))goalSugg.style.display='none';});
+  window.addEventListener('scroll', ()=>{if(goalSugg.style.display!=='none')positionDropdown(goalSugg,goalInput);}, true);
   function addGoalFromInput(){const v=goalInput.value.trim();if(v)addGoal(v,'custom');}
   function addGoal(name,source){if(addedGoals.find(g=>g.name.toLowerCase()===name.toLowerCase())){goalInput.value='';goalSugg.style.display='none';return;}addedGoals.push({name,source});renderGoals();goalInput.value='';goalSugg.style.display='none';}
   function removeGoal(i){addedGoals.splice(i,1);renderGoals();}
@@ -274,11 +287,17 @@
 
   // Skills
   const skillInput = document.getElementById('skillInput');
-  const skillSugg = document.getElementById('skillSuggestions');
   const skillsContainer = document.getElementById('skillsContainer');
-  skillInput.addEventListener('input', ()=>{const q=skillInput.value.toLowerCase();skillSugg.innerHTML='';if(!q){skillSugg.style.display='none';return;}const f=TECH_SKILLS.filter(s=>s.toLowerCase().includes(q));if(!f.length){skillSugg.style.display='none';return;}f.forEach(s=>{const d=document.createElement('div');d.className='suggestion-item';d.textContent=s;d.onclick=()=>addSkill(s,'core');skillSugg.appendChild(d);});skillSugg.style.display='block';});
-  skillInput.addEventListener('keyup',e=>{if(e.key==='Enter'){e.preventDefault();addSkillFromInput();}});
-  document.addEventListener('click',e=>{if(!skillInput.contains(e.target))skillSugg.style.display='none';});
+
+  const skillSugg = document.createElement('div');
+  skillSugg.className = 'suggestions-dropdown';
+  skillSugg.style.cssText = 'position:fixed;display:none;z-index:99999;';
+  document.body.appendChild(skillSugg);
+
+  skillInput.addEventListener('input', ()=>{const q=skillInput.value.toLowerCase();skillSugg.innerHTML='';if(!q){skillSugg.style.display='none';return;}const f=TECH_SKILLS.filter(s=>s.toLowerCase().includes(q));if(!f.length){skillSugg.style.display='none';return;}f.forEach(s=>{const d=document.createElement('div');d.className='suggestion-item';d.textContent=s;d.onmousedown=(e)=>{e.preventDefault();addSkill(s,'core');};skillSugg.appendChild(d);});positionDropdown(skillSugg,skillInput);skillSugg.style.display='block';});
+  skillInput.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addSkillFromInput();}});
+  document.addEventListener('click',e=>{if(!skillInput.contains(e.target)&&!skillSugg.contains(e.target))skillSugg.style.display='none';});
+  window.addEventListener('scroll',()=>{if(skillSugg.style.display!=='none')positionDropdown(skillSugg,skillInput);},true);
   function addSkillFromInput(){const v=skillInput.value.trim();if(v)addSkill(v,'custom');}
   function addSkill(name,source){if(addedSkills.find(s=>s.name.toLowerCase()===name.toLowerCase())){skillInput.value='';skillSugg.style.display='none';return;}addedSkills.push({name,source,level:'beginner',exposure:'heard',confidence:1});renderSkills();skillInput.value='';skillSugg.style.display='none';}
   function removeSkill(i){addedSkills.splice(i,1);renderSkills();}
