@@ -35,7 +35,7 @@ STEP 2: SUBMIT YOUR SITEMAP
 ------------------------------------------------------------
 STEP 3: ADD ROBOTS.TXT
 ------------------------------------------------------------
-[ ] Create public/robots.txt with:
+[x] Create public/robots.txt with:
       User-agent: *
       Allow: /
       Disallow: /dashboard
