@@ -1044,7 +1044,7 @@ res.status(500).send("Error deleting education")
 
 
 exports.printResume = async (req, res) => {
-  let browser;
+
 
   try {
     if (!req.isAuthenticated()) {
@@ -1072,15 +1072,16 @@ exports.printResume = async (req, res) => {
       finalResume.sections.sort((a, b) => a.order - b.order);
     }
 
-    browser = await puppeteer.launch({
-      headless: "new", // ✅ better
-      args: [
-        "--no-sandbox",
-        "--disable-setuid-sandbox",
-        "--disable-dev-shm-usage",
-        "--disable-gpu"
-      ]
-    });
+   const browser = await puppeteer.launch({
+  headless: "new",
+  executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || "/usr/bin/chromium-browser",
+  args: [
+    "--no-sandbox",
+    "--disable-setuid-sandbox",
+    "--disable-dev-shm-usage",
+    "--disable-gpu"
+  ]
+});
 
     const page = await browser.newPage();
 
