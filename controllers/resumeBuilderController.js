@@ -1044,7 +1044,7 @@ res.status(500).send("Error deleting education")
 
 
 exports.printResume = async (req, res) => {
-
+  let browser = null;
 
   try {
     if (!req.isAuthenticated()) {
@@ -1056,7 +1056,6 @@ exports.printResume = async (req, res) => {
       userId: req.user._id
     });
 
-    // ✅ FIX 1: check early
     if (!resume) {
       return res.send("Resume not found");
     }
@@ -1067,21 +1066,26 @@ exports.printResume = async (req, res) => {
       finalResume = resume.aiCache.optimizedResume;
     }
 
-    // ✅ FIX 2: sort correct object
     if (finalResume.sections) {
       finalResume.sections.sort((a, b) => a.order - b.order);
     }
 
-   const browser = await puppeteer.launch({
-  headless: "new",
-  executablePath: process.env.PUPPETEER_EXECUTABLE_PATH || "/usr/bin/chromium-browser",
-  args: [
-    "--no-sandbox",
-    "--disable-setuid-sandbox",
-    "--disable-dev-shm-usage",
-    "--disable-gpu"
-  ]
-});
+    const launchOptions = {
+      headless: "new",
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--disable-dev-shm-usage",
+        "--disable-gpu"
+      ]
+    };
+
+    // Only override executablePath if explicitly set in env
+    if (process.env.PUPPETEER_EXECUTABLE_PATH) {
+      launchOptions.executablePath = process.env.PUPPETEER_EXECUTABLE_PATH;
+    }
+
+    browser = await puppeteer.launch(launchOptions);
 
     const page = await browser.newPage();
 
@@ -1092,7 +1096,7 @@ exports.printResume = async (req, res) => {
 
     await page.setContent(html, {
       waitUntil: "domcontentloaded",
-      timeout: 30000 // ✅ prevent hanging
+      timeout: 30000
     });
 
     const pdfBuffer = await page.pdf({
@@ -1107,6 +1111,7 @@ exports.printResume = async (req, res) => {
     });
 
     await browser.close();
+    browser = null;
 
     res.set({
       "Content-Type": "application/pdf",
@@ -1117,10 +1122,7 @@ exports.printResume = async (req, res) => {
 
   } catch (err) {
     console.error("PDF Error:", err);
-
-    // ✅ FIX 3: always close browser
     if (browser) await browser.close();
-
     res.status(500).send("Error generating PDF");
   }
 };
