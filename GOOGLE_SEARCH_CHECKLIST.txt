@@ -1,0 +1,83 @@
+GOOGLE SEARCH CONSOLE - WEBSITE LISTING CHECKLIST
+===================================================
+Goal: Get preppilot.in indexed and visible on Google Search
+
+------------------------------------------------------------
+STEP 1: VERIFY OWNERSHIP IN GOOGLE SEARCH CONSOLE
+------------------------------------------------------------
+[ ] Go to https://search.google.com/search-console
+[ ] Click "Add Property" → enter https://preppilot.in
+[ ] Choose a verification method:
+    Option A - HTML file (easiest for Render):
+      [ ] Download the googleXXXXXXXX.html file
+      [ ] Place it in your /public folder (served as static)
+      [ ] Deploy to Render
+      [ ] Click "Verify" in Search Console
+    Option B - Meta tag:
+      [ ] Copy the <meta name="google-site-verification" ...> tag
+      [ ] Add it to the <head> of views/home.ejs (and ideally a layout partial)
+      [ ] Deploy and verify
+[ ] Confirm ownership is verified
+
+------------------------------------------------------------
+STEP 2: SUBMIT YOUR SITEMAP
+------------------------------------------------------------
+[ ] Create a sitemap.xml for your public pages, e.g.:
+      https://preppilot.in/sitemap.xml
+[ ] Add a route in app.js that serves sitemap.xml with your public URLs:
+      / (home)
+      /login
+      /register
+      (do NOT include /dashboard, /builder, /profile — these are auth-protected)
+[ ] In Search Console → Sitemaps → enter "sitemap.xml" → Submit
+[ ] Confirm sitemap is read without errors
+
+------------------------------------------------------------
+STEP 3: ADD ROBOTS.TXT
+------------------------------------------------------------
+[ ] Create public/robots.txt with:
+      User-agent: *
+      Allow: /
+      Disallow: /dashboard
+      Disallow: /builder
+      Disallow: /profile
+      Disallow: /onboarding
+      Disallow: /activity
+      Disallow: /resume
+      Sitemap: https://preppilot.in/sitemap.xml
+[ ] Verify it's accessible at https://preppilot.in/robots.txt
+
+------------------------------------------------------------
+STEP 4: OPTIMIZE PUBLIC PAGES FOR INDEXING
+------------------------------------------------------------
+[ ] Add <title> tags to views/home.ejs, views/auth/login.ejs, views/auth/register.ejs
+[ ] Add meta description tags to each public page, e.g.:
+      <meta name="description" content="PrepPilot - AI-powered placement prep for college students. Roadmaps, mock interviews, resume builder and more.">
+[ ] Add Open Graph tags for social sharing (optional but helpful):
+      <meta property="og:title" content="PrepPilot">
+      <meta property="og:description" content="...">
+      <meta property="og:url" content="https://preppilot.in">
+[ ] Make sure home page loads fast (check with https://pagespeed.web.dev)
+
+------------------------------------------------------------
+STEP 5: REQUEST INDEXING
+------------------------------------------------------------
+[ ] In Search Console → URL Inspection → enter https://preppilot.in
+[ ] Click "Request Indexing"
+[ ] Do the same for /login and /register
+
+------------------------------------------------------------
+STEP 6: MONITOR
+------------------------------------------------------------
+[ ] Wait 3-7 days for Google to crawl
+[ ] Check Search Console → Coverage for any errors
+[ ] Search "site:preppilot.in" on Google to confirm pages are indexed
+[ ] Fix any crawl errors reported in Search Console
+
+------------------------------------------------------------
+NOTES
+------------------------------------------------------------
+- Auth-protected pages (dashboard, builder, etc.) will NOT be indexed — that's fine
+- Google indexes public-facing pages only
+- Free Render plan may have cold starts; make sure home page responds quickly
+- If using a custom domain, verify HTTPS is working before submitting
