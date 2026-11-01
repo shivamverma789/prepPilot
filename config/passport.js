@@ -1,4 +1,4 @@
-const LocalStrategy = require("passport-local").Strategy;
+const LocalStrategy = require("passport-local").Strategy; 
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const GitHubStrategy = require("passport-github2").Strategy;
 const User = require("../models/userModel");

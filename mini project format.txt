@@ -1,0 +1,511 @@
+ Front Cover Page (Annexure-A, Remove after finalization)
+<TITLE OF THE PROJECT>
+
+
+
+A Minor Project Report
+Submitted in partial fulfillment of requirement of the
+Degree of 
+BACHELOR OF TECHNOLOGY in COMPUTER SCIENCE & ENGINEERING
+BY
+<Name of the Student(s)>
+<University Roll No(s) of the Student(s)>
+
+Under the Guidance of 
+<Name of the Guide(s)>
+
+
+
+
+Department of Computer Science & Engineering   
+Faculty of Engineering
+MEDICAPS UNIVERSITY, INDORE- 453331
+
+APRIL-2026
+ Title Page (Annexure-B, Remove after finalization)
+<TITLE OF THE PROJECT>
+
+
+
+A Minor Project Report
+Submitted in partial fulfillment of requirement of the
+Degree of 
+BACHELOR OF TECHNOLOGY in COMPUTER SCIENCE & ENGINEERING
+BY
+<Name of the Student(s)>
+<University Roll No(s) of the Student(s)>
+
+Under the Guidance of 
+<Name of the Guide(s)>
+
+
+
+
+Department of Computer Science & Engineering   
+Faculty of Engineering
+MEDICAPS UNIVERSITY, INDORE- 453331
+
+<MONTH YEAR>
+Approval Sheet (Annexure-D, Remove after finalization)
+Report Approval 
+
+The project work“<Title of the Project>”  is hereby approved as a creditable study of an engineering/computer application subject carried out and presented in a manner satisfactory to warrant its acceptance as prerequisite for the Degree for which it has been submitted.
+It is to be understood that by this approval the undersigned do not endorse or approve any statement made, opinion expressed, or conclusion drawn there in; but approve the “Project Report” only for the purpose for which it has been submitted.
+
+
+Internal Examiner	
+Name:
+Designation
+Affiliation
+
+
+
+External Examiner
+Name:
+Designation
+Affiliation
+
+
+
+
+
+Declaration (Annexure-E, Remove after finalization)
+Declaration
+
+I/We hereby declare that the project entitled “<Title of the Project>” submitted in partial fulfillment for the award of the degree of Bachelor of Technology/Master of Computer Applications in ‘<Name of Department>’ completed under the supervision of <Name, designation and department of the Guide(s)>, Faculty of Engineering, Medi-Caps University Indore is an authentic work.
+Further, I/we declare that the content of this Project work, in full or in parts, have neither been taken from any other source nor have been  submitted to any other  Institute or University for  the award of any degree or diploma.
+
+
+Signature and name of the student(s) with date
+
+
+
+
+
+
+
+
+
+
+
+Certificate (Annexure-F, Remove after finalization)
+Certificate 
+
+I/We, <Name of the Guide(s)> certify that the project entitled “<Title of the Project>”   submitted in partial fulfillment for the award of the degree of Bachelor of Technology/Master of Computer Applications by <Name of the student(s)> is the record carried out by him/them under my/our guidance and that the work has not formed the basis of award of any other degree elsewhere.
+
+________________________________	
+<Name of Internal Guide> 
+<Name of the Department>
+Medi-Caps University, Indore
+________________________________	
+<Name of External Guide (If any)> 
+<Name of the Department>
+Name of the Organization
+
+
+
+
+_____________________
+Dr. Ratnesh Litoriya
+Head of the Department
+Computer Science & Engineering
+Medi-Caps University, Indore
+
+
+
+Acknowledgements (Annexure-G, Remove after finalization)
+Acknowledgements
+
+I would like to express my deepest gratitude to the Honorable Chancellor, Shri R C Mittal, who has provided me with every facility to successfully carry out this project, and my profound indebtedness to Prof. (Dr.) D. K. Patnaik, Vice Chancellor, Medi-Caps University, whose unfailing support and enthusiasm has always boosted up my morale. I also thank Prof. (Dr.) Pramod S. Nair, Dean, Faculty of Engineering, Medi-Caps University, for giving me a chance to work on this project. I would also like to thank my Head of the Department Dr. Ratnesh Litoriya for his continuous encouragement for the betterment of the project.
+
+
+It is their help and support, due to which we became able to complete the design and technical report.
+
+Without their support this report would not have been possible. 
+
+Students may write as per their experience. 
+
+<Name of the Student(s)>
+B.Tech. III Year (A)
+Department of Computer Science & Engineering
+Faculty of Engineering
+Medi-Caps University, Indore
+
+
+
+
+
+
+Abstract
+
+
+
+
+
+
+
+Keywords:
+Contents (Annexure-H, Remove after finalization)
+Table of Contents
+
+
+Page No.
+
+
+
+
+Report Approval 
+ii
+
+Declaration 
+iii
+
+Certificate
+iv
+
+Acknowledgement
+v
+
+Abstract 
+vi
+
+Table of Contents
+vii
+
+List of figures
+viii
+
+List of tables
+ix
+
+Abbreviations
+x
+
+Notations & Symbols
+xi
+Chapter 1 
+Introduction (Whichever is applicable)
+
+
+1.1 Introduction
+1
+
+1.2 Literature Review
+
+
+1.3 Objectives 
+
+
+1.4 Significance 
+
+
+1.5 Research Design
+
+
+1.6 Source of Data
+
+
+1.7 Chapter Scheme
+
+Chapter 2
+REQUIREMENTS SPECIFICATION
+
+
+2.1 User Characteris
+
+
+2.2 Functional Requirements
+
+
+2.3 Dependencies
+
+
+2.4 Performance Requirements
+
+
+2.5 Hardware Requirements
+
+
+2.6 Constraints & Assumptions
+
+Chapter 3
+DESIGN ( Whichever is applicable)
+
+
+3.1 Algorithm (if Applicable)
+
+
+3.2 Function Oriented Design for procedural approach
+
+
+3.3 System Design  (Whichever is applicable)
+
+
+3.3.1 Data Flow Diagrams (Level 0,Level1)
+
+
+3.3.2 Activity Diagram
+
+
+3.3.3 Flow Chart
+
+
+3.3.4 Class Diagram
+
+
+3.3.5 ER Diagram
+
+
+3.3.6 Sequence diagram
+
+
+3.4 Database Design
+
+
+3.4.1 Logical Database Design
+
+
+3.4.2 Physical Database Design 
+
+Chapter 4
+Implementation, Testing, and Maintenance
+
+
+4.1 Introduction to Languages, IDE’s, Tools and Technologies used for Implementation
+
+
+4.2 Testing Techniques and Test Plans (According to project)
+
+
+4.3 Installation Instructions
+
+
+4.4 End User Instructions
+
+
+
+
+Chapter 5
+Results and Discussions 
+
+
+5.1 User Interface Representation (of Respective Project)
+
+
+5.2 Brief Description of Various Modules of the system
+
+
+5.3 Snapshots of system with brief detail of each
+
+
+5.4 Back Ends Representation (Database to be used )
+
+
+5.5 Snapshots of Database Tables with brief description
+
+Chapter 6
+Summary and Conclusions
+
+Chapter 7
+Future scope
+
+
+Appendix
+
+
+Bibliography
+
+
+List of Publications (If any)
+
+
+Reprints of publications(If any)
+
+Note
+Results and Discussions may not be a separate chapter it may be included in main chapter
+
+List of Figures
+
+List of Tables
+
+Abbreviations
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Notations & Symbols
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Chapter-1
+
+Standard Formats and Guidelines for Thesis / Dissertations / Reports
+
+In this regulation, standard formats and guidelines for the submission of the thesis / dissertation / report are given which shall be the requirement for partial fulfillment of the respective degrees such as Ph.D, M.Tech, M.Phil etc. 
+	•	Organization of the Thesis / Dissertation / Report
+The Thesis / Dissertation / Report shall be presented in a number of chapters, starting from Abstract, Introduction and ending with Summary and Conclusions. Other chapters will have the description of the work carried out by the student. All the  chapters shall have precise title reflecting the contents of the chapter and be subdivided into sections, sub­sections   and sub­sub­sections  describing the contents distinctly with due emphasis. 
+When the work comprises two or more mutually independent investigations, the thesis may be divided into two or more parts, each with an appropriate title.  However, the numbering of chapters will be continuous right through, for example Part I may comprise of Chapters1­5 and Part II having Chapters 6­9. The chapters and their contents are highlighted below.
+TITLE PAGE, DEDICATION, ACKNOWLEDGEMENT, Approval Sheet, ETC.
+	•	Abstract
+About 500 words abstract shall highlight the important features of the thesis / dissertation / report. The electronic version shall be submitted to KMC for inclusion in the website. The Abstract in the thesis, however, additionally shall have two more parts, namely, the layout of the thesis giving a brief chapter wise description of the work and the key words.
+	•	Contents
+The contents shall follow the Abstract and shall enlist the titles of the chapters, section and sub­section using decimal notation, as in the text, with corresponding page number against them, flushed to the   right.
+	•	List of Figures and Tables
+Two separate lists of Figure captions and Table titles along with their numbers and corresponding page numbers against them shall follow the Contents.
+	•	Abbreviation, Notation and Nomenclature
+A complete and comprehensive list of all abbreviations, notations and nomenclature including Greek alphabets with subscripts and superscripts shall be provided after the list of figures and tables. (As far as possible, generally accepted symbols and notation should be used).
+
+Auxiliary pages from dedication (if any) to abbreviations shall be numbered using Roman numerals in lower case, while the text starting from the Introduction shall be in Hindu­Arabic. (The first pages in the both the cases shall not bear a page number).
+	•	Declaration of Academic Honesty and Integrity
+A declaration of Academic honesty and integrity is required to be included along with every thesis / dissertation / report after the approval sheet. Sample copy of the 'Declaration Sheet' is in the Specimen.
+The writing of the thesis / dissertation / report will commence in several chapters starting from Introduction. The chapter wise details are given below:
+	•	Introduction
+The title of Chapter 1 shall be Introduction. This shall normally form literature review and shall present a critical appraisal of the previous work published in the literature pertaining to the topic of the investigation. The extent and emphasis of the chapter shall depend on the nature of the investigation. It may also highlight the significant contributions from the   investigation. It shall justify and highlight the problem posed, define the topic and explain the aim and scope of the work presented in the thesis.
+	•	Report on the Present Investigation
+The reporting on the investigation shall be presented in one or more chapters with appropriate titles.
+	•	Due importance shall be given to experimental setups, procedures adopted, 
+	•	Techniques developed, methodologies developed and   adopted.
+	•	While important derivations / formulae should normally be presented in the text of these chapters, extensive and long treatments, copious details and tedious information, detailed results in tabular and graphical forms may be presented in Appendices.  Representative    data   in table and figures may, however, be included in appropriate   chapters.
+	•	Figures and tables should be presented immediately following their first mention in the text. Short tables and figures (say, less than half the writing area of the page) should be presented within the text, while large tables and figures may be presented on separate pages.
+	•	Equations should form separate lines with appropriate paragraph separation above and below the equation line, with equation numbers flushed to the   right.
+	•	Results and Discussions
+This shall form the penultimate chapter of the thesis and shall include a thorough evaluation of the investigation carried out and bring out the contributions from the study. The discussion shall logically lead to inferences and conclusions as well as scope for possible future work.
+	•	Summary and Conclusions
+This will be the final chapter of the thesis. A brief report of the work carried out shall form the first part of the Chapter. Conclusions derived from the logical analysis presented in the Results and Discussions Chapter shall be presented and clearly enumerated, each point stated separately. Scope for future work should be stated lucidly in the last part of the chapter.
+	•	Appendix
+Detailed information, lengthy derivations, raw experimental observations etc. are to be presented in the separate appendices, which shall be numbered in Roman Capitals (e.g. “Appendix IV”). Since reference can be drawn to published / unpublished literature in the appendices. These should precede the   “Literature Cited” section.
+	•	Literature Cited
+This should follow the Appendices, if any, otherwise the Summary and Conclusions chapter.  The candidates shall follow the style of citation and style of listing in one of the standard journals in the subject area consistently throughout his/her thesis, for example, IEEE in the Department of Electrical Engineering, Materials Transactions in Department of Metallurgical Engineering and Materials Science. However, the names of all the authors along with their initials and the full title of the article/monogram/book etc. have to be given in addition to the journals/publishers, volume, number, pages(s) and year of    publication.
+	•	Citation from websites should include  the  names(s)  of  author(s)  (  including  the initials),  full  title  of  the  article,  website  reference  and  when  last  accessed.
+	•	Reference  to  personal communications, similarly, shall include  the  author,  title  of  the  communication  (if  any ) and date of   receipt.
+	•	Publications by the candidate
+Articles, technical notes etc. on the topic of the thesis published by the candidate may be separately listed after the literature cited. This may also be included in the contents. The candidates may also include reprints of his/her publications after the literature   citation.
+	•	Acknowledgements
+The acknowledgments by the candidate shall follow the citation of literature, signed by him/her, with date.
+	•	Format of the Thesis
+	•	Paper  Quality
+	•	The thesis shall be printed/xeroxed on white bond or Executive Bond paper, whiteness 95% or above, weight 70 gram or more per square meter.
+	•	Size
+	•	The size of the paper shall be standard A 4; height 297 mm, width 210 mm.
+	•	Type ­Setting, Text Processing and Printing
+	•	The text shall be printed employing laserjet or Inkjet printer, the text having been processed using a standard text processor. The standard font shall be Times New Roman of 12 pts with 1.5 line spacing.
+	•	Page Format
+	•	The Printed Sheets shall have the following written Area and margins: 
+	•	Top    Margin			15 mm
+	•	Head    Height			3 mm
+	•	Head    Separation		12 mm
+	•	Bottom    Margin		22 mm
+	•	Footer				3 mm
+	•	Foot    Separation		10 mm
+	•	Text     Height			245 mm
+	•	Text    Width			160 mm
+When header is not used the top margin shall be 30 mm.
+	•	Left and Right Margins
+The candidates shall have the options of single or double sided printing
+Single sided/odd number page (in double sided printing) 
+Left    Margin 	30 mm
+Right Margin	20 mm
+Double sided­ even numbered page 
+Left Margin   	20 mm 
+Right Margin   	30 mm
+	•	Pagination
+Page numbering in the text of the thesis shall be Hindu­Arabic numerals at the center of the footer.  But when the candidate opts for header style the page number shall appear at the right and left top corner for the odd and even number pages, respectively.
+Page number “1” for the first page of the Introduction chapter shall not appear in print, only the second page will bear the number   “2”.
+The subsequent chapters shall begin on a fresh page (fresh odd number page in case of double sided printing).   When header style is chosen the first page of each chapter will not     have the header      and the page number shall be printed at the center of the footer.
+Pagination for pages before the Introduction chapter shall be in lower case Roman numerals,  e.g.,  “iv”.
+	•	Header
+When the header style is chosen, the header can have the Chapter number and Section number (e.g., Chapter 2, Section 3) on even numbered page headers and Chapter  title  or  Section title on the odd numbered   page   header.
+	•	Paragraph format
+Vertical space between paragraphs shall be about 2.5 line   spacing. The first line of each paragraph should normally be indented by five characters or 12mm. A candidate may, however, choose not to indent if (s) he has provided sufficient paragraph separation.
+A paragraph should normally comprise more than one line. A single line of a paragraph shall not be left at the top or bottom of a page (that is, no windows or orphans should be left)
+The word at the right end of the first line of a page or paragraph should, as  far  as  possible, not be  hyphenated.
+	•	Chapter and Section Format
+Each chapter shall begin on a fresh page (odd number page in case of double sided printing) with an additional top margin of about 75mm.  Chapter  number  (in  Hindu­Arabic) and title shall be printed at the center of the line in 6mm font size (18pt) in bold face using      both upper and lower case (all capitals or small capitals shall not be used). A vertical gap of about 25mm shall be left between the Chapter number and Chapter title lines and between chapter title line and the first paragraph.
+	•	Sections and Sub­sections
+A chapter can be divided into Sections, Sub­sections and Sub­sub­Sections so as to present different concepts separately. Sections and sub­sections  can  be  numbered  using  decimal points, e.g. 2.2 for the second section in Chapter  2  and  2.3.4  for  the  fourth  Sub­  section in third Section of Chapter 2.  Chapters, Sections and Subsections shall be included in  the contents with page numbers flushed to the right. Further subsections  need  not  be  numbered   or included in the contents.
+The Section and Sub­Section titles along with  their numbers  in 5 and  4mm (16 and  14 pt) fonts, respectively, in bold face shall be flushed to the left (not centered) with 15 mm space above and below these   lines.
+In further subdivisions character size of 3 and 3.5  with bold face,  small  caps,  all  caps  and italics may be used for the titles flushed left or centered. These shall not feature in the contents.
+	•	Table / Figure Format
+As far as possible tables and figures should be presented in portrait style.   Small size   table and figures (less than half  of writing area of a page) should be incorporated within the   text, while larger ones may be presented on separate pages. Table and  figures  shall  be  numbered chapter ­wise. For example, the fourth figure in chapter 5 will bear the  number Figure 5.4 or Fig  5.4
+Table number and title will be placed above the table while the figure number and caption will be located below the figure. Reference for Table and Figures reproduced from elsewhere shall be cited in the last and separate line in the table and figure caption, e.g. (after McGregor [12]).
+
+Reference and Citation Style Guides
+Providing references and citations is an important and essential part of any type of academic writing. The main purpose is to acknowledge the original source of ideas and work that is not the author's own, and to direct the readers to the original sources of information. Whenever you use sources such as books, journals, research papers, web sites, e-resources and others in the writings, one must give credit to the original author by properly citing the sources.
+There are a number of different reference and citation styles available. Styles are basically well established practices and conventions. Depending on the discipline in which one is working and also the widely used style in the respective discipline, one can decide to select and use a particular style.
+Following links provide the list of varieties of styles and also the guidelines for using. 
+	•	AAA Style (American Anthropological Association)
+	•	ACS Style (American Chemical Society)
+	•	AIP Style (American Institute of Physics)
+	•	American Antiquity Style-Society for American Archaeology
+	•	AMS Style (American Mathematical Society)
+	•	AP Style (Associated Press Style)
+	•	APA Style (American Psychological Association)
+	•	APSA Style (American Political Science Association)
+	•	ASA Style (American Sociological Association)
+	•	ASABE Citation Style (American Society of Agricultural and Biological Engineers)
+	•	ASME Citation Style (American Society of Mechanical Engineers)
+	•	Chicago Style
+	•	GSA (Geological Society of America) Style
+	•	Hart's Ruels (Oxford Style)
+	•	Harvard Style
+	•	IEEE Style
+	•	MHRA Style (Modern Humanities Research Association)
+	•	MLA Style (Modern Language Association)
+	•	NLM Style (National Library of Medicine)
+	•	Turabian Style
+	•	Vancouver Style
+ Note: For CSE Department  IEEE format will be followed.
+Appendices (if any)
+Bibliography
+List of Publications
+Reprint of Publications
+Most Important: The no of copies for B Tech  students = 1 hardcopy+1 softcopy

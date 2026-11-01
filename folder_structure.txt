@@ -1,0 +1,118 @@
+app.js
+CAPACITY_ANALYSIS.txt
+GOOGLE_SEARCH_CHECKLIST.txt
+mini project format.txt
+package.json
+PRODUCTION_CHECKLIST.txt
+PROJECT_REPORT_INFO copy.txt
+config/
+	passport.js
+controllers/
+	activityController.js
+	assessmentController.js
+	authController.js
+	interviewController.js
+	onboardingController.js
+	profileController.js
+	progressController.js
+	resumeBuilderController.js
+	resumeController.js
+	roadmapController.js
+documentation/
+	logger.txt
+middlewares/
+	isLoggedIn.js
+	profileCheck.js
+models/
+	activityModel.js
+	assessmentModel.js
+	resumeAnalysisModel.js
+	resumeModel.js
+	roadmapModel.js
+	taskModel.js
+	userModel.js
+	userPlatformModel.js
+public/
+	robots.txt
+	sitemap.xml
+	css/
+		resumeEditor.css
+	images/
+		favicon/
+			site.webmanifest
+	js/
+		resumeEditor.js
+routes/
+	activityRoutes.js
+	assessmentRoutes.js
+	authRoutes.js
+	interviewRoutes.js
+	onboardingRoutes.js
+	profileRoutes.js
+	progressRoutes.js
+	resumeBuilderRoutes.js
+	resumeRoutes.js
+	roadmapRoutes.js
+services/
+	emailService.js
+	activity/
+		activityService.js
+		codechefService.js
+		codeforcesService.js
+		githubService.js
+		hackerrankService.js
+		leetcodeService.js
+	ai/
+		aiClient.js
+		assessmentAI.js
+		resumeAI.js
+		resumeEnhancer.js
+		resumeParser.js
+		roadmapAI.js
+	parser/
+		textExtractor.js
+uploads/
+	notempty.txt
+utils/
+	normalizeResume.js
+views/
+	error.ejs
+	home.ejs
+	activity/
+		dashboard.ejs
+		profile.ejs
+		publicProfile.ejs
+		resources.ejs
+	assessment/
+		quiz.ejs
+		result.ejs
+	auth/
+		login.ejs
+		register.ejs
+		verify-email.ejs
+	dashboard/
+		dashboard.ejs
+		dsaProfiles.ejs
+		profile.ejs
+		roadmap.ejs
+	interview/
+		setup.ejs
+	onboarding/
+		index.ejs
+	resume/
+		index.ejs
+		result.ejs
+	resumeBuilder/
+		dashboard.ejs
+		editor.ejs
+		preview.ejs
+		print.ejs
+		sections/
+			basics.ejs
+			education.ejs
+			experience.ejs
+			projects.ejs
+			skills.ejs
+			summary.ejs
+	user/
+		onboarding.ejs

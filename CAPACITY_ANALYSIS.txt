@@ -1,0 +1,138 @@
+PREPPILOT — REAL USER CAPACITY ANALYSIS
+========================================
+Based on actual stack: Node.js/Express, MongoDB Atlas, Gemini AI (3 keys),
+Render Free Plan, single process, no queue system.
+
+Last updated: April 2026
+
+
+════════════════════════════════════════════════════════
+SECTION 1: CONCURRENT USER LIMITS BY FEATURE
+════════════════════════════════════════════════════════
+
+Each feature has a different bottleneck. Here's the real breakdown:
+
+┌─────────────────────────────┬──────────────────┬─────────────────────────────────────┐
+│ Feature                     │ Concurrent Users │ Bottleneck                          │
+├─────────────────────────────┼──────────────────┼─────────────────────────────────────┤
+│ Browse home / login / reg   │ 200–500          │ Render free plan cold starts        │
+│ Dashboard (read-only)       │ 100–200          │ MongoDB Atlas free tier (500 conn)  │
+│ Activity tracking           │ 50–100           │ External API rate limits (GitHub,   │
+│                             │                  │ LeetCode, Codeforces etc.)          │
+│ Roadmap generation (AI)     │ 3–5              │ Gemini API (3 keys × ~2 RPM free)   │
+│ Resume analysis (AI)        │ 3–5              │ Same Gemini limit + file parsing    │
+│ Resume builder (no AI)      │ 50–100           │ MongoDB writes                      │
+│ PDF download (Puppeteer)    │ 1–2              │ Puppeteer launches full Chrome,     │
+│                             │                  │ ~500MB RAM per instance             │
+│ Mock interview setup        │ 20–50            │ LiveKit external service            │
+│ Skill assessment (AI quiz)  │ 3–5              │ Gemini API                          │
+└─────────────────────────────┴──────────────────┴─────────────────────────────────────┘
+
+
+════════════════════════════════════════════════════════
+SECTION 2: THE HARD LIMITS RIGHT NOW
+════════════════════════════════════════════════════════
+
+1. GEMINI API (BIGGEST BOTTLENECK)
+   - You have 3 API keys rotating
+   - Free tier: ~15 requests/minute per key = 45 req/min total
+   - Each AI feature (roadmap, resume analysis, quiz) takes 5–30 seconds
+   - Real concurrent AI users: 3–5 at a time before 429 errors
+   - Impact: roadmap, resume AI, assessments, interview setup all share this
+
+2. RENDER FREE PLAN
+   - 512MB RAM limit
+   - Single instance (no horizontal scaling)
+   - Spins down after 15 min inactivity (cold start = 30–60 sec delay)
+   - 1 Puppeteer PDF = ~400–500MB RAM → can crash the server if 2 happen at once
+   - CPU throttled under load
+   - Real limit: ~50 active sessions before slowdowns
+
+3. MONGODB ATLAS FREE TIER (M0)
+   - 512MB storage
+   - Max 500 connections (shared cluster)
+   - No dedicated RAM — queries slow under load
+   - Real limit: ~100 concurrent DB operations
+
+4. SINGLE NODE.JS PROCESS
+   - No clustering (no cluster module, no PM2)
+   - One CPU core used
+   - Blocking operations (Puppeteer, heavy AI parsing) block the event loop
+   - Real limit: ~50–100 concurrent requests before queue backs up
+
+
+════════════════════════════════════════════════════════
+SECTION 3: REALISTIC USER SCENARIOS
+════════════════════════════════════════════════════════
+
+SCENARIO A — Light usage (browsing, dashboard, resume builder)
+  Users doing: login, view dashboard, edit resume sections
+  Concurrent users supported: ~80–120
+  Risk: Low. Mostly DB reads/writes, no AI.
+
+SCENARIO B — Mixed usage (some AI features)
+  Users doing: mix of browsing + some generating roadmaps/quizzes
+  Concurrent users supported: ~20–40
+  Risk: Medium. AI queue builds up, some users get 429 errors.
+
+SCENARIO C — Heavy AI usage (everyone generating at once)
+  Users doing: all triggering roadmap/resume AI simultaneously
+  Concurrent users supported: 3–5
+  Risk: High. Most requests fail or timeout.
+
+SCENARIO D — PDF downloads
+  Multiple users downloading PDF resumes at once
+  Concurrent users supported: 1–2
+  Risk: Critical. Server can run out of RAM and crash.
+
+
+════════════════════════════════════════════════════════
+SECTION 4: WHAT BREAKS FIRST UNDER LOAD
+════════════════════════════════════════════════════════
+
+Order of failure as users increase:
+
+1. PDF generation crashes (2+ simultaneous = OOM on Render free)
+2. AI features return 429 / timeout (5+ simultaneous AI requests)
+3. Render server slows down (50+ active sessions)
+4. MongoDB queries slow (100+ concurrent DB operations)
+5. Server becomes unresponsive (150+ concurrent requests)
+
+
+════════════════════════════════════════════════════════
+SECTION 5: HOW TO INCREASE CAPACITY (PRIORITY ORDER)
+════════════════════════════════════════════════════════
+
+QUICK WINS (free / low cost):
+  [ ] Add more Gemini API keys (each free key = +15 RPM)
+  [ ] Add a simple AI request queue (process one at a time per user)
+  [ ] Limit PDF generation to 1 concurrent (semaphore/mutex)
+  [ ] Enable Node.js clustering (use all CPU cores)
+  [ ] Add Redis or in-memory caching for roadmaps (don't regenerate same roadmap)
+
+MEDIUM EFFORT:
+  [ ] Upgrade Render to Starter plan ($7/mo) → 512MB→1GB RAM, no cold starts
+  [ ] Upgrade MongoDB Atlas to M2/M5 → dedicated RAM, more connections
+  [ ] Add a job queue (Bull/BullMQ) for AI tasks → users wait in line gracefully
+  [ ] Cache AI results per user (roadmap doesn't need to regenerate every visit)
+
+LONGER TERM:
+  [ ] Switch to Gemini paid tier (much higher RPM limits)
+  [ ] Use puppeteer-cluster for PDF generation
+  [ ] Add horizontal scaling (multiple Render instances)
+
+
+════════════════════════════════════════════════════════
+SECTION 6: SUMMARY — SAFE OPERATING RANGE
+════════════════════════════════════════════════════════
+
+  Total registered users:     Unlimited (just DB storage)
+  Daily active users (safe):  50–100
+  Concurrent users (safe):    20–30
+  Concurrent AI users (safe): 3–5
+  Concurrent PDF users (safe): 1
+
+  Bottom line: PrepPilot can comfortably handle a college batch of
+  100–200 students using it throughout the day, as long as not everyone
+  hits AI features at the exact same time. For a wider launch (1000+
+  DAU), the Gemini API limit and Render plan are the first things to fix.

@@ -1,0 +1,884 @@
+================================================================
+PROJECT REPORT INFORMATION — PrepPilot
+For: B.Tech CSE Mini Project Report, Medi-Caps University, Indore
+Format: IEEE Style | April 2026
+================================================================
+
+NOTE TO AI: Use this file to generate a complete mini project report
+following the Medi-Caps University B.Tech CSE format. Fill all
+placeholders with the information provided below. Write in formal
+academic English. Use IEEE citation style for references.
+
+================================================================
+SECTION 1: TITLE PAGE INFORMATION
+================================================================
+
+Project Title: PrepPilot — An AI-Powered Placement Preparation Platform for Engineering Students
+
+Degree: Bachelor of Technology in Computer Science & Engineering
+
+University: Medi-Caps University, Indore — 453331
+
+Department: Computer Science & Engineering, Faculty of Engineering
+
+Month & Year: April 2026
+
+[NOTE: Student names, roll numbers, and guide names to be filled by student]
+
+================================================================
+SECTION 2: ABSTRACT (approx 500 words)
+================================================================
+
+PrepPilot is a full-stack, AI-powered web application designed to assist
+engineering students in preparing for campus placements and technical job
+interviews. The platform addresses a critical gap in the current placement
+preparation ecosystem — the absence of a unified, personalized, and
+intelligent system that adapts to each student's unique academic background,
+skill level, and career goals.
+
+The system is built using Node.js with the Express 5 framework on the
+backend, MongoDB as the primary database via Mongoose, and EJS as the
+server-side templating engine for rendering views. All AI features are
+powered by Google Gemini (gemini-3-flash-preview model) accessed through
+a centralized AI client service that supports key rotation and retry logic.
+
+PrepPilot offers six core modules:
+
+1. AI Personalized Roadmap Generator: Based on a student's onboarding
+profile (skills, career goals, academic year, target company type), the
+system generates a phase-wise, week-by-week learning roadmap with
+subtopics, resources (YouTube + documentation), and mini projects.
+
+2. ATS Resume Analyzer: Students upload their resume (PDF or DOCX), which
+is parsed and analyzed by the AI to produce an ATS score, keyword gaps,
+critical issues, improvement suggestions, and rewrite examples. A
+job-description-based analysis mode is also available.
+
+3. Resume Builder: A structured, section-based resume editor allowing
+students to build resumes from scratch with sections for basics, summary,
+skills, experience, projects, and education. AI enhancement rewrites
+bullet points for impact. PDF export is supported via Puppeteer.
+
+4. Skill Assessments: AI-generated 5-question MCQ quizzes for each
+subtopic in the student's roadmap, with difficulty progression and
+detailed explanations.
+
+5. DSA Activity Tracker: Aggregates coding activity from LeetCode,
+Codeforces, CodeChef, HackerRank, and GitHub using their respective APIs,
+displaying streaks, ratings, and activity heatmaps.
+
+6. AI Mock Interview Setup: Configures and launches AI-driven mock
+interview sessions integrated with a LiveKit-based real-time interview
+application.
+
+The platform uses Passport.js for authentication (local strategy + Google
+OAuth + GitHub OAuth), session management via connect-mongo, and bcrypt
+for password hashing. Email verification is handled through Brevo (formerly
+Sendinblue) SMTP.
+
+PrepPilot is deployed on Render (cloud platform) with MongoDB Atlas as the
+cloud database. The application is live at https://preppilot.in.
+
+Keywords: Placement Preparation, Artificial Intelligence, ATS Resume
+Analysis, Personalized Roadmap, Skill Assessment, Node.js, Google Gemini,
+MongoDB, Express.js, Full Stack Web Application
+
+================================================================
+SECTION 3: CHAPTER 1 — INTRODUCTION
+================================================================
+
+1.1 INTRODUCTION
+
+The placement season in Indian engineering colleges is one of the most
+critical phases of a student's academic journey. Despite the availability
+of numerous online resources, students often struggle with three core
+problems: (a) not knowing what to study, (b) not knowing how to present
+their skills, and (c) not getting enough practice in a realistic setting.
+
+PrepPilot was conceived to solve all three problems in a single, unified
+platform. It acts as a personal placement coach — understanding the
+student's current skill level, generating a customized learning path,
+helping them build and optimize their resume, and providing tools to
+practice and track their progress.
+
+The platform is entirely web-based, requiring no installation, and is
+accessible from any device with a browser. It is free to use and designed
+specifically for the Indian engineering student demographic targeting
+product-based companies, service-based companies, startups, and FAANG-level
+organizations.
+
+1.2 LITERATURE REVIEW
+
+[AI: Generate a literature review covering the following topics with
+IEEE citations — existing placement prep platforms (InterviewBit, LeetCode,
+GeeksforGeeks), ATS resume systems, AI-based personalized learning systems,
+chatbot-based interview prep tools, and limitations of existing solutions.
+Cite at least 8 relevant papers/sources from 2018–2024.]
+
+1.3 OBJECTIVES
+
+The primary objectives of PrepPilot are:
+
+1. To develop an AI-powered personalized roadmap generator that adapts to
+   each student's skill level, academic background, and career goals.
+
+2. To build an ATS resume analyzer that provides actionable, data-driven
+   feedback on resume quality and keyword optimization.
+
+3. To create a full-featured resume builder with AI-assisted bullet point
+   enhancement and PDF export capability.
+
+4. To implement a skill assessment module that generates topic-specific
+   MCQ quizzes using AI to evaluate and track student proficiency.
+
+5. To aggregate coding activity from multiple competitive programming
+   platforms into a single unified dashboard.
+
+6. To integrate an AI-driven mock interview preparation system.
+
+7. To deploy a production-ready, scalable web application accessible to
+   students across India.
+
+1.4 SIGNIFICANCE
+
+PrepPilot addresses a real and pressing need in the Indian engineering
+education ecosystem. With over 1.5 million engineering graduates produced
+annually in India, the competition for placement is intense. Most students
+lack access to personalized mentorship or structured preparation guidance.
+PrepPilot democratizes access to high-quality, AI-driven placement
+preparation tools that were previously available only through expensive
+coaching institutes or premium platforms.
+
+1.5 RESEARCH DESIGN
+
+The project follows an iterative, feature-driven development methodology.
+Requirements were gathered through observation of student placement
+preparation patterns and analysis of existing platforms. The system was
+designed using the MVC (Model-View-Controller) architectural pattern.
+AI prompts were engineered iteratively to produce consistent, structured
+JSON outputs suitable for rendering in the UI.
+
+1.6 SOURCE OF DATA
+
+- Student profile data: Collected during onboarding (skills, goals,
+  academic details, experience level)
+- Resume data: Uploaded by users (PDF/DOCX format)
+- Coding activity data: Fetched via public APIs of LeetCode, Codeforces,
+  CodeChef, HackerRank, and GitHub
+- AI-generated content: Roadmaps, quiz questions, resume analysis —
+  generated by Google Gemini API
+
+1.7 CHAPTER SCHEME
+
+Chapter 1: Introduction — Background, objectives, significance, and
+           literature review of the project.
+Chapter 2: Requirements Specification — Functional and non-functional
+           requirements, hardware/software requirements.
+Chapter 3: System Design — Architecture, data flow diagrams, ER diagram,
+           database design, and system diagrams.
+Chapter 4: Implementation, Testing, and Maintenance — Technology stack,
+           implementation details, testing strategy.
+Chapter 5: Results and Discussions — UI screenshots, module descriptions,
+           database snapshots.
+Chapter 6: Summary and Conclusions
+Chapter 7: Future Scope
+
+================================================================
+SECTION 4: CHAPTER 2 — REQUIREMENTS SPECIFICATION
+================================================================
+
+2.1 USER CHARACTERISTICS
+
+The primary users of PrepPilot are:
+- Engineering students (B.Tech/B.E.) in their 2nd, 3rd, or 4th year
+- Students targeting campus placements at product-based, service-based,
+  startup, or FAANG-level companies
+- Students with varying levels of technical proficiency (beginner to
+  intermediate)
+- Users accessing the platform via desktop or mobile browsers
+
+Secondary users:
+- Faculty/guides who may review student progress (future scope)
+
+2.2 FUNCTIONAL REQUIREMENTS
+
+FR1: User Registration and Authentication
+  - Users must be able to register with email and password
+  - Users must be able to login via Google OAuth and GitHub OAuth
+  - Email verification must be required before account activation
+  - Passwords must be hashed using bcrypt
+
+FR2: Onboarding and Profile Setup
+  - New users must complete a 4-step onboarding flow
+  - Steps: Career Goals → Academic Details → Skills → Experience Level
+  - Skills must support proficiency levels (beginner/intermediate/advanced)
+    and exposure levels (heard of it/learned/built projects/confident)
+  - Profile must be editable after onboarding
+
+FR3: AI Roadmap Generation
+  - System must generate a personalized, phase-wise roadmap based on
+    user profile
+  - Each phase must contain skills, subtopics, resources, and mini projects
+  - Resources must include YouTube search links and documentation links
+  - Roadmap must be stored in the database and viewable on dashboard
+
+FR4: Resume Analysis
+  - Users must be able to upload PDF or DOCX resume files
+  - System must extract text and send to AI for analysis
+  - Analysis must return: ATS score, breakdown, critical issues,
+    missing keywords, improvement suggestions, rewrite examples
+  - Job-description-based analysis must also be supported
+
+FR5: Resume Builder
+  - Users must be able to create multiple resumes
+  - Sections: Basics, Professional Summary, Skills, Experience,
+    Projects, Education
+  - Each section must support full CRUD operations
+  - AI enhancement must rewrite bullet points for impact
+  - PDF export must be supported via Puppeteer
+
+FR6: Skill Assessment
+  - System must generate 5-question MCQ quizzes per subtopic
+  - Questions must have 4 options, 1 correct answer, and explanation
+  - Difficulty must progress from basic to advanced
+  - Results must be displayed with score and explanations
+
+FR7: Activity Tracking
+  - System must fetch and display coding stats from:
+    LeetCode, Codeforces, CodeChef, HackerRank, GitHub
+  - Users must be able to link their platform usernames
+  - Activity dashboard must show ratings, streaks, and problem counts
+
+FR8: Mock Interview
+  - Users must be able to configure interview parameters
+    (role, difficulty, focus areas)
+  - System must redirect to LiveKit-based interview application
+
+2.3 DEPENDENCIES
+
+- Google Gemini API (AI features) — requires GEMINI_API_KEY
+- MongoDB Atlas (database) — requires MONGO_URI
+- Google OAuth 2.0 — requires GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET
+- GitHub OAuth — requires GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET
+- Brevo SMTP (email) — requires BREVO_API_KEY
+- LiveKit (mock interview) — external application at ai-interviewer
+- LeetCode, Codeforces, CodeChef, HackerRank, GitHub public APIs
+
+2.4 PERFORMANCE REQUIREMENTS
+
+- Page load time for static pages: < 2 seconds
+- AI roadmap generation: < 30 seconds
+- Resume analysis: < 20 seconds
+- PDF generation: < 15 seconds
+- Activity data fetch: < 10 seconds per platform
+- System must support 20–30 concurrent users on current infrastructure
+
+2.5 HARDWARE REQUIREMENTS
+
+Development:
+- Processor: Intel Core i5 or equivalent (minimum)
+- RAM: 8 GB minimum
+- Storage: 10 GB free space
+- Internet connection for API access
+
+Deployment (Render Free Plan):
+- RAM: 512 MB
+- CPU: Shared (throttled)
+- Storage: Ephemeral (uploads stored temporarily)
+
+Client (End User):
+- Any device with a modern web browser (Chrome, Firefox, Safari, Edge)
+- Internet connection
+
+2.6 CONSTRAINTS AND ASSUMPTIONS
+
+Constraints:
+- Gemini API free tier limits AI to ~45 requests/minute (3 keys × 15 RPM)
+- Render free plan has 512MB RAM limit; PDF generation is memory-intensive
+- No persistent file storage (uploaded resumes processed in memory)
+- Single Node.js process (no clustering on free plan)
+
+Assumptions:
+- Users have basic computer literacy and internet access
+- Users provide accurate information during onboarding
+- External platform APIs (LeetCode, GitHub, etc.) remain publicly accessible
+- Google Gemini API responses are in valid JSON format as prompted
+
+================================================================
+SECTION 5: CHAPTER 3 — SYSTEM DESIGN
+================================================================
+
+3.1 ALGORITHM (AI PROMPT ENGINEERING)
+
+The core intelligence of PrepPilot is driven by carefully engineered
+prompts sent to the Google Gemini API. The prompt engineering follows
+a structured approach:
+
+Roadmap Generation Algorithm:
+1. Collect user profile (skills with levels, goals, academic year,
+   target company, experience)
+2. Build a structured user profile text block
+3. Send to Gemini with strict JSON output schema
+4. Parse response and store phases/skills/subtopics in MongoDB
+5. Render roadmap on dashboard
+
+Resume Analysis Algorithm:
+1. Accept uploaded file (PDF/DOCX)
+2. Extract raw text using pdf-parse or mammoth
+3. Send text to Gemini with scoring framework prompt
+4. Parse JSON response (ATS score, breakdown, issues, suggestions)
+5. Render results page with visual score breakdown
+
+Quiz Generation Algorithm:
+1. Receive subtopic title, skill title, user level
+2. Send to Gemini requesting 5 MCQ questions in JSON format
+3. Parse and validate response
+4. Render quiz UI with options and submit handler
+5. Score answers and display explanations
+
+3.2 SYSTEM ARCHITECTURE
+
+PrepPilot follows the MVC (Model-View-Controller) architectural pattern:
+
+Model Layer (MongoDB + Mongoose):
+- userModel.js — User accounts, profile, skills, goals, academic info
+- roadmapModel.js — Generated roadmap phases, skills, subtopics
+- resumeModel.js — Resume sections, basics, AI cache
+- assessmentModel.js — Quiz questions and results
+- activityModel.js — Coding platform usernames and stats
+- taskModel.js — Roadmap task completion tracking
+
+View Layer (EJS Templates):
+- Server-rendered HTML pages organized by feature
+- Folders: auth/, dashboard/, resume/, resumeBuilder/,
+  activity/, assessment/, interview/, onboarding/
+
+Controller Layer (Express Route Handlers):
+- authController.js — Registration, login, OAuth, email verification
+- onboardingController.js — 4-step profile setup
+- roadmapController.js — Roadmap generation and display
+- resumeController.js — Resume upload and AI analysis
+- resumeBuilderController.js — Resume CRUD and PDF export
+- assessmentController.js — Quiz generation and scoring
+- activityController.js — Platform data aggregation
+- interviewController.js — Mock interview configuration
+- profileController.js — Profile editing
+
+Service Layer:
+- services/ai/ — All Gemini AI logic (aiClient, roadmapAI,
+  resumeAI, assessmentAI, resumeEnhancer, resumeParser)
+- services/activity/ — Per-platform API fetchers
+- services/parser/ — PDF/DOCX text extraction
+- services/emailService.js — Email sending via Brevo
+
+3.3 SYSTEM DESIGN DIAGRAMS
+
+[AI: Generate the following diagrams as text descriptions for the report.
+The report writer will convert these to actual diagrams.]
+
+3.3.1 DATA FLOW DIAGRAM — LEVEL 0 (Context Diagram)
+External entities: Student User, Google Gemini API, MongoDB Atlas,
+Coding Platforms (LeetCode/GitHub/etc.), Email Service (Brevo),
+LiveKit Interview App
+Central process: PrepPilot Web Application
+Data flows:
+- Student → Login/Profile/Resume/Activity data → PrepPilot
+- PrepPilot → AI Prompts → Gemini API → AI Responses → PrepPilot
+- PrepPilot → Queries/Updates → MongoDB Atlas
+- PrepPilot → API Requests → Coding Platforms → Stats → PrepPilot
+- PrepPilot → Verification Email → Brevo → Student
+- PrepPilot → Interview Config → LiveKit App
+
+3.3.2 DATA FLOW DIAGRAM — LEVEL 1
+[AI: Expand the Level 0 DFD into Level 1 showing individual processes:
+User Auth, Onboarding, Roadmap Generation, Resume Analysis,
+Resume Builder, Assessment, Activity Tracking, Interview Setup]
+
+3.3.3 ACTIVITY DIAGRAM
+[AI: Describe the main user activity flow from registration to
+roadmap generation to assessment completion]
+
+3.3.4 FLOWCHART — ROADMAP GENERATION
+Start → User logs in → Check if onboarding complete →
+If not: redirect to onboarding → Complete 4 steps →
+Submit profile → AI generates roadmap → Store in DB →
+Display on dashboard → User clicks subtopic → Take quiz →
+View results → End
+
+3.3.5 ER DIAGRAM — KEY ENTITIES AND RELATIONSHIPS
+
+Entities and key attributes:
+
+User:
+  _id, name, email, password (hashed), isVerified,
+  careerGoals[], customGoals[], targetCompanyType,
+  year, degree, branch, university,
+  skills[{name, level, exposure, confidence}],
+  experience{projectsCount, internshipExperience,
+  dailyStudyHours, resumeReady}
+
+Roadmap:
+  _id, userId (FK→User), phases[{phase, skills[{
+  title, subtopics[{title, resources[], completed}],
+  miniProject{title, description}}]}]
+
+Resume (Analysis):
+  _id, userId (FK→User), originalText, analysis{
+  atsScore, breakdown, criticalIssues, missingKeywords,
+  improvementSuggestions, rewriteExamples}
+
+ResumeBuilder:
+  _id, userId (FK→User), title, basics{fullName, email,
+  phone, location, links[]}, sections[{title, type,
+  order, data}], aiCache{optimizedResume, atsScoreBefore,
+  atsScoreAfter, missingSkills, improvementNotes}
+
+Assessment:
+  _id, userId (FK→User), subtopicTitle, skillTitle,
+  questions[], score, completedAt
+
+Activity:
+  _id, userId (FK→User), platforms{leetcode, codeforces,
+  codechef, hackerrank, github}
+
+Relationships:
+- User 1:1 Roadmap
+- User 1:N Resume (Analysis)
+- User 1:N ResumeBuilder
+- User 1:N Assessment
+- User 1:1 Activity
+
+3.4 DATABASE DESIGN
+
+3.4.1 LOGICAL DATABASE DESIGN
+
+The database uses MongoDB (NoSQL, document-oriented). Collections:
+
+users — Stores all user account and profile data
+roadmaps — Stores AI-generated roadmaps per user
+resumes — Stores resume analysis results
+resumebuilder — Stores resume builder documents
+assessments — Stores quiz results
+activities — Stores coding platform usernames and stats
+sessions — Managed by connect-mongo for session persistence
+
+3.4.2 PHYSICAL DATABASE DESIGN
+
+Database: MongoDB Atlas (M0 Free Tier)
+Cluster: Shared cluster, region: Mumbai (ap-south-1)
+Connection: Mongoose 9 via MONGO_URI environment variable
+Session Store: connect-mongo (sessions stored in MongoDB)
+Indexes: Default _id index on all collections;
+         userId index on roadmaps, resumes, resumebuilder,
+         assessments, activities for fast user-based queries
+
+================================================================
+SECTION 6: CHAPTER 4 — IMPLEMENTATION, TESTING & MAINTENANCE
+================================================================
+
+4.1 LANGUAGES, IDEs, TOOLS AND TECHNOLOGIES
+
+BACKEND:
+- Runtime: Node.js v20 (LTS)
+- Framework: Express.js v5 (CommonJS modules)
+- Language: JavaScript (ES6+)
+- Module System: CommonJS (require/module.exports)
+
+FRONTEND:
+- Templating Engine: EJS (Embedded JavaScript) v4
+- CSS: Custom CSS (inline in EJS files, scoped per page)
+- JavaScript: Vanilla JS (client-side interactions)
+
+DATABASE:
+- MongoDB (NoSQL document database)
+- Mongoose v9 (ODM for schema definition and queries)
+- MongoDB Atlas (cloud-hosted database)
+
+AUTHENTICATION:
+- Passport.js v0.7 with passport-local strategy
+- passport-google-oauth20 (Google OAuth 2.0)
+- passport-github2 (GitHub OAuth)
+- express-session v1.19 (session management)
+- connect-mongo v6 (MongoDB session store)
+- bcrypt v6 (password hashing)
+
+AI INTEGRATION:
+- @google/genai v1.41 (Google Gemini SDK)
+- Model: gemini-3-flash-preview
+- 3 API keys with round-robin rotation
+- Retry logic for 429/503 errors
+
+FILE HANDLING:
+- multer v2 (file upload middleware, memory storage)
+- pdf-parse v2 (PDF text extraction)
+- mammoth v1 (DOCX text extraction)
+- puppeteer v24 (PDF generation from HTML)
+- @sparticuz/chromium (Chromium binary for cloud deployment)
+- puppeteer-core (used with sparticuz/chromium in production)
+
+EMAIL:
+- nodemailer v8 (email sending)
+- Brevo (Sendinblue) SMTP service
+
+EXTERNAL APIs:
+- LeetCode GraphQL API (unofficial)
+- Codeforces REST API
+- CodeChef API
+- HackerRank API
+- GitHub REST API v3
+- axios v1 (HTTP client for external API calls)
+
+DEPLOYMENT:
+- Platform: Render (cloud PaaS)
+- Database: MongoDB Atlas
+- Domain: preppilot.in
+- Environment: NODE_ENV=production
+
+DEVELOPMENT TOOLS:
+- IDE: Visual Studio Code
+- Version Control: Git + GitHub
+- Package Manager: npm
+- API Testing: Browser + manual testing
+
+4.2 TESTING TECHNIQUES AND TEST PLANS
+
+Testing Strategy: Manual Black-Box Testing
+
+Test Plan:
+
+Module 1: Authentication
+  TC1.1: Register with valid email/password → Expect: verification email sent
+  TC1.2: Login with correct credentials → Expect: redirect to dashboard
+  TC1.3: Login with wrong password → Expect: error message
+  TC1.4: Google OAuth login → Expect: account created/linked, redirect to dashboard
+  TC1.5: Access protected route without login → Expect: redirect to /login
+
+Module 2: Onboarding
+  TC2.1: Complete all 4 steps → Expect: profile saved, redirect to dashboard
+  TC2.2: Skip required fields → Expect: validation error
+  TC2.3: Add skills with autocomplete → Expect: skills saved with levels
+
+Module 3: Roadmap Generation
+  TC3.1: Generate roadmap for beginner SDE profile → Expect: valid JSON roadmap
+  TC3.2: Generate roadmap for advanced Full Stack profile → Expect: advanced phases
+  TC3.3: Gemini API timeout → Expect: error handled gracefully
+
+Module 4: Resume Analysis
+  TC4.1: Upload valid PDF → Expect: ATS score and analysis displayed
+  TC4.2: Upload DOCX → Expect: text extracted and analyzed
+  TC4.3: Upload with JD → Expect: JD match score displayed
+
+Module 5: Resume Builder
+  TC5.1: Create new resume → Expect: default sections created
+  TC5.2: Add experience entry → Expect: saved to DB
+  TC5.3: Download PDF → Expect: valid PDF file downloaded
+  TC5.4: AI enhance → Expect: optimized resume returned
+
+Module 6: Assessment
+  TC6.1: Start quiz for subtopic → Expect: 5 MCQ questions displayed
+  TC6.2: Submit answers → Expect: score and explanations shown
+
+Module 7: Activity Tracking
+  TC7.1: Add valid LeetCode username → Expect: stats fetched and displayed
+  TC7.2: Add invalid username → Expect: error handled gracefully
+
+4.3 INSTALLATION INSTRUCTIONS
+
+Prerequisites:
+- Node.js v18 or higher
+- npm v9 or higher
+- MongoDB Atlas account (or local MongoDB)
+- Google Gemini API key
+- Google OAuth credentials
+- GitHub OAuth credentials
+
+Steps:
+1. Clone the repository:
+   git clone https://github.com/[username]/preppilot.git
+   cd preppilot
+
+2. Install dependencies:
+   npm install
+
+3. Create .env file in root with:
+   PORT=3000
+   MONGO_URI=<your_mongodb_connection_string>
+   SESSION_SECRET=<random_secret_string>
+   GEMINI_API_KEY_1=<gemini_api_key>
+   GEMINI_API_KEY_2=<gemini_api_key_2>
+   GEMINI_API_KEY_3=<gemini_api_key_3>
+   GOOGLE_CLIENT_ID=<google_oauth_client_id>
+   GOOGLE_CLIENT_SECRET=<google_oauth_client_secret>
+   GITHUB_CLIENT_ID=<github_oauth_client_id>
+   GITHUB_CLIENT_SECRET=<github_oauth_client_secret>
+   BREVO_API_KEY=<brevo_smtp_api_key>
+   NODE_ENV=development
+
+4. Start the server:
+   node app.js
+
+5. Open browser at: http://localhost:3000
+
+4.4 END USER INSTRUCTIONS
+
+1. Visit https://preppilot.in
+2. Click "Get started free" and register with email or Google/GitHub
+3. Verify your email address via the link sent to your inbox
+4. Complete the 4-step onboarding (takes ~3 minutes):
+   - Step 1: Enter career goals and target company type
+   - Step 2: Enter academic details (year, degree, branch, university)
+   - Step 3: Add your technical skills with proficiency levels
+   - Step 4: Describe your experience level
+5. View your AI-generated personalized roadmap on the dashboard
+6. Click any subtopic to take a skill assessment quiz
+7. Go to Resume section to upload your resume for ATS analysis
+8. Use Resume Builder to create a new resume from scratch
+9. Connect your coding profiles in the Activity section
+10. Use Interview Prep to configure and start a mock interview session
+
+================================================================
+SECTION 7: CHAPTER 5 — RESULTS AND DISCUSSIONS
+================================================================
+
+5.1 USER INTERFACE REPRESENTATION
+
+The PrepPilot UI is clean, modern, and responsive. It uses a blue-based
+color scheme (#2563eb primary) with Inter font family. All pages are
+server-rendered using EJS with inline CSS for fast load times.
+
+Key UI pages:
+- Home Page: Landing page with hero section, features grid, how-it-works
+  steps, testimonials, and CTA banner
+- Login/Register: Split-panel design with feature highlights on left,
+  form on right. Supports email/password and OAuth buttons
+- Onboarding: 4-step wizard with progress bar, step dots, and card-based
+  input sections
+- Dashboard: Shows roadmap phases, progress tracking, and quick links
+- Resume Analyzer: Upload area, ATS score gauge, breakdown cards,
+  issues list, and improvement suggestions
+- Resume Builder: Multi-section editor with sidebar navigation,
+  inline editing, and AI enhancement panel
+- Activity Dashboard: Platform cards with stats, ratings, and
+  activity heatmaps
+- Assessment Quiz: Clean MCQ interface with option selection,
+  submit button, and results with explanations
+
+5.2 BRIEF DESCRIPTION OF VARIOUS MODULES
+
+Module 1 — Authentication & Onboarding:
+Handles user registration, email verification, login (local + OAuth),
+and the 4-step profile setup. Uses Passport.js strategies and
+connect-mongo for persistent sessions.
+
+Module 2 — AI Roadmap Generator:
+Takes the user's complete profile and sends a structured prompt to
+Google Gemini. The response is a JSON array of phases, each containing
+skills with subtopics, resources, and mini projects. Stored in MongoDB
+and rendered as an interactive roadmap on the dashboard.
+
+Module 3 — Resume Analyzer:
+Accepts PDF/DOCX uploads via Multer (memory storage). Text is extracted
+using pdf-parse or mammoth. The text is sent to Gemini with a detailed
+scoring framework prompt. Results include ATS score (0-100), section
+breakdown, critical issues, missing keywords, and rewrite examples.
+
+Module 4 — Resume Builder:
+A full CRUD resume editor with 6 section types (text, grouped-list,
+entries). Supports adding/editing/deleting entries and bullet points.
+AI enhancement sends the resume to Gemini for optimization. PDF export
+uses Puppeteer to render an EJS template and generate a PDF buffer.
+
+Module 5 — Skill Assessment:
+For each subtopic in the roadmap, the system generates a 5-question MCQ
+quiz using Gemini. Questions have 4 options, difficulty levels (basic/
+intermediate/advanced), and explanations. Results are scored and displayed
+immediately.
+
+Module 6 — Activity Tracker:
+Uses axios to call public APIs of LeetCode (GraphQL), Codeforces (REST),
+CodeChef, HackerRank, and GitHub. Aggregates problem counts, ratings,
+streaks, and contribution data into a unified dashboard view.
+
+Module 7 — Mock Interview:
+Collects interview configuration (role, difficulty, focus areas) and
+redirects to the LiveKit-based AI interviewer application with parameters
+passed as query strings.
+
+5.3 SNAPSHOTS OF SYSTEM
+[AI: Add placeholder text for screenshots with descriptions:
+- Figure 5.1: Home Page — Landing page with hero section
+- Figure 5.2: Registration Page — Email and OAuth registration
+- Figure 5.3: Onboarding Step 1 — Career goals selection
+- Figure 5.4: Onboarding Step 3 — Skills profiling with autocomplete
+- Figure 5.5: Dashboard — AI-generated roadmap phases
+- Figure 5.6: Resume Analyzer — ATS score and analysis results
+- Figure 5.7: Resume Builder — Section editor interface
+- Figure 5.8: Skill Assessment — MCQ quiz interface
+- Figure 5.9: Activity Dashboard — Coding platform stats
+- Figure 5.10: Mock Interview Setup — Configuration page]
+
+5.4 BACKEND / DATABASE REPRESENTATION
+
+Database: MongoDB Atlas
+Collections used:
+- users: Stores profile, skills, goals, academic info
+- roadmaps: Stores AI-generated roadmap per user
+- resumes: Stores resume analysis results
+- resumebuilder: Stores resume builder documents with sections
+- assessments: Stores quiz questions and scores
+- activities: Stores platform usernames and fetched stats
+- sessions: Managed by connect-mongo
+
+5.5 SNAPSHOTS OF DATABASE TABLES
+[AI: Add placeholder descriptions for MongoDB collection screenshots:
+- Figure 5.11: users collection — sample document showing profile fields
+- Figure 5.12: roadmaps collection — sample document showing phases array
+- Figure 5.13: resumebuilder collection — sample document with sections
+- Figure 5.14: assessments collection — sample quiz result document]
+
+================================================================
+SECTION 8: CHAPTER 6 — SUMMARY AND CONCLUSIONS
+================================================================
+
+PrepPilot successfully achieves its primary objective of providing a
+unified, AI-powered placement preparation platform for engineering students.
+The system integrates six major modules — personalized roadmap generation,
+ATS resume analysis, resume building, skill assessment, activity tracking,
+and mock interview preparation — into a single, cohesive web application.
+
+Key conclusions:
+
+1. AI-driven personalization significantly improves the relevance of
+   learning roadmaps compared to generic study plans.
+
+2. The ATS resume analyzer provides actionable, data-driven feedback
+   that helps students improve their resume quality measurably.
+
+3. The integration of multiple coding platforms into a single activity
+   dashboard reduces the friction of tracking progress across platforms.
+
+4. The system is production-ready and deployed at preppilot.in, serving
+   real users with a stable, responsive interface.
+
+5. The MVC architecture and modular service design make the codebase
+   maintainable and extensible for future feature additions.
+
+6. Google Gemini's structured JSON output capability, combined with
+   careful prompt engineering, enables reliable AI feature integration
+   without hallucination or format errors.
+
+================================================================
+SECTION 9: CHAPTER 7 — FUTURE SCOPE
+================================================================
+
+1. AI Chat Assistant: A conversational AI tutor that answers
+   placement-related questions in real time.
+
+2. Peer Comparison: Anonymous benchmarking of skills and progress
+   against other students in the same year/branch.
+
+3. Company-Specific Preparation: Tailored roadmaps and question banks
+   for specific companies (Google, Amazon, TCS, etc.).
+
+4. Resume Version Control: Track changes to resumes over time and
+   compare ATS scores across versions.
+
+5. Mentor Connect: Allow senior students or alumni to offer mentorship
+   through the platform.
+
+6. Mobile Application: Native iOS and Android apps for on-the-go
+   preparation.
+
+7. Gamification: Badges, streaks, leaderboards, and XP points to
+   increase engagement and motivation.
+
+8. Placement Analytics: Aggregate anonymized data to show which skills
+   and preparation patterns lead to successful placements.
+
+9. Integration with College ERP: Allow colleges to track student
+   placement readiness through an admin dashboard.
+
+10. Paid Tier with Advanced AI: Higher Gemini API limits, unlimited
+    roadmap regeneration, and priority AI processing.
+
+================================================================
+SECTION 10: ABBREVIATIONS
+================================================================
+
+AI    — Artificial Intelligence
+API   — Application Programming Interface
+ATS   — Applicant Tracking System
+CRUD  — Create, Read, Update, Delete
+CSS   — Cascading Style Sheets
+DOCX  — Document format used by Microsoft Word
+DSA   — Data Structures and Algorithms
+EJS   — Embedded JavaScript (templating engine)
+ER    — Entity-Relationship
+FAANG — Facebook, Amazon, Apple, Netflix, Google
+HTML  — HyperText Markup Language
+HTTP  — HyperText Transfer Protocol
+IDE   — Integrated Development Environment
+JSON  — JavaScript Object Notation
+JWT   — JSON Web Token
+MCQ   — Multiple Choice Question
+MVC   — Model-View-Controller
+NoSQL — Not Only SQL
+OAuth — Open Authorization
+ODM   — Object Document Mapper
+OOP   — Object-Oriented Programming
+PDF   — Portable Document Format
+REST  — Representational State Transfer
+SDK   — Software Development Kit
+SMTP  — Simple Mail Transfer Protocol
+SQL   — Structured Query Language
+UI    — User Interface
+URL   — Uniform Resource Locator
+UX    — User Experience
+
+================================================================
+SECTION 11: BIBLIOGRAPHY / REFERENCES
+================================================================
+
+[AI: Generate 10-15 IEEE-format references covering:
+1. Node.js and Express.js official documentation
+2. MongoDB documentation
+3. Google Gemini API documentation
+4. Papers on AI-based personalized learning systems (2019-2024)
+5. Papers on ATS resume screening systems
+6. Papers on placement preparation platforms
+7. Passport.js documentation
+8. Puppeteer documentation
+9. Papers on prompt engineering for LLMs
+10. Papers on student career guidance systems in India]
+
+================================================================
+SECTION 12: ADDITIONAL NOTES FOR REPORT GENERATION
+================================================================
+
+FORMATTING INSTRUCTIONS FOR AI REPORT GENERATOR:
+- Font: Times New Roman, 12pt, 1.5 line spacing
+- Margins: Left 30mm, Right 20mm, Top 30mm, Bottom 22mm
+- Page numbers: Hindu-Arabic numerals, centered in footer
+- Pre-chapter pages: Roman numerals (i, ii, iii...)
+- Chapter headings: 18pt bold, centered
+- Section headings: 16pt bold, left-aligned
+- Sub-section headings: 14pt bold, left-aligned
+- Figures: Numbered as Figure X.Y, caption below figure
+- Tables: Numbered as Table X.Y, title above table
+- Citation style: IEEE format
+- All diagrams to be described textually and converted to actual
+  diagrams by the student before submission
+
+WHAT STUDENT NEEDS TO ADD MANUALLY:
+1. Student name(s) and university roll number(s)
+2. Guide name, designation, and department
+3. Actual screenshots of the running application
+4. Actual database screenshots from MongoDB Atlas
+5. Actual UML diagrams (DFD, ER, Activity, Sequence) drawn in
+   draw.io or similar tool
+6. Signature pages (Declaration, Certificate, Approval Sheet)
+7. Acknowledgement (personalized)
+8. Any publications if applicable
+
+LIVE URL: https://preppilot.in
+GITHUB: [Add your GitHub repository URL]
